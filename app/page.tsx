@@ -128,7 +128,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2">
               <CheckIcon className="size-5 text-emerald-500" />
-              <span className="text-muted-foreground">100% free</span>
+              <span className="text-muted-foreground">Free</span>
             </div>
           </div>
         </div>

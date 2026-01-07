@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronRightIcon, LockIcon } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 
 import { SettingsPopover } from "@/components/settings-popover";
 import { SidebarSearch } from "@/components/sidebar-search";
@@ -24,6 +25,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   sidebarConfig,
@@ -34,9 +36,11 @@ import {
 function NavItem({
   item,
   isActive,
+  onNavigate,
 }: {
   item: SidebarNavItem;
   isActive: boolean;
+  onNavigate?: () => void;
 }) {
   const Icon = item.icon;
 
@@ -65,7 +69,7 @@ function NavItem({
 
   return (
     <SidebarMenuButton asChild tooltip={item.title} isActive={isActive}>
-      <Link href={item.href} className="py-5">
+      <Link href={item.href} className="py-5" onClick={onNavigate}>
         <Icon />
         <span className="flex-1 truncate">{item.title}</span>
         {item.badge === "new" && (
@@ -89,16 +93,65 @@ function NavItem({
 function CollapsibleCategory({
   category,
   isItemActive,
+  onNavigate,
+  isOpen,
+  onOpenChange,
+  onCategoryClickWhileCollapsed,
 }: {
   category: SidebarNavCategory;
   isItemActive: (item: SidebarNavItem) => boolean;
+  onNavigate?: () => void;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  onCategoryClickWhileCollapsed?: (categoryTitle: string) => void;
 }) {
-  // Check if any item in this category is active
-  const hasActiveItem = category.items.some(isItemActive);
+  const { state, setOpen, isMobile } = useSidebar();
+  const isCollapsed = state === "collapsed" && !isMobile;
 
+  // Handle category click when collapsed
+  const handleCategoryClick = () => {
+    if (isCollapsed) {
+      // Notify parent that this category was clicked
+      onCategoryClickWhileCollapsed?.(category.title);
+      // Expand sidebar first
+      setOpen(true);
+      // Then open this category after a short delay to allow sidebar animation
+      setTimeout(() => {
+        onOpenChange(true);
+      }, 150);
+    } else {
+      // Toggle category when sidebar is expanded
+      onOpenChange(!isOpen);
+    }
+  };
+
+  // When collapsed, show as icon button
+  if (isCollapsed) {
+    const CategoryIcon = category.icon;
+    return (
+      <SidebarGroup>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                tooltip={category.title}
+                onClick={handleCategoryClick}
+                className="cursor-pointer"
+              >
+                <CategoryIcon />
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    );
+  }
+
+  // When expanded, show normal collapsible category
   return (
     <Collapsible
-      defaultOpen={hasActiveItem || false}
+      open={isOpen}
+      onOpenChange={onOpenChange}
       className="group/collapsible"
     >
       <SidebarGroup>
@@ -113,7 +166,11 @@ function CollapsibleCategory({
             <SidebarMenu>
               {category.items.map((item) => (
                 <SidebarMenuItem key={item.href}>
-                  <NavItem item={item} isActive={isItemActive(item)} />
+                  <NavItem
+                    item={item}
+                    isActive={isItemActive(item)}
+                    onNavigate={onNavigate}
+                  />
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -126,10 +183,73 @@ function CollapsibleCategory({
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { isMobile, setOpenMobile, state } = useSidebar();
+  const isCollapsed = state === "collapsed" && !isMobile;
 
   const isItemActive = (item: SidebarNavItem) =>
     pathname === item.href ||
     (item.href !== "/" && pathname?.startsWith(`${item.href}/`));
+
+  // Track which categories are open
+  const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
+    () => {
+      // Initialize with categories that have active items
+      const initial: Record<string, boolean> = {};
+      sidebarConfig.categories.forEach((category) => {
+        initial[category.title] = category.items.some(isItemActive);
+      });
+      return initial;
+    }
+  );
+
+  // Track category that was clicked while collapsed (to preserve it when expanding)
+  const clickedCategoryRef = useRef<string | null>(null);
+
+  // Reset all categories to closed when sidebar collapses
+  // When sidebar expands, open categories that have active items or the clicked category
+  useEffect(() => {
+    if (isCollapsed) {
+      setOpenCategories({});
+      clickedCategoryRef.current = null;
+    } else {
+      // When sidebar expands, open categories that have active items
+      // Also preserve the category that was clicked while collapsed
+      const updated: Record<string, boolean> = {};
+      sidebarConfig.categories.forEach((category) => {
+        const hasActive = category.items.some(isItemActive);
+        const wasClicked = clickedCategoryRef.current === category.title;
+        updated[category.title] = hasActive || wasClicked;
+      });
+      setOpenCategories(updated);
+      // Clear the ref after using it
+      if (clickedCategoryRef.current) {
+        clickedCategoryRef.current = null;
+      }
+    }
+  }, [isCollapsed, pathname]);
+
+  // Update open state when active item changes (only when expanded)
+  useEffect(() => {
+    if (!isCollapsed) {
+      sidebarConfig.categories.forEach((category) => {
+        const hasActive = category.items.some(isItemActive);
+        if (hasActive) {
+          setOpenCategories((prev) => ({ ...prev, [category.title]: true }));
+        }
+      });
+    }
+  }, [pathname, isCollapsed]);
+
+  const handleCategoryClickWhileCollapsed = (categoryTitle: string) => {
+    clickedCategoryRef.current = categoryTitle;
+  };
+
+  const handleCategoryOpenChange = (categoryTitle: string, open: boolean) => {
+    setOpenCategories((prev) => ({ ...prev, [categoryTitle]: open }));
+  };
+
+  // Close mobile sidebar on navigation
+  const handleNavigate = isMobile ? () => setOpenMobile(false) : undefined;
 
   return (
     <Sidebar collapsible="icon" variant="inset">
@@ -156,7 +276,11 @@ export function AppSidebar() {
               <SidebarMenu>
                 {sidebarConfig.main.map((item) => (
                   <SidebarMenuItem key={item.href}>
-                    <NavItem item={item} isActive={isItemActive(item)} />
+                    <NavItem
+                      item={item}
+                      isActive={isItemActive(item)}
+                      onNavigate={handleNavigate}
+                    />
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
@@ -170,6 +294,10 @@ export function AppSidebar() {
             key={category.title}
             category={category}
             isItemActive={isItemActive}
+            onNavigate={handleNavigate}
+            isOpen={openCategories[category.title] || false}
+            onOpenChange={(open) => handleCategoryOpenChange(category.title, open)}
+            onCategoryClickWhileCollapsed={handleCategoryClickWhileCollapsed}
           />
         ))}
       </SidebarContent>

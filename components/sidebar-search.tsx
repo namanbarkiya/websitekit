@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LockIcon, SearchIcon } from "lucide-react";
 
@@ -18,7 +17,7 @@ export function SidebarSearch() {
   const [query, setQuery] = React.useState("");
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const { state, isMobile, setOpen } = useSidebar();
+  const { state, isMobile, setOpen, setOpenMobile } = useSidebar();
 
   const results = React.useMemo(() => searchTools(query), [query]);
 
@@ -54,6 +53,7 @@ export function SidebarSearch() {
           setQuery("");
           setIsOpen(false);
           inputRef.current?.blur();
+          if (isMobile) setOpenMobile(false);
         }
         break;
       case "Escape":
@@ -70,6 +70,7 @@ export function SidebarSearch() {
     router.push(result.href);
     setQuery("");
     setIsOpen(false);
+    if (isMobile) setOpenMobile(false);
   };
 
   // In collapsed (icon) mode, render a compact icon button
@@ -119,7 +120,7 @@ export function SidebarSearch() {
         <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-[300px] overflow-auto rounded-md border bg-popover p-1 shadow-md">
           {results.length === 0 ? (
             <div className="px-3 py-6 text-center text-sm text-muted-foreground">
-              No tools found for "{query}"
+              No tools found for &quot;{query}&quot;
             </div>
           ) : (
             <ul className="space-y-0.5">

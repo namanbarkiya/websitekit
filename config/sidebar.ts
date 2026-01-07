@@ -1,12 +1,14 @@
 import type { LucideIcon } from "lucide-react";
 import {
   BotIcon,
+  BuildingIcon,
   CheckSquareIcon,
   CodeIcon,
   CookieIcon,
   FileTextIcon,
   GaugeIcon,
-  HomeIcon,
+  HammerIcon,
+  HeartIcon,
   ImageIcon,
   KeyIcon,
   LinkIcon,
@@ -14,11 +16,14 @@ import {
   PaletteIcon,
   QrCodeIcon,
   ScrollTextIcon,
+  SearchIcon,
+  SettingsIcon,
   ShareIcon,
   ShieldCheckIcon,
   ShieldIcon,
   SparklesIcon,
   SquareIcon,
+  TrendingUpIcon,
   TypeIcon,
   ZapIcon,
 } from "lucide-react";
@@ -36,6 +41,7 @@ export interface SidebarNavItem {
 
 export interface SidebarNavCategory {
   title: string;
+  icon: LucideIcon;
   items: SidebarNavItem[];
 }
 
@@ -61,6 +67,7 @@ export const sidebarConfig: SidebarConfig = {
     // ═══════════════════════════════════════════════════════════════════
     {
       title: "Setup & Identity",
+      icon: BuildingIcon,
       items: [
         {
           title: "Website Assets",
@@ -162,6 +169,7 @@ export const sidebarConfig: SidebarConfig = {
     // ═══════════════════════════════════════════════════════════════════
     {
       title: "SEO & Discoverability",
+      icon: TrendingUpIcon,
       items: [
         {
           title: "robots.txt",
@@ -283,6 +291,7 @@ export const sidebarConfig: SidebarConfig = {
     // ═══════════════════════════════════════════════════════════════════
     {
       title: "Social & Branding",
+      icon: HeartIcon,
       items: [
         {
           title: "Social Preview",
@@ -358,6 +367,7 @@ export const sidebarConfig: SidebarConfig = {
     // ═══════════════════════════════════════════════════════════════════
     {
       title: "Performance",
+      icon: ZapIcon,
       items: [
         {
           title: "Preload Hints",
@@ -451,6 +461,7 @@ export const sidebarConfig: SidebarConfig = {
     // ═══════════════════════════════════════════════════════════════════
     {
       title: "Security",
+      icon: ShieldIcon,
       items: [
         {
           title: "Security Headers",
@@ -557,6 +568,7 @@ export const sidebarConfig: SidebarConfig = {
     // ═══════════════════════════════════════════════════════════════════
     {
       title: "Utilities",
+      icon: HammerIcon,
       items: [
         {
           title: "Placeholder",
