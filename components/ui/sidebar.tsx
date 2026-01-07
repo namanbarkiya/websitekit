@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { PanelLeftIcon } from "lucide-react";
+import { PanelLeftIcon, SearchIcon } from "lucide-react";
 import { cva, VariantProps } from "class-variance-authority";
 
 import { Button } from "@/components/ui/button";
@@ -320,15 +320,52 @@ function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
 
 function SidebarInput({
   className,
+  onFocus,
   ...props
 }: React.ComponentProps<typeof Input>) {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const { state, isMobile, setOpen } = useSidebar();
+
+  // In collapsed (icon) mode, render a compact icon button instead of a full input,
+  // otherwise the input's padding/width looks wrong inside the 3rem rail.
+  if (!isMobile && state === "collapsed") {
+    return (
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        className={cn("h-8 w-8", className)}
+        onClick={() => {
+          setOpen(true);
+          // Focus the real input after the sidebar expands.
+          requestAnimationFrame(() => {
+            const el = document.querySelector(
+              'input[data-sidebar="input"]'
+            ) as HTMLInputElement | null;
+            el?.focus();
+          });
+        }}
+      >
+        <SearchIcon />
+        <span className="sr-only">Search</span>
+      </Button>
+    );
+  }
+
   return (
-    <Input
-      data-slot="sidebar-input"
-      data-sidebar="input"
-      className={cn("bg-background h-8 w-full shadow-none", className)}
-      {...props}
-    />
+    <div className="relative">
+      <SearchIcon className="text-muted-foreground pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2" />
+      <Input
+        ref={inputRef}
+        data-slot="sidebar-input"
+        data-sidebar="input"
+        className={cn("bg-background h-8 w-full pl-9 shadow-none", className)}
+        onFocus={(event) => {
+          onFocus?.(event);
+        }}
+        {...props}
+      />
+    </div>
   );
 }
 
