@@ -16,8 +16,6 @@ import {
   PaletteIcon,
   QrCodeIcon,
   ScrollTextIcon,
-  SearchIcon,
-  SettingsIcon,
   ShareIcon,
   ShieldCheckIcon,
   ShieldIcon,
@@ -69,28 +67,6 @@ export const sidebarConfig: SidebarConfig = {
       title: "Setup & Identity",
       icon: BuildingIcon,
       items: [
-        {
-          title: "Website Assets",
-          href: "/tools/assets",
-          icon: PaletteIcon,
-          category: "Setup & Identity",
-          description:
-            "Define site name, domain, description, brand color, and logo",
-          keywords: [
-            "assets",
-            "branding",
-            "brand",
-            "color",
-            "logo",
-            "domain",
-            "name",
-            "website info",
-            "site settings",
-            "configuration",
-            "setup",
-            "identity",
-          ],
-        },
         {
           title: "Meta Tags",
           href: "/tools/meta-tags",

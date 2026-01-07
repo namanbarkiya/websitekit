@@ -64,33 +64,42 @@ If a tool needs to change something:
 /tools ← Tools dashboard
 /tools/[toolId] ← Tool host page
 
-/core
-asset-context
-tool-registry
-tool-types
-output-types
-search-index
+/lib/store
+asset-store.ts        # Website assets store
+app-store.ts          # App-level state
+ui-store.ts           # UI state
+breadcrumb-store.ts   # Breadcrumb state
 
-/tools
+/lib/hooks
+use-website-assets.ts # Access website assets (read-only)
+use-tool-state.ts     # Tool local state management
+use-tool-context.tsx  # Tool context provider
+
+/lib/utils
+tool-registry.ts      # Tool registry and definitions
+output-utils.ts       # Output formatting, copy, download
+search.ts             # Search utilities
+
+/components
+asset-modal.tsx       # Asset editing modal
+output-renderer.tsx   # Output display component
+ui/                   # UI primitives (shadcn/ui)
+
+/app/tools
 /meta-tags
 /favicon
 /robots
 ...
 
-/ui
-button
-input
-modal
-tabs
-sidebar
-layout
-
 ### Folder Intent
 
-- `/core` → system-level logic only
-- `/tools` → isolated plugins
-- `/ui` → dumb UI primitives (no business logic)
-- `/app` → routing & composition
+- `/lib/store` → Zustand stores for global state
+- `/lib/hooks` → React hooks for shared logic
+- `/lib/utils` → Utility functions and shared logic
+- `/components` → React components (business logic OK)
+- `/app/tools` → Individual tool implementations (isolated)
+- `/components/ui` → Dumb UI primitives (no business logic)
+- `/app` → Routing & page composition
 
 ---
 

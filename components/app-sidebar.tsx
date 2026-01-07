@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronRightIcon, LockIcon } from "lucide-react";
+import { ChevronRightIcon, LockIcon, PaletteIcon } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
+import { AssetModal } from "@/components/asset-modal";
 import { SettingsPopover } from "@/components/settings-popover";
 import { SidebarSearch } from "@/components/sidebar-search";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +14,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
@@ -185,6 +187,7 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { isMobile, setOpenMobile, state } = useSidebar();
   const isCollapsed = state === "collapsed" && !isMobile;
+  const [assetModalOpen, setAssetModalOpen] = useState(false);
 
   const isItemActive = (item: SidebarNavItem) =>
     pathname === item.href ||
@@ -269,6 +272,27 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="gap-0">
+        {/* Website Assets - Configuration (at top, separate from tools) */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  tooltip="Website Assets"
+                  onClick={() => setAssetModalOpen(true)}
+                  className="cursor-pointer"
+                >
+                  <PaletteIcon />
+                  <span className="flex-1 truncate">Website Assets</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Divider */}
+        <Separator className="my-2" />
+
         {/* Main nav items (Home, etc.) */}
         {sidebarConfig.main.length > 0 && (
           <SidebarGroup>
@@ -307,6 +331,7 @@ export function AppSidebar() {
       </SidebarFooter>
 
       <SidebarRail />
+      <AssetModal open={assetModalOpen} onOpenChange={setAssetModalOpen} />
     </Sidebar>
   );
 }

@@ -1,15 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   ChevronsUpDownIcon,
   HelpCircleIcon,
   MailIcon,
   MoonIcon,
+  PaletteIcon,
   SettingsIcon,
   SunIcon,
 } from "lucide-react";
 
+import { AssetModal } from "@/components/asset-modal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +32,7 @@ import { useDarkMode } from "@/lib/hooks/use-dark-mode";
 export function SettingsPopover() {
   const { isMobile, open } = useSidebar();
   const [isDark, toggleDark] = useDarkMode();
+  const [assetModalOpen, setAssetModalOpen] = useState(false);
 
   return (
     <SidebarMenu>
@@ -47,13 +51,19 @@ export function SettingsPopover() {
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuLabel>Extras</DropdownMenuLabel>
+            {/* Configuration section - separate from categories */}
+            <DropdownMenuItem onClick={() => setAssetModalOpen(true)}>
+              <PaletteIcon />
+              Website Assets
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
+            <DropdownMenuLabel>Appearance</DropdownMenuLabel>
             <DropdownMenuItem onClick={toggleDark}>
               {isDark ? <SunIcon /> : <MoonIcon />}
               {isDark ? "Light mode" : "Dark mode"}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
+            <DropdownMenuLabel>Extras</DropdownMenuLabel>
             <DropdownMenuItem asChild>
               <Link href="/faq">
                 <HelpCircleIcon />
@@ -69,6 +79,7 @@ export function SettingsPopover() {
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
+      <AssetModal open={assetModalOpen} onOpenChange={setAssetModalOpen} />
     </SidebarMenu>
   );
 }
