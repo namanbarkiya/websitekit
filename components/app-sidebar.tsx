@@ -25,13 +25,15 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-1.5">
-          <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md font-semibold">
-            WK
+        <div className="flex items-center gap-2 py-1.5">
+          <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md font-semibold px-2">
+            W
           </div>
           <div className="group-data-[collapsible=icon]:hidden">
-            <div className="text-sm font-semibold leading-none">websitekit</div>
-            <div className="text-muted-foreground text-xs">Sidebar</div>
+            <div className="text-sm font-semibold leading-none">WebsiteKit</div>
+            <div className="text-muted-foreground text-xs">
+              Kickstart your site!
+            </div>
           </div>
         </div>
         <SidebarInput placeholder="Search…" />
