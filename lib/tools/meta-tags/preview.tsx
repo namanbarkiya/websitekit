@@ -1,0 +1,151 @@
+/**
+ * Meta Tags Preview Component
+ *
+ * Shows how meta tags appear on different platforms (Google, X, Facebook, etc.)
+ */
+
+import type { MetaTagsState } from "./component";
+
+interface PreviewProps {
+  state: MetaTagsState;
+}
+
+export function generatePreviewHTML(state: MetaTagsState): string {
+  const title = state.title || state.ogTitle || "Untitled";
+  const description = state.description || state.ogDescription || "";
+  const url = state.canonicalUrl || state.ogUrl || "";
+  const image = state.ogImage || state.twitterImage || "";
+  const siteName = state.ogSiteName || "";
+
+  // Extract domain from URL
+  const domain = url
+    ? new URL(url.startsWith("http") ? url : `https://${url}`).hostname
+    : "";
+
+  return `
+<div class="meta-preview-container space-y-6">
+  <!-- Google Preview -->
+  <div class="meta-preview-section">
+    <div class="text-xs text-muted-foreground mb-2 font-medium">Google</div>
+    <div class="border rounded-lg p-4 bg-background">
+      <div class="space-y-1">
+        <div class="text-blue-600 dark:text-blue-400 text-lg font-normal leading-tight cursor-pointer hover:underline">
+          ${escapeHtml(title)}
+        </div>
+        <div class="text-green-700 dark:text-green-500 text-sm leading-tight">
+          ${escapeHtml(domain)}
+          ${domain ? '<span class="text-muted-foreground">▼</span>' : ""}
+        </div>
+        <div class="text-muted-foreground text-sm leading-snug line-clamp-2">
+          ${escapeHtml(truncate(description, 155))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- X (Twitter) Preview -->
+  <div class="meta-preview-section">
+    <div class="text-xs text-muted-foreground mb-2 font-medium">X (Formerly Twitter)</div>
+    <div class="border rounded-lg overflow-hidden bg-background max-w-lg">
+      ${image
+        ? `<div class="aspect-[1.91/1] bg-gradient-to-br from-blue-500 to-blue-600 relative overflow-hidden">
+            <img src="${escapeHtml(image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-6" style="display: none;">
+              <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
+              <div class="text-xl font-semibold">${escapeHtml(truncate(title, 30))}</div>
+            </div>
+          </div>`
+        : `<div class="aspect-[1.91/1] bg-gradient-to-br from-blue-500 to-blue-600 flex flex-col items-center justify-center text-white p-6">
+            <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
+            <div class="text-xl font-semibold">${escapeHtml(truncate(title, 30))}</div>
+          </div>`}
+      ${title || description
+        ? `<div class="p-4 space-y-1">
+            <div class="font-semibold text-sm line-clamp-2">${escapeHtml(title)}</div>
+            ${description ? `<div class="text-muted-foreground text-sm line-clamp-2">${escapeHtml(truncate(description, 100))}</div>` : ""}
+            ${domain ? `<div class="text-xs text-muted-foreground mt-1">From ${escapeHtml(domain)}</div>` : ""}
+          </div>`
+        : ""}
+    </div>
+  </div>
+
+  <!-- Facebook Preview -->
+  <div class="meta-preview-section">
+    <div class="text-xs text-muted-foreground mb-2 font-medium">Facebook</div>
+    <div class="border rounded-lg overflow-hidden bg-background max-w-lg">
+      ${image
+        ? `<div class="aspect-[1.91/1] bg-gradient-to-br from-blue-500 to-blue-600 relative overflow-hidden">
+            <img src="${escapeHtml(image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-6" style="display: none;">
+              <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
+              <div class="text-xl font-semibold">${escapeHtml(truncate(title, 30))}</div>
+            </div>
+          </div>`
+        : `<div class="aspect-[1.91/1] bg-gradient-to-br from-blue-500 to-blue-600 flex flex-col items-center justify-center text-white p-6">
+            <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
+            <div class="text-xl font-semibold">${escapeHtml(truncate(title, 30))}</div>
+          </div>`}
+      <div class="p-3 space-y-1">
+        ${domain ? `<div class="text-xs text-muted-foreground uppercase">${escapeHtml(domain)}</div>` : ""}
+        ${title ? `<div class="font-semibold text-base leading-tight line-clamp-2">${escapeHtml(title)}</div>` : ""}
+        ${description ? `<div class="text-muted-foreground text-sm leading-snug line-clamp-3">${escapeHtml(truncate(description, 125))}</div>` : ""}
+      </div>
+    </div>
+  </div>
+
+  <!-- Pinterest Preview -->
+  <div class="meta-preview-section">
+    <div class="text-xs text-muted-foreground mb-2 font-medium">Pinterest</div>
+    <div class="border rounded-lg overflow-hidden bg-background max-w-xs">
+      ${image
+        ? `<div class="aspect-square bg-gradient-to-br from-blue-500 to-blue-600 relative overflow-hidden">
+            <img src="${escapeHtml(image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-6" style="display: none;">
+              <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
+            </div>
+          </div>`
+        : `<div class="aspect-square bg-gradient-to-br from-blue-500 to-blue-600 flex flex-col items-center justify-center text-white p-6">
+            <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
+          </div>`}
+      ${title ? `<div class="p-3">
+        <div class="font-semibold text-sm line-clamp-2">${escapeHtml(title)}</div>
+      </div>` : ""}
+    </div>
+  </div>
+
+  <!-- Slack Preview -->
+  <div class="meta-preview-section">
+    <div class="text-xs text-muted-foreground mb-2 font-medium">Slack</div>
+    <div class="border rounded-lg p-3 bg-background max-w-lg">
+      <div class="flex items-start gap-2 mb-2">
+        <div class="w-4 h-4 rounded bg-blue-500 flex-shrink-0 mt-0.5"></div>
+        <div class="text-sm font-medium text-muted-foreground">${escapeHtml(siteName || domain || "Link")}</div>
+      </div>
+      ${title ? `<div class="text-blue-600 dark:text-blue-400 font-semibold text-sm mb-1 leading-tight">${escapeHtml(title)}</div>` : ""}
+      ${description ? `<div class="text-sm text-muted-foreground mb-3 leading-snug line-clamp-3">${escapeHtml(truncate(description, 150))}</div>` : ""}
+      ${image
+        ? `<div class="rounded-lg overflow-hidden border">
+            <img src="${escapeHtml(image)}" alt="${escapeHtml(title)}" class="w-full object-cover" style="max-height: 300px;" onerror="this.style.display='none';" />
+          </div>`
+        : ""}
+    </div>
+  </div>
+</div>
+  `.trim();
+}
+
+function escapeHtml(text: string): string {
+  const map: Record<string, string> = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  };
+  return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
+function truncate(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength).trim() + "...";
+}

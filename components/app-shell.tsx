@@ -50,13 +50,17 @@ function Header() {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider>
-      <SonnerProvider />
-      <AppSidebar />
-      <SidebarInset>
-        <Header />
-        <div className="p-6">{children}</div>
-      </SidebarInset>
-    </SidebarProvider>
+    <div className="h-screen overflow-hidden">
+      <SidebarProvider>
+        <SonnerProvider />
+        <AppSidebar />
+        <SidebarInset className="flex flex-col h-full overflow-hidden">
+          <div className="shrink-0">
+            <Header />
+          </div>
+          <div className="flex-1 overflow-hidden p-6 min-h-0">{children}</div>
+        </SidebarInset>
+      </SidebarProvider>
+    </div>
   );
 }

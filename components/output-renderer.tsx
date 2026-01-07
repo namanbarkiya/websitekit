@@ -1,14 +1,19 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { CopyIcon, DownloadIcon, CheckIcon, FileIcon, ImageIcon } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  CheckIcon,
+  CopyIcon,
+  DownloadIcon,
+  FileIcon,
+  ImageIcon,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { ToolOutput } from "@/lib/utils/tool-registry";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   copyToClipboard,
   downloadFile,
@@ -16,6 +21,7 @@ import {
   generateFilename,
   getSyntaxLanguage,
 } from "@/lib/utils/output-utils";
+import type { ToolOutput } from "@/lib/utils/tool-registry";
 
 interface OutputRendererProps {
   /** Tool output to render */
@@ -63,7 +69,7 @@ export function OutputRenderer({
   }, [output]);
 
   // Set default tab when output changes
-  useMemo(() => {
+  useEffect(() => {
     if (availableTabs.length > 0 && !availableTabs.includes(activeTab)) {
       setActiveTab(availableTabs[0]);
     }
@@ -150,123 +156,142 @@ export function OutputRenderer({
     );
   }
 
-  const canCopy = !!(output.content || (output.files && output.files.length > 0));
-  const canDownload =
-    !!(output.content || (output.files && output.files.length > 0));
+  const canCopy = !!(
+    output.content ||
+    (output.files && output.files.length > 0)
+  );
+  const canDownload = !!(
+    output.content ||
+    (output.files && output.files.length > 0)
+  );
 
   return (
-    <Card className="overflow-hidden">
-      {/* Header with actions */}
-      <div className="flex items-center justify-between border-b p-4">
-        <h3 className="text-sm font-semibold">Output</h3>
-        <div className="flex items-center gap-2">
-          {canCopy && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCopy}
-              className="gap-2"
-            >
-              {copied ? (
-                <>
-                  <CheckIcon className="size-4" />
-                  Copied
-                </>
-              ) : (
-                <>
-                  <CopyIcon className="size-4" />
-                  Copy
-                </>
-              )}
-            </Button>
-          )}
-          {canDownload && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleDownload}
-              className="gap-2"
-            >
-              <DownloadIcon className="size-4" />
-              Download
-            </Button>
-          )}
-        </div>
-      </div>
-
+    <Card className="overflow-hidden flex flex-col h-full min-h-0 py-0">
       {/* Tabs */}
       {availableTabs.length > 0 ? (
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="border-b px-4">
-            <TabsList>
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full flex-1 flex flex-col min-h-0 overflow-hidden"
+        >
+          {/* Header with Tabs and actions */}
+          <div className="flex items-center justify-between border-b p-4 shrink-0 gap-4">
+            <TabsList className="w-auto">
               {availableTabs.map((tab) => (
-                <TabsTrigger key={tab} value={tab}>
+                <TabsTrigger key={tab} value={tab} className="px-6">
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
                 </TabsTrigger>
               ))}
             </TabsList>
+            <div className="flex items-center gap-2">
+              {canCopy && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCopy}
+                  className="gap-2"
+                >
+                  {copied ? (
+                    <>
+                      <CheckIcon className="size-4" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <CopyIcon className="size-4" />
+                      Copy
+                    </>
+                  )}
+                </Button>
+              )}
+              {canDownload && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDownload}
+                  className="gap-2"
+                >
+                  <DownloadIcon className="size-4" />
+                  Download
+                </Button>
+              )}
+            </div>
           </div>
 
           {/* Preview Tab */}
           {availableTabs.includes("preview") && (
-            <TabsContent value="preview" className="m-0 p-4">
-              <div className="rounded-lg border bg-muted/50 p-4">
-                {output.type === "html" && output.content ? (
-                  <div
-                    className="prose prose-sm max-w-none dark:prose-invert"
-                    dangerouslySetInnerHTML={{ __html: output.content }}
-                  />
-                ) : output.type === "image" && output.files?.[0] ? (
-                  <div className="flex items-center justify-center">
-                    <img
-                      src={
-                        output.files[0].content instanceof Blob
-                          ? URL.createObjectURL(output.files[0].content)
-                          : output.files[0].content
-                      }
-                      alt="Preview"
-                      className="max-w-full rounded-lg"
-                    />
+            <TabsContent
+              value="preview"
+              className="m-0 p-4 flex-1 min-h-0 overflow-hidden"
+            >
+              <ScrollArea className="h-full w-full">
+                <div className="pr-4">
+                  <div className="rounded-lg border bg-muted/50 p-4">
+                    {output.preview ? (
+                      <div
+                        className="max-w-none"
+                        dangerouslySetInnerHTML={{ __html: output.preview }}
+                      />
+                    ) : output.type === "html" && output.content ? (
+                      <div
+                        className="prose prose-sm max-w-none dark:prose-invert"
+                        dangerouslySetInnerHTML={{ __html: output.content }}
+                      />
+                    ) : output.type === "image" && output.files?.[0] ? (
+                      <div className="flex items-center justify-center">
+                        <img
+                          src={
+                            output.files[0].content instanceof Blob
+                              ? URL.createObjectURL(output.files[0].content)
+                              : output.files[0].content
+                          }
+                          alt="Preview"
+                          className="max-w-full rounded-lg"
+                        />
+                      </div>
+                    ) : (
+                      <div className="text-center text-muted-foreground">
+                        No preview available
+                      </div>
+                    )}
                   </div>
-                ) : output.preview ? (
-                  <div
-                    className="prose prose-sm max-w-none dark:prose-invert"
-                    dangerouslySetInnerHTML={{ __html: output.preview }}
-                  />
-                ) : (
-                  <div className="text-center text-muted-foreground">
-                    No preview available
-                  </div>
-                )}
-              </div>
+                </div>
+              </ScrollArea>
             </TabsContent>
           )}
 
           {/* Code Tab */}
           {availableTabs.includes("code") && (
-            <TabsContent value="code" className="m-0 p-4">
-              <ScrollArea className="h-[400px] w-full rounded-lg border bg-muted/50">
-                <pre className="p-4 text-sm">
-                  <code className="font-mono">
-                    {output.content
-                      ? output.content
-                      : output.files && output.files.length > 0
-                        ? output.files
-                            .map((file) => {
-                              const content =
-                                file.content instanceof Blob
-                                  ? "[Binary file]"
-                                  : file.content;
-                              return output.files!.length > 1
-                                ? `// ${file.filename}\n${content}`
-                                : content;
-                            })
-                            .join("\n\n")
-                        : "No content"}
-                  </code>
-                </pre>
+            <TabsContent
+              value="code"
+              className="m-0 p-4 flex-1 min-h-0 overflow-hidden flex flex-col"
+            >
+              <ScrollArea className="flex-1 min-h-0 w-full">
+                <div className="pr-4">
+                  <div className="rounded-lg border bg-muted/50">
+                    <pre className="p-4 text-sm m-0">
+                      <code className="font-mono">
+                        {output.content
+                          ? output.content
+                          : output.files && output.files.length > 0
+                            ? output.files
+                                .map((file) => {
+                                  const content =
+                                    file.content instanceof Blob
+                                      ? "[Binary file]"
+                                      : file.content;
+                                  return output.files!.length > 1
+                                    ? `// ${file.filename}\n${content}`
+                                    : content;
+                                })
+                                .join("\n\n")
+                            : "No content"}
+                      </code>
+                    </pre>
+                  </div>
+                </div>
               </ScrollArea>
-              <div className="mt-2 text-xs text-muted-foreground">
+              <div className="mt-2 text-xs text-muted-foreground shrink-0 px-4">
                 Language: {getSyntaxLanguage(output)}
               </div>
             </TabsContent>
@@ -274,54 +299,63 @@ export function OutputRenderer({
 
           {/* Files Tab */}
           {availableTabs.includes("files") && (
-            <TabsContent value="files" className="m-0 p-4">
-              <div className="space-y-2">
-                {output.files?.map((file, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between rounded-lg border p-3"
-                  >
-                    <div className="flex items-center gap-3">
-                      {output.type === "image" ? (
-                        <ImageIcon className="size-5 text-muted-foreground" />
-                      ) : (
-                        <FileIcon className="size-5 text-muted-foreground" />
-                      )}
-                      <div>
-                        <p className="text-sm font-medium">{file.filename}</p>
-                        {file.mimeType && (
-                          <p className="text-xs text-muted-foreground">
-                            {file.mimeType}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const content =
-                          file.content instanceof Blob
-                            ? file.content
-                            : new Blob([file.content], { type: file.mimeType });
-                        downloadFile(content, {
-                          filename: file.filename,
-                          mimeType: file.mimeType,
-                        });
-                        toast.success(`Downloaded ${file.filename}`);
-                      }}
+            <TabsContent
+              value="files"
+              className="m-0 p-4 flex-1 min-h-0 overflow-hidden"
+            >
+              <ScrollArea className="h-full w-full">
+                <div className="pr-4 space-y-2">
+                  {output.files?.map((file, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between rounded-lg border p-3"
                     >
-                      <DownloadIcon className="size-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
+                      <div className="flex items-center gap-3">
+                        {output.type === "image" ? (
+                          <ImageIcon className="size-5 text-muted-foreground" />
+                        ) : (
+                          <FileIcon className="size-5 text-muted-foreground" />
+                        )}
+                        <div>
+                          <p className="text-sm font-medium">{file.filename}</p>
+                          {file.mimeType && (
+                            <p className="text-xs text-muted-foreground">
+                              {file.mimeType}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const content =
+                            file.content instanceof Blob
+                              ? file.content
+                              : new Blob([file.content], {
+                                  type: file.mimeType,
+                                });
+                          downloadFile(content, {
+                            filename: file.filename,
+                            mimeType: file.mimeType,
+                          });
+                          toast.success(`Downloaded ${file.filename}`);
+                        }}
+                      >
+                        <DownloadIcon className="size-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
             </TabsContent>
           )}
         </Tabs>
       ) : (
-        <div className="p-4 text-center text-muted-foreground">
-          No output to display
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center text-muted-foreground">
+            No output to display
+          </div>
         </div>
       )}
     </Card>
