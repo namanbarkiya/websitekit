@@ -64,13 +64,13 @@ export default function Home() {
   );
 
   return (
-    <div className="pb-16 px-2 md:px-6 lg:px-8">
+    <div className="pb-16 px-4 md:px-6 lg:px-8 overflow-x-hidden">
       {/* Hero */}
       <section className="relative py-2 md:py-8">
         {/* Ambient Background */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 right-0 size-[500px] rounded-full bg-primary/5 blur-[100px]" />
-          <div className="absolute bottom-0 left-0 size-[400px] rounded-full bg-amber-500/5 blur-[80px]" />
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute top-0 right-0 size-[300px] md:size-[500px] rounded-full bg-primary/5 blur-[80px] md:blur-[100px]" />
+          <div className="absolute bottom-0 left-0 size-[250px] md:size-[400px] rounded-full bg-amber-500/5 blur-[60px] md:blur-[80px]" />
         </div>
 
         <div className="max-w-3xl">
