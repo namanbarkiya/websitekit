@@ -166,7 +166,7 @@ export function OutputRenderer({
   );
 
   return (
-    <Card className="overflow-hidden flex flex-col h-full min-h-0 py-0">
+    <Card className="overflow-hidden flex flex-col h-full min-h-0 py-0 gap-0">
       {/* Tabs */}
       {availableTabs.length > 0 ? (
         <Tabs
@@ -222,10 +222,10 @@ export function OutputRenderer({
           {availableTabs.includes("preview") && (
             <TabsContent
               value="preview"
-              className="m-0 p-4 flex-1 min-h-0 overflow-hidden"
+              className="m-0 flex-1 min-h-0 overflow-hidden"
             >
               <ScrollArea className="h-full w-full">
-                <div className="pr-4">
+                <div className="px-4 pt-4 pb-4">
                   <div className="rounded-lg border bg-muted/50 p-4">
                     {output.preview ? (
                       <div
@@ -264,12 +264,12 @@ export function OutputRenderer({
           {availableTabs.includes("code") && (
             <TabsContent
               value="code"
-              className="m-0 p-4 flex-1 min-h-0 overflow-hidden flex flex-col"
+              className="m-0 flex-1 min-h-0 overflow-hidden flex flex-col"
             >
-              <ScrollArea className="flex-1 min-h-0 w-full">
-                <div className="pr-4">
-                  <div className="rounded-lg border bg-muted/50">
-                    <pre className="p-4 text-sm m-0">
+              <div className="flex-1 min-h-0 w-full overflow-y-auto">
+                <div className="px-4 pt-4 pb-2">
+                  <div className="rounded-lg border bg-muted/50 overflow-x-auto overflow-y-hidden">
+                    <pre className="p-4 text-sm m-0 whitespace-pre min-w-fit">
                       <code className="font-mono">
                         {output.content
                           ? output.content
@@ -290,8 +290,8 @@ export function OutputRenderer({
                     </pre>
                   </div>
                 </div>
-              </ScrollArea>
-              <div className="mt-2 text-xs text-muted-foreground shrink-0 px-4">
+              </div>
+              <div className="text-xs text-muted-foreground shrink-0 px-4 pb-4">
                 Language: {getSyntaxLanguage(output)}
               </div>
             </TabsContent>
@@ -301,10 +301,10 @@ export function OutputRenderer({
           {availableTabs.includes("files") && (
             <TabsContent
               value="files"
-              className="m-0 p-4 flex-1 min-h-0 overflow-hidden"
+              className="m-0 flex-1 min-h-0 overflow-hidden"
             >
               <ScrollArea className="h-full w-full">
-                <div className="pr-4 space-y-2">
+                <div className="px-4 pt-4 pb-4 space-y-2">
                   {output.files?.map((file, index) => (
                     <div
                       key={index}

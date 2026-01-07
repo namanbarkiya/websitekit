@@ -67,7 +67,7 @@ export default function ToolHostPage() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full min-h-0">
       {/* Left Card - Tool Form */}
-      <Card className="flex flex-col h-full min-h-0 overflow-hidden !py-0">
+      <Card className="flex flex-col h-full min-h-0 overflow-hidden !py-0 gap-0">
         <CardHeader className="shrink-0 border-b px-6 py-6">
           <CardTitle className="flex items-center gap-2">
             {toolMeta?.title ?? toolDef?.name ?? toolId}
@@ -84,7 +84,7 @@ export default function ToolHostPage() {
         </CardHeader>
         <div className="flex-1 min-h-0 overflow-hidden">
           <ScrollArea className="h-full w-full">
-            <div className="px-6 space-y-4 pb-6">
+            <div className="px-6 space-y-4 py-4">
               {ToolComponent ? (
                 <ToolComponent
                   assets={assets}
