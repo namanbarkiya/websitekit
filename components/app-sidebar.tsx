@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { SettingsPopover } from "@/components/settings-popover";
 import {
   Sidebar,
   SidebarContent,
@@ -40,11 +41,9 @@ export function AppSidebar() {
         <SidebarInput placeholder="Search…" />
       </SidebarHeader>
 
-      <SidebarSeparator />
-
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel>Tools</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarNav.map((item) => {
@@ -73,10 +72,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        <div className="text-muted-foreground px-2 py-1.5 text-xs group-data-[collapsible=icon]:hidden">
-          Tip: press <kbd className="rounded border px-1">⌘</kbd>+
-          <kbd className="rounded border px-1">B</kbd>
-        </div>
+        <SettingsPopover />
       </SidebarFooter>
 
       <SidebarRail />
