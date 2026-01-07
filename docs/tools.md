@@ -1,178 +1,267 @@
-# websitekit — Tool Catalog
-
-This document lists all planned tools for **websitekit**, split into two categories:
-
-- **Top 10 (v1 launch tools)**
-- **Extended Tool Set (roadmap)**
-
-Each tool is designed to be **independent, context-aware, and scalable**.
+# websitekit — Tool Categorization (UX-First)
 
 ---
 
-## 🚀 Top 10 Tools (v1 Launch)
+## 🧱 Setup & Identity (Foundational)
 
-These tools provide maximum value at launch and form the foundation of websitekit.
+> Tools users expect to configure **first** when starting a website.
 
 ### 1. Website Asset Manager
 
-Defines and manages shared website assets such as name, domain, description, brand color, and logo.  
-Acts as the global context for all other tools.
+- Define site name, domain, description
+- Set primary brand color
+- Upload logo
+- Acts as global read-only defaults for all tools
 
 ---
 
 ### 2. Meta Tags Generator
 
-Generates SEO, Open Graph, Twitter, and AI-friendly meta tags using website context with optional overrides.
+- SEO title & description
+- Open Graph meta
+- Twitter/X cards
+- AI-friendly tags (max-snippet, authors, canonical)
+- Live preview of search & social appearance
 
 ---
 
 ### 3. Favicon Generator
 
-Creates complete favicon and app icon sets for browsers, iOS, Android, and Windows from a single image or logo.
+- Browser favicon (ico + png)
+- Apple touch icons
+- Android icons
+- Windows tiles
+- HTML `<link>` tag output
 
 ---
 
-### 4. robots.txt Generator
+### 4. HTML Head Exporter
 
-Generates crawler rules for search engines and AI bots with sensible, production-ready defaults.
-
----
-
-### 5. Sitemap.xml Generator
-
-Creates XML sitemaps from user-provided URLs with configurable priority and change frequency.
+- Merge meta, favicon, PWA outputs
+- Single production-ready `<head>` block
+- Copy or download options
 
 ---
 
-### 6. PWA Manifest Generator
+## 🔍 SEO & Discoverability
 
-Generates `manifest.json` for installable web apps, including icons, theme colors, and display modes.
+> Tools that help search engines and AI systems **understand and index** the website.
 
----
+### 5. robots.txt Generator
 
-### 7. Social Preview Image Generator
-
-Generates Open Graph and Twitter preview images using brand color, title, and description.
-
----
-
-### 8. Basic Security Headers Generator
-
-Creates baseline HTTP security headers with explanations and export-ready snippets.
+- Allow/disallow crawlers
+- AI bot compatibility
+- Sitemap reference
+- Production-safe defaults
 
 ---
 
-### 9. HTML Head Exporter
+### 6. Sitemap.xml Generator
 
-Combines outputs from multiple tools into a single, production-ready `<head>` snippet.
-
----
-
-### 10. SEO & AI Readiness Checklist
-
-Audits basic SEO, metadata, and AI discoverability with actionable recommendations.
+- URL-based sitemap creation
+- Priority & change frequency
+- XML output
+- Optional HTML sitemap
 
 ---
 
-## 🧰 Extended Tool Set (Roadmap)
+### 7. Canonical URL Generator
 
-These tools expand coverage and can be added incrementally without affecting core UX.
-
-### 11. Canonical URL Generator
-
-Generates canonical URL tags to avoid duplicate content issues across domains or paths.
+- Generate canonical tags
+- Prevent duplicate content issues
+- Supports multi-domain setups
 
 ---
 
-### 12. JSON-LD Generator
+### 8. JSON-LD (Schema) Generator
 
-Creates structured data for organizations, products, articles, profiles, and websites.
+- Organization schema
+- Website schema
+- Article / Blog schema
+- FAQ schema
+- Validated structured data output
 
 ---
+
+### 9. SEO & AI Readiness Checklist
+
+- Meta completeness checks
+- Crawlability checks
+- AI visibility hints
+- Actionable recommendations
+
+---
+
+## 🌍 Social & Branding
+
+> Tools that control **how the website appears when shared** and how the brand is expressed.
+
+### 10. Social Preview Image Generator
+
+- Open Graph image (1200×630)
+- Twitter/X image
+- Brand color + logo
+- Text overlays
+- Downloadable assets
+
+---
+
+### 11. Logo Usage & Export Helper
+
+- Light / dark logo variants
+- SVG / PNG exports
+- Size recommendations
+- Background compatibility previews
+
+---
+
+### 12. Brand Color Palette Helper
+
+- Generate palette from primary color
+- Accessibility-aware contrast
+- Light / dark variations
+- Export CSS variables
+
+---
+
+## 🚀 Performance & Optimization
+
+> Tools focused on **speed, loading behavior, and perceived performance**.
 
 ### 13. Preload & Preconnect Generator
 
-Generates resource hints for fonts, APIs, and critical assets to improve performance.
+- Font preloading
+- API preconnect
+- CDN optimization hints
+- `<link>` tag outputs
 
 ---
 
 ### 14. Font Loading Strategy Tool
 
-Generates optimized font-loading patterns using modern best practices.
+- `font-display` strategies
+- Preload vs async guidance
+- CSS snippets
+- Fallback font suggestions
 
 ---
 
-### 15. Image Optimization Guide Generator
+### 15. Image Optimization Guide
 
-Provides recommendations for image formats, sizes, compression, and lazy loading.
-
----
-
-### 16. Content Security Policy (CSP) Generator
-
-Builds Content Security Policies with safe defaults and incremental tightening options.
+- Recommended formats (WebP, AVIF)
+- Size & compression guidance
+- Lazy loading hints
+- `<img>` best practices
 
 ---
 
-### 17. Permissions Policy Generator
+### 16. HTML / CSS / JS Minifier
 
-Generates browser permissions policies for controlling access to sensitive features.
-
----
-
-### 18. Brand Color Palette Helper
-
-Generates accessible color palettes derived from a primary brand color.
+- Minify pasted code
+- Size reduction preview
+- Copy minified output
+- No file uploads required
 
 ---
 
-### 19. Logo Usage & Export Helper
+## 🔐 Security & Compliance
 
-Creates logo variants and exports for light/dark backgrounds and multiple formats.
+> Tools that help ensure **baseline security and legal readiness**.
 
----
+### 17. Basic Security Headers Generator
 
-### 20. Platform-Specific Export Tool
-
-Exports generated outputs tailored for platforms like Next.js, Vercel, Netlify, or Nginx.
-
----
-
-### 21. Environment Metadata Generator
-
-Generates environment-aware metadata (production, staging, preview).
+- HSTS
+- X-Content-Type-Options
+- X-Frame-Options
+- Referrer-Policy
+- Platform-specific snippets
 
 ---
 
-### 22. Accessibility Meta Helper
+### 18. Content Security Policy (CSP) Generator
 
-Checks and generates accessibility-related metadata and best-practice hints.
-
----
-
-### 23. Web Standards Checklist
-
-Audits usage of modern web standards and highlights gaps or improvements.
+- Build CSP incrementally
+- Default-safe presets
+- Inline vs external guidance
+- Copyable headers
 
 ---
 
-### 24. File Structure Template Generator
+### 19. Permissions Policy Generator
 
-Generates a clean starter file and folder structure for public assets and configs.
-
----
-
-### 25. Full Website Kit Generator
-
-Bundles selected tools and outputs into a single downloadable production-ready package.
+- Camera, mic, location controls
+- Browser feature restrictions
+- Header output
 
 ---
 
-## Notes
+### 20. Privacy Policy Generator
 
-- All tools are **independent by design**
-- Global website context is **read-only**
-- Tools may override context locally
-- New tools must fit into this structure without altering core UX
+- Basic GDPR/CCPA-ready policy
+- Editable text
+- Downloadable document
 
-This catalog defines the **long-term surface area** of websitekit while keeping the v1 scope focused and achievable.
+---
+
+### 21. Cookie Consent Banner Helper
+
+- Lightweight JS snippet
+- Customizable text
+- GDPR-friendly defaults
+- No backend required
+
+---
+
+## 🎨 UI & Dev Utilities
+
+> Small but **high-frequency tools** developers repeatedly use during setup.
+
+### 22. Placeholder Image Generator
+
+- Custom dimensions
+- Background/text colors
+- SVG / PNG output
+- URL-based usage
+
+---
+
+### 23. Gradient Generator
+
+- Linear & radial gradients
+- Live preview
+- CSS output
+
+---
+
+### 24. SVG Shape / Blob Generator
+
+- Organic SVG shapes
+- Adjustable complexity
+- Downloadable SVGs
+
+---
+
+### 25. QR Code Generator
+
+- URL / text QR codes
+- SVG / PNG exports
+- High-resolution output
+- No watermark
+
+---
+
+## 🧭 UX Notes (Why This Categorization Works)
+
+- **Setup & Identity** always comes first mentally
+- **SEO & Discoverability** is a natural second step
+- **Social & Branding** is where marketers live
+- **Performance** is developer-focused but essential
+- **Security & Compliance** is checklist-driven
+- **Utilities** are fast, low-thinking tools
+
+This structure:
+
+- scales past 50 tools
+- maps cleanly to sidebar navigation
+- works with keyword search
+- avoids cognitive overload
