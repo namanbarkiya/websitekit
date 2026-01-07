@@ -1,4 +1,5 @@
 import React from "react";
+
 import { WithBreadcrumbs } from "@/components/with-breadcrumbs";
 
 export default function NotFound() {

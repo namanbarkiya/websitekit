@@ -5,7 +5,7 @@
   "singleQuote": false,
   "trailingComma": "es5",
   "semi": true,
-  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
   "importOrder": [
     "^react$",
     "^next(.*)$",
@@ -27,11 +27,12 @@
     "^react-tweet$",
     "^motion$",
     "^tw-animate-css$",
+    "",
     "^@/(.*)$",
+    "",
     "^[./]",
+    "",
     "^.*\\.css$"
   ],
-  "importOrderSeparation": false,
-  "importOrderSortSpecifiers": true,
   "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"]
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+
 import { useBreadcrumbs } from "@/lib/hooks/use-breadcrumbs";
 import { BreadcrumbItem } from "@/lib/store/breadcrumb-store";
 

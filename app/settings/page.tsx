@@ -1,5 +1,5 @@
-import React from "react";
 import Link from "next/link";
+
 import { WithBreadcrumbs } from "@/components/with-breadcrumbs";
 
 export default function page() {

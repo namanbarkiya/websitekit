@@ -1,5 +1,7 @@
-import { useBreadcrumbStore } from "@/lib/store/breadcrumb-store";
-import { BreadcrumbItem } from "@/lib/store/breadcrumb-store";
+import {
+  BreadcrumbItem,
+  useBreadcrumbStore,
+} from "@/lib/store/breadcrumb-store";
 
 export function useBreadcrumbs() {
   const {
