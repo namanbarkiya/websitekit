@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { PaletteIcon } from "lucide-react";
 
 import { AppSidebar } from "@/components/app-sidebar";
@@ -49,6 +50,9 @@ function Header() {
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isLandingPage = pathname === "/";
+
   return (
     <div className="h-screen overflow-hidden">
       <SidebarProvider>
@@ -58,7 +62,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="shrink-0">
             <Header />
           </div>
-          <div className="flex-1 overflow-hidden p-6 min-h-0">{children}</div>
+          <div
+            className={`flex-1 p-6 min-h-0 ${
+              isLandingPage ? "overflow-y-auto" : "overflow-hidden"
+            }`}
+          >
+            {children}
+          </div>
         </SidebarInset>
       </SidebarProvider>
     </div>
