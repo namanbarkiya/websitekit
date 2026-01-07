@@ -1,0 +1,352 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import QRCode from "qrcode";
+import type { ToolProps } from "@/lib/utils/tool-registry";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+export interface QRCodeState {
+  content: string;
+  size: number;
+  margin: number;
+  errorCorrectionLevel: "L" | "M" | "Q" | "H";
+  colorDark: string;
+  colorLight: string;
+  format: "svg" | "png";
+}
+
+const DEFAULT_STATE: QRCodeState = {
+  content: "",
+  size: 256,
+  margin: 4,
+  errorCorrectionLevel: "M",
+  colorDark: "#000000",
+  colorLight: "#FFFFFF",
+  format: "svg",
+};
+
+export function QRCodeComponent({
+  assets,
+  state,
+  setState,
+  onGenerate,
+}: ToolProps) {
+  const [qrSvg, setQrSvg] = useState<string>("");
+  const [qrPng, setQrPng] = useState<Blob | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const currentState = (state as Partial<QRCodeState>) || {};
+  const formState: QRCodeState = { ...DEFAULT_STATE, ...currentState };
+
+  // Memoize state values for effect dependencies
+  const stateKey = useMemo(
+    () =>
+      `${formState.content}|${formState.size}|${formState.margin}|${formState.errorCorrectionLevel}|${formState.colorDark}|${formState.colorLight}`,
+    [
+      formState.content,
+      formState.size,
+      formState.margin,
+      formState.errorCorrectionLevel,
+      formState.colorDark,
+      formState.colorLight,
+    ]
+  );
+
+  // Initialize from assets if available
+  useEffect(() => {
+    const currentState = (state as Partial<QRCodeState>) || {};
+    const currentContent = currentState.content || "";
+    if (!currentContent && assets.domain) {
+      setState({
+        ...DEFAULT_STATE,
+        ...currentState,
+        content: assets.domain.startsWith("http")
+          ? assets.domain
+          : `https://${assets.domain}`,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assets.domain]);
+
+  // Generate QR code whenever state changes
+  useEffect(() => {
+    if (!formState.content.trim()) {
+      setQrSvg("");
+      setQrPng(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    const generateQR = async () => {
+      setIsGenerating(true);
+      try {
+        // Generate SVG
+        const svgString = await QRCode.toString(formState.content, {
+          type: "svg",
+          width: formState.size,
+          margin: formState.margin,
+          color: {
+            dark: formState.colorDark,
+            light: formState.colorLight,
+          },
+          errorCorrectionLevel: formState.errorCorrectionLevel,
+        });
+        if (!cancelled) {
+          setQrSvg(svgString);
+        }
+
+        // Generate PNG blob
+        const canvas = document.createElement("canvas");
+        await QRCode.toCanvas(canvas, formState.content, {
+          width: formState.size,
+          margin: formState.margin,
+          color: {
+            dark: formState.colorDark,
+            light: formState.colorLight,
+          },
+          errorCorrectionLevel: formState.errorCorrectionLevel,
+        });
+
+        canvas.toBlob((blob) => {
+          if (!cancelled) {
+            setQrPng(blob);
+            setIsGenerating(false);
+          }
+        }, "image/png");
+      } catch (error) {
+        console.error("Error generating QR code:", error);
+        if (!cancelled) {
+          setIsGenerating(false);
+        }
+      }
+    };
+
+    generateQR();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stateKey]);
+
+  const handleGenerate = () => {
+    if (!formState.content.trim()) {
+      return;
+    }
+
+    const selectedFormat = formState.format;
+    const filename = `qr-code-${Date.now()}.${selectedFormat}`;
+
+    // Always use SVG for preview
+    const previewHtml = qrSvg
+      ? `<div style="display: flex; justify-content: center; align-items: center; padding: 2rem;">
+           ${qrSvg}
+         </div>`
+      : undefined;
+
+    if (selectedFormat === "svg" && qrSvg) {
+      const svgBlob = new Blob([qrSvg], { type: "image/svg+xml" });
+      onGenerate({
+        type: "files",
+        files: [
+          {
+            filename,
+            content: svgBlob,
+            mimeType: "image/svg+xml",
+          },
+        ],
+        preview: previewHtml,
+      });
+    } else if (selectedFormat === "png" && qrPng) {
+      onGenerate({
+        type: "files",
+        files: [
+          {
+            filename,
+            content: qrPng,
+            mimeType: "image/png",
+          },
+        ],
+        preview: previewHtml,
+      });
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Content Input */}
+      <div className="space-y-2">
+        <Label htmlFor="content">Content (URL or Text)</Label>
+        <Input
+          id="content"
+          value={formState.content}
+          onChange={(e) =>
+            setState({ ...formState, content: e.target.value })
+          }
+          placeholder="https://example.com or any text"
+        />
+      </div>
+
+      <Separator />
+
+      {/* Size */}
+      <div className="space-y-2">
+        <Label htmlFor="size">Size (pixels)</Label>
+        <Input
+          id="size"
+          type="number"
+          min="100"
+          max="1000"
+          step="10"
+          value={formState.size}
+          onChange={(e) =>
+            setState({ ...formState, size: parseInt(e.target.value) || 256 })
+          }
+        />
+      </div>
+
+      {/* Margin */}
+      <div className="space-y-2">
+        <Label htmlFor="margin">Margin</Label>
+        <Input
+          id="margin"
+          type="number"
+          min="0"
+          max="10"
+          value={formState.margin}
+          onChange={(e) =>
+            setState({ ...formState, margin: parseInt(e.target.value) || 4 })
+          }
+        />
+      </div>
+
+      {/* Error Correction Level */}
+      <div className="space-y-2">
+        <Label htmlFor="errorCorrection">Error Correction Level</Label>
+        <Select
+          value={formState.errorCorrectionLevel}
+          onValueChange={(value: "L" | "M" | "Q" | "H") =>
+            setState({ ...formState, errorCorrectionLevel: value })
+          }
+        >
+          <SelectTrigger id="errorCorrection">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="L">L (Low - ~7%)</SelectItem>
+            <SelectItem value="M">M (Medium - ~15%)</SelectItem>
+            <SelectItem value="Q">Q (Quartile - ~25%)</SelectItem>
+            <SelectItem value="H">H (High - ~30%)</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <Separator />
+
+      {/* Colors */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="colorDark">Dark Color</Label>
+          <div className="flex gap-2">
+            <Input
+              id="colorDark"
+              type="color"
+              value={formState.colorDark}
+              onChange={(e) =>
+                setState({ ...formState, colorDark: e.target.value })
+              }
+              className="w-16 h-10"
+            />
+            <Input
+              type="text"
+              value={formState.colorDark}
+              onChange={(e) =>
+                setState({ ...formState, colorDark: e.target.value })
+              }
+              placeholder="#000000"
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="colorLight">Light Color</Label>
+          <div className="flex gap-2">
+            <Input
+              id="colorLight"
+              type="color"
+              value={formState.colorLight}
+              onChange={(e) =>
+                setState({ ...formState, colorLight: e.target.value })
+              }
+              className="w-16 h-10"
+            />
+            <Input
+              type="text"
+              value={formState.colorLight}
+              onChange={(e) =>
+                setState({ ...formState, colorLight: e.target.value })
+              }
+              placeholder="#FFFFFF"
+            />
+          </div>
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Format */}
+      <div className="space-y-2">
+        <Label htmlFor="format">Export Format</Label>
+        <Select
+          value={formState.format}
+          onValueChange={(value: "svg" | "png") =>
+            setState({ ...formState, format: value })
+          }
+        >
+          <SelectTrigger id="format">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="svg">SVG (Scalable Vector)</SelectItem>
+            <SelectItem value="png">PNG (Raster Image)</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Preview */}
+      {qrSvg && (
+        <>
+          <Separator />
+          <div className="space-y-2">
+            <Label>Preview</Label>
+            <div className="flex items-center justify-center p-6 border rounded-lg bg-muted/50">
+              {isGenerating ? (
+                <div className="text-sm text-muted-foreground">
+                  Generating QR code...
+                </div>
+              ) : (
+                <div
+                  dangerouslySetInnerHTML={{ __html: qrSvg }}
+                  className="flex items-center justify-center"
+                />
+              )}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Generate Button */}
+      <Button
+        onClick={handleGenerate}
+        disabled={!formState.content.trim() || isGenerating}
+        className="w-full"
+      >
+        {isGenerating ? "Generating..." : "Generate QR Code"}
+      </Button>
+    </div>
+  );
+}

@@ -7,3 +7,4 @@
 
 // Import all tools here - this triggers registration
 import "./meta-tags";
+import "./qr-code";
