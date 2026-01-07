@@ -2,8 +2,8 @@
 
 This document lists all planned tools for **websitekit**, split into two categories:
 
--   **Top 10 (v1 launch tools)**
--   **Extended Tool Set (roadmap)**
+- **Top 10 (v1 launch tools)**
+- **Extended Tool Set (roadmap)**
 
 Each tool is designed to be **independent, context-aware, and scalable**.
 
@@ -170,9 +170,9 @@ Bundles selected tools and outputs into a single downloadable production-ready p
 
 ## Notes
 
--   All tools are **independent by design**
--   Global website context is **read-only**
--   Tools may override context locally
--   New tools must fit into this structure without altering core UX
+- All tools are **independent by design**
+- Global website context is **read-only**
+- Tools may override context locally
+- New tools must fit into this structure without altering core UX
 
 This catalog defines the **long-term surface area** of websitekit while keeping the v1 scope focused and achievable.
