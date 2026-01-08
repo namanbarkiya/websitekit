@@ -182,9 +182,16 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
 
-  const isItemActive = (item: SidebarNavItem) =>
-    pathname === item.href ||
-    (item.href !== "/" && pathname?.startsWith(`${item.href}/`));
+  const isItemActive = (item: SidebarNavItem) => {
+    // Special-case: "/tools" should not be active on "/tools/<toolId>"
+    if (item.href === "/tools") {
+      return pathname === "/tools";
+    }
+    return (
+      pathname === item.href ||
+      (item.href !== "/" && pathname?.startsWith(`${item.href}/`))
+    );
+  };
 
   // Track which categories are open
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(

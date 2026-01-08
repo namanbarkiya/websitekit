@@ -53,9 +53,9 @@ export interface SidebarConfig {
 export const sidebarConfig: SidebarConfig = {
   main: [
     {
-      title: "Get Started",
-      href: "/",
-      icon: ZapIcon,
+      title: "All Tools",
+      href: "/tools",
+      icon: HammerIcon,
       description: "Return to the homepage",
       keywords: ["home", "start", "dashboard", "main", "landing"],
     },

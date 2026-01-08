@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { notFound, useParams } from "next/navigation";
 import { InfoIcon, Zap } from "lucide-react";
 
@@ -25,6 +25,8 @@ import {
 
 // Initialize tools (this triggers registration)
 import "@/lib/tools";
+
+const RECENTS_STORAGE_KEY = "websitekit-recent-tools";
 
 function findToolMeta(toolId: string): SidebarNavItem | undefined {
   for (const category of sidebarConfig.categories) {
@@ -85,6 +87,22 @@ export default function ToolHostPage() {
       setIsGenerating(false);
     }
   };
+
+  // Track recent tools locally (for the /tools browse page)
+  useEffect(() => {
+    try {
+      const href = `/tools/${toolId}`;
+      const raw = localStorage.getItem(RECENTS_STORAGE_KEY);
+      const arr = raw ? (JSON.parse(raw) as unknown) : [];
+      const list = Array.isArray(arr)
+        ? arr.filter((x) => typeof x === "string")
+        : [];
+      const next = [href, ...list.filter((x) => x !== href)].slice(0, 10);
+      localStorage.setItem(RECENTS_STORAGE_KEY, JSON.stringify(next));
+    } catch {
+      // ignore
+    }
+  }, [toolId]);
 
   const ToolComponent = toolDef?.Component;
   const effectiveGenerate = headerGenerate?.onGenerate
