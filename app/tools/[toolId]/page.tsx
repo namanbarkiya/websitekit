@@ -135,13 +135,14 @@ export default function ToolHostPage() {
             <div className="shrink-0 flex items-center gap-2">
               {headerAction}
               <Button
-                size="sm"
-                className="gap-2"
+                size="icon-sm"
                 onClick={handleHeaderGenerate}
                 disabled={generateDisabled}
+                aria-label={generateLabel}
+                title={generateLabel}
               >
                 <Zap className="size-4" />
-                {generateLabel}
+                <span className="sr-only">{generateLabel}</span>
               </Button>
             </div>
           </div>

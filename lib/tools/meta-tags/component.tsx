@@ -1,12 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDownIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import type { ToolProps } from "@/lib/utils/tool-registry";
 
 import { generatePreviewHTML } from "./preview";
@@ -65,6 +69,10 @@ export function MetaTagsComponent({
   onGenerate,
   setHeaderGenerate,
 }: ToolProps) {
+  const [basicOpen, setBasicOpen] = useState(true);
+  const [ogOpen, setOgOpen] = useState(false);
+  const [twitterOpen, setTwitterOpen] = useState(false);
+
   // Memoize assets for stable reference
   const assetsKey = useMemo(
     () =>
@@ -206,12 +214,25 @@ export function MetaTagsComponent({
   }, [handleGenerate, setHeaderGenerate]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Basic SEO Meta Tags */}
-      <div className="space-y-4">
-        <div>
-          <h3 className="text-sm font-semibold mb-3">Basic SEO</h3>
-          <div className="space-y-4">
+      <Collapsible open={basicOpen} onOpenChange={setBasicOpen} className="rounded-lg border">
+        <CollapsibleTrigger asChild>
+          <button
+            type="button"
+            className="flex w-full items-center justify-between px-4 py-3 text-left"
+          >
+            <span className="text-sm font-semibold">Basic SEO</span>
+            <ChevronDownIcon
+              className={[
+                "size-4 text-muted-foreground transition-transform",
+                basicOpen ? "rotate-180" : "",
+              ].join(" ")}
+            />
+          </button>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div className="px-4 pb-4 space-y-4">
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>
               <Input
@@ -274,16 +295,27 @@ export function MetaTagsComponent({
               />
             </div>
           </div>
-        </div>
-      </div>
-
-      <Separator />
+        </CollapsibleContent>
+      </Collapsible>
 
       {/* Open Graph Meta Tags */}
-      <div className="space-y-4">
-        <div>
-          <h3 className="text-sm font-semibold mb-3">Open Graph</h3>
-          <div className="space-y-4">
+      <Collapsible open={ogOpen} onOpenChange={setOgOpen} className="rounded-lg border">
+        <CollapsibleTrigger asChild>
+          <button
+            type="button"
+            className="flex w-full items-center justify-between px-4 py-3 text-left"
+          >
+            <span className="text-sm font-semibold">Open Graph</span>
+            <ChevronDownIcon
+              className={[
+                "size-4 text-muted-foreground transition-transform",
+                ogOpen ? "rotate-180" : "",
+              ].join(" ")}
+            />
+          </button>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div className="px-4 pb-4 space-y-4">
             <div className="space-y-2">
               <Label htmlFor="ogTitle">OG:Title</Label>
               <Input
@@ -347,16 +379,31 @@ export function MetaTagsComponent({
               />
             </div>
           </div>
-        </div>
-      </div>
-
-      <Separator />
+        </CollapsibleContent>
+      </Collapsible>
 
       {/* Twitter Card Meta Tags */}
-      <div className="space-y-4">
-        <div>
-          <h3 className="text-sm font-semibold mb-3">Twitter Card</h3>
-          <div className="space-y-4">
+      <Collapsible
+        open={twitterOpen}
+        onOpenChange={setTwitterOpen}
+        className="rounded-lg border"
+      >
+        <CollapsibleTrigger asChild>
+          <button
+            type="button"
+            className="flex w-full items-center justify-between px-4 py-3 text-left"
+          >
+            <span className="text-sm font-semibold">Twitter Card</span>
+            <ChevronDownIcon
+              className={[
+                "size-4 text-muted-foreground transition-transform",
+                twitterOpen ? "rotate-180" : "",
+              ].join(" ")}
+            />
+          </button>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div className="px-4 pb-4 space-y-4">
             <div className="space-y-2">
               <Label htmlFor="twitterCard">Card Type</Label>
               <Input
@@ -421,14 +468,8 @@ export function MetaTagsComponent({
               />
             </div>
           </div>
-        </div>
-      </div>
-
-      <Separator />
-
-      <Button onClick={handleGenerate} className="w-full">
-        Generate Meta Tags
-      </Button>
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 }

@@ -3,9 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronRightIcon, LockIcon, PaletteIcon } from "lucide-react";
-
-import { AssetModal } from "@/components/asset-modal";
+import { ChevronRightIcon, LockIcon } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { SettingsPopover } from "@/components/settings-popover";
 import { SidebarSearch } from "@/components/sidebar-search";
@@ -183,7 +181,6 @@ function CollapsibleCategory({
 export function AppSidebar() {
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
-  const [assetModalOpen, setAssetModalOpen] = useState(false);
 
   const isItemActive = (item: SidebarNavItem) =>
     pathname === item.href ||
@@ -216,6 +213,7 @@ export function AppSidebar() {
           <Logo
             variant="icon"
             size="sm"
+            href="/"
             className="hidden group-data-[collapsible=icon]:flex"
           />
           <Logo
@@ -251,27 +249,6 @@ export function AppSidebar() {
         {/* Divider */}
         <Separator className="my-2" />
 
-        {/* Website Assets - Configuration (at top, separate from tools) */}
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  tooltip="Website Assets"
-                  onClick={() => setAssetModalOpen(true)}
-                  className="cursor-pointer"
-                >
-                  <PaletteIcon />
-                  <span className="flex-1 truncate">Website Assets</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {/* Divider */}
-        <Separator className="my-2" />
-
         {/* Most Used (derived from config item flag) */}
         {(() => {
           const mostUsedItems = sidebarConfig.categories
@@ -282,7 +259,7 @@ export function AppSidebar() {
 
           return (
             <SidebarGroup>
-              <SidebarGroupLabel>Most Used</SidebarGroupLabel>
+              <SidebarGroupLabel>Live</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {mostUsedItems.map((item) => (
@@ -320,7 +297,6 @@ export function AppSidebar() {
       </SidebarFooter>
 
       <SidebarRail />
-      <AssetModal open={assetModalOpen} onOpenChange={setAssetModalOpen} />
     </Sidebar>
   );
 }

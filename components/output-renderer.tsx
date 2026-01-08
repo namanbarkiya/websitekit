@@ -175,31 +175,40 @@ export function OutputRenderer({
           className="w-full flex-1 flex flex-col min-h-0 overflow-hidden"
         >
           {/* Header with Tabs and actions */}
-          <div className="flex items-center justify-between border-b p-4 shrink-0 gap-4">
-            <TabsList className="w-auto">
-              {availableTabs.map((tab) => (
-                <TabsTrigger key={tab} value={tab} className="px-6">
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            <div className="flex items-center gap-2">
+          <div className="border-b p-3 sm:p-4 shrink-0">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0 overflow-x-auto">
+                <TabsList className="w-max">
+                  {availableTabs.map((tab) => (
+                    <TabsTrigger
+                      key={tab}
+                      value={tab}
+                      className="px-3 sm:px-6 flex-none"
+                    >
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </div>
+              <div className="flex items-center gap-2 justify-end">
               {canCopy && (
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handleCopy}
-                  className="gap-2"
+                  className="gap-2 px-2 sm:px-3"
+                  aria-label={copied ? "Copied" : "Copy"}
+                  title={copied ? "Copied" : "Copy"}
                 >
                   {copied ? (
                     <>
                       <CheckIcon className="size-4" />
-                      Copied
+                      <span className="hidden sm:inline">Copied</span>
                     </>
                   ) : (
                     <>
                       <CopyIcon className="size-4" />
-                      Copy
+                      <span className="hidden sm:inline">Copy</span>
                     </>
                   )}
                 </Button>
@@ -209,12 +218,15 @@ export function OutputRenderer({
                   variant="outline"
                   size="sm"
                   onClick={handleDownload}
-                  className="gap-2"
+                  className="gap-2 px-2 sm:px-3"
+                  aria-label="Download"
+                  title="Download"
                 >
                   <DownloadIcon className="size-4" />
-                  Download
+                  <span className="hidden sm:inline">Download</span>
                 </Button>
               )}
+              </div>
             </div>
           </div>
 

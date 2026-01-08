@@ -3,11 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  ArrowRightIcon,
   BotIcon,
-  CheckIcon,
   GaugeIcon,
-  HammerIcon,
   LockIcon,
   PaletteIcon,
   ShareIcon,
@@ -16,9 +13,11 @@ import {
   ZapIcon,
 } from "lucide-react";
 
+import { AssetForm } from "@/components/asset-form";
 import { AssetModal } from "@/components/asset-modal";
 import { Button } from "@/components/ui/button";
 import { sidebarConfig } from "@/config/sidebar";
+import { useHasAssets } from "@/lib/hooks/use-website-assets";
 
 const categoryMeta: Record<
   string,
@@ -58,84 +57,83 @@ const categoryMeta: Record<
 
 export default function Home() {
   const [assetModalOpen, setAssetModalOpen] = useState(false);
+  const hasAssets = useHasAssets();
 
-  const totalTools = sidebarConfig.categories.reduce(
-    (acc, cat) => acc + cat.items.length,
-    0
-  );
   const unlockedTools = sidebarConfig.categories.reduce(
     (acc, cat) => acc + cat.items.filter((item) => !item.locked).length,
     0
   );
 
+  const liveNowTools = sidebarConfig.categories
+    .flatMap((cat) => cat.items)
+    .filter((item) => !item.locked)
+    .slice(0, 6);
+
   return (
     <div className="pb-16 px-4 md:px-6 lg:px-8 overflow-x-hidden">
-      {/* Hero */}
-      <section className="relative py-2 md:py-8">
+      {/* Section 1: Head + tagline */}
+      <section className="relative py-4 md:py-8">
         {/* Ambient Background */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute top-0 right-0 size-[300px] md:size-[500px] rounded-full bg-primary/5 blur-[80px] md:blur-[100px]" />
           <div className="absolute bottom-0 left-0 size-[250px] md:size-[400px] rounded-full bg-primary/5 blur-[60px] md:blur-[80px]" />
         </div>
 
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 text-sm text-primary mb-8">
-            <span className="relative flex size-2">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
-              <span className="relative inline-flex size-2 rounded-full bg-primary" />
-            </span>
-            {unlockedTools} tools ready
-            <span className="text-muted-foreground">•</span>
-            <span className="text-muted-foreground">No signup required</span>
-          </div>
-
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.95] mb-6">
-            Website setup,
-            <br />
-            <span className="text-primary">done right.</span>
-          </h1>
-
-          <p className="text-xl text-muted-foreground leading-relaxed mb-10 max-w-xl">
-            Meta tags, favicons, sitemaps, security headers—everything your site
-            needs to launch, generated in seconds.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-4 mb-16">
-            <Button
-              onClick={() => setAssetModalOpen(true)}
-              className="group inline-flex items-center gap-2 px-7 py-4 h-auto rounded-full font-medium transition-all hover:gap-3 hover:shadow-xl hover:shadow-primary/20"
-            >
-              Add your assets
-              {/* Wrap icon so Button's `has-[>svg]:px-*` rule doesn't override our custom padding */}
-              <span className="inline-flex">
-                <ArrowRightIcon className="size-4" />
-              </span>
-            </Button>
-            <Link
-              href="/tools"
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors px-4 py-4"
-            >
-              <HammerIcon className="size-4" />
-              All Tools →
-            </Link>
-          </div>
-
-          {/* Inline Stats */}
-          <div className="flex items-center gap-8 text-sm">
+        <div className="max-w-6xl">
+          <div className="grid lg:grid-cols-2 gap-y-14 lg:gap-x-24 items-start">
             <div>
-              <span className="text-3xl font-bold">{totalTools}</span>
-              <span className="text-muted-foreground ml-2">tools</span>
+              <div className="inline-flex items-center gap-2 text-sm text-primary mb-4">
+                <span className="relative flex size-2">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
+                  <span className="relative inline-flex size-2 rounded-full bg-primary" />
+                </span>
+                {unlockedTools} tools ready
+                <span className="text-muted-foreground">•</span>
+                <span className="text-muted-foreground">No signup required</span>
+              </div>
+
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05] mb-3">
+                Every FREAKN&apos; website tool, in one place.
+              </h1>
+
+              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
+                Set your website assets once, then generate production-ready
+                outputs (meta tags, favicons, sitemaps, headers) in seconds.
+              </p>
+
+              <div className="mt-4 flex items-center gap-3">
+                <Button asChild>
+                  <Link href="/tools">Browse tools</Link>
+                </Button>
+                {hasAssets ? (
+                  <Button
+                    variant="outline"
+                    onClick={() => setAssetModalOpen(true)}
+                  >
+                    Edit assets
+                  </Button>
+                ) : null}
+              </div>
             </div>
-            <div>
-              <span className="text-3xl font-bold">
-                {sidebarConfig.categories.length}
-              </span>
-              <span className="text-muted-foreground ml-2">categories</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckIcon className="size-5 text-emerald-500" />
-              <span className="text-muted-foreground">Free</span>
-            </div>
+
+            {!hasAssets ? (
+              <div className="lg:pt-1">
+                <div className="mb-3">
+                  <h2 className="text-lg font-semibold">Set your assets</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Saved locally in your browser
+                  </p>
+                </div>
+                <div className="rounded-2xl border bg-card p-5">
+                  <AssetForm
+                    active
+                    variant="compact"
+                    showCancel={false}
+                    saveLabel="Save"
+                  />
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </section>
@@ -143,13 +141,56 @@ export default function Home() {
       {/* Divider */}
       <div className="h-px bg-linear-to-r from-transparent via-border to-transparent my-8" />
 
-      {/* Categories */}
+      {/* Section 3: Tools list (as-is) + Live now */}
       <section className="py-8">
         <div className="flex items-baseline justify-between mb-12">
           <h2 className="text-3xl font-bold">Tools</h2>
           <span className="text-sm text-muted-foreground tabular-nums">
             {unlockedTools} available
           </span>
+        </div>
+
+        {/* Live now */}
+        <div className="mb-14">
+          <div className="flex items-baseline justify-between mb-4">
+            <h3 className="text-lg font-semibold inline-flex items-center gap-2">
+              <span className="relative flex size-2">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex size-2 rounded-full bg-primary" />
+              </span>
+              Live now
+            </h3>
+            <Link
+              href="/tools"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              View all →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4">
+            {liveNowTools.map((item) => {
+              const ItemIcon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="group flex items-start gap-4 py-3 transition-all hover:translate-x-1"
+                >
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <ItemIcon className="size-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium mb-0.5 group-hover:text-primary">
+                      {item.title}
+                    </p>
+                    <p className="text-sm text-muted-foreground line-clamp-1">
+                      {item.description}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
 
         <div className="space-y-16">
@@ -226,65 +267,6 @@ export default function Home() {
             );
           })}
         </div>
-      </section>
-
-      {/* Divider */}
-      <div className="h-px bg-linear-to-r from-transparent via-border to-transparent my-8" />
-
-      {/* How It Works */}
-      <section className="py-8">
-        <h2 className="text-3xl font-bold mb-12">How it works</h2>
-
-        <div className="grid md:grid-cols-3 gap-12">
-          {[
-            {
-              num: "01",
-              title: "Set your brand",
-              desc: "Enter site name, domain, and color once. They'll be used across all tools.",
-              icon: PaletteIcon,
-            },
-            {
-              num: "02",
-              title: "Generate outputs",
-              desc: "Pick any tool. Your info auto-fills. Customize if needed.",
-              icon: ZapIcon,
-            },
-            {
-              num: "03",
-              title: "Copy or download",
-              desc: "Get production-ready code, files, or images. Ship it.",
-              icon: CheckIcon,
-            },
-          ].map((step) => (
-            <div key={step.num} className="relative">
-              <span className="text-6xl font-bold text-muted/30 absolute -top-2 -left-2">
-                {step.num}
-              </span>
-              <div className="relative pt-8">
-                <step.icon className="size-6 text-primary mb-4" />
-                <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {step.desc}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-16 text-center">
-        <p className="text-muted-foreground mb-6">
-          Ready to set up your website properly?
-        </p>
-        <button
-          type="button"
-          onClick={() => setAssetModalOpen(true)}
-          className="group inline-flex items-center gap-2 text-lg font-medium text-primary hover:gap-3 transition-all"
-        >
-          Set Website Assets
-          <ArrowRightIcon className="size-5" />
-        </button>
       </section>
 
       <AssetModal open={assetModalOpen} onOpenChange={setAssetModalOpen} />
