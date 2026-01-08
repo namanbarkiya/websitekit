@@ -10,7 +10,14 @@ interface PreviewProps {
   state: MetaTagsState;
 }
 
-export function generatePreviewHTML(state: MetaTagsState): string {
+export function generatePreviewHTML(
+  state: MetaTagsState,
+  primaryColor?: string
+): string {
+  // Use primary color from assets for fallback backgrounds when no image
+  // primaryColor is in hex format (e.g., "#3b82f6")
+  // For CSS variable fallback, we need to use a computed value or default blue
+  const brandColor = primaryColor || "#3b82f6";
   const title = state.title || state.ogTitle || "Untitled";
   const description = state.description || state.ogDescription || "";
   const url = state.canonicalUrl || state.ogUrl || "";
@@ -48,14 +55,14 @@ export function generatePreviewHTML(state: MetaTagsState): string {
     <div class="text-xs text-muted-foreground mb-2 font-medium">X (Formerly Twitter)</div>
     <div class="border rounded-lg overflow-hidden bg-background max-w-lg">
       ${image
-        ? `<div class="aspect-[1.91/1] bg-gradient-to-br from-blue-500 to-blue-600 relative overflow-hidden">
+        ? `<div class="aspect-[1.91/1] relative overflow-hidden" style="background-color: ${brandColor};">
             <img src="${escapeHtml(image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-            <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-6" style="display: none;">
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-6" style="display: none; background-color: ${brandColor};">
               <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
               <div class="text-xl font-semibold">${escapeHtml(truncate(title, 30))}</div>
             </div>
           </div>`
-        : `<div class="aspect-[1.91/1] bg-gradient-to-br from-blue-500 to-blue-600 flex flex-col items-center justify-center text-white p-6">
+        : `<div class="aspect-[1.91/1] flex flex-col items-center justify-center text-white p-6" style="background-color: ${brandColor};">
             <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
             <div class="text-xl font-semibold">${escapeHtml(truncate(title, 30))}</div>
           </div>`}
@@ -74,14 +81,14 @@ export function generatePreviewHTML(state: MetaTagsState): string {
     <div class="text-xs text-muted-foreground mb-2 font-medium">Facebook</div>
     <div class="border rounded-lg overflow-hidden bg-background max-w-lg">
       ${image
-        ? `<div class="aspect-[1.91/1] bg-gradient-to-br from-blue-500 to-blue-600 relative overflow-hidden">
+        ? `<div class="aspect-[1.91/1] relative overflow-hidden" style="background-color: ${brandColor};">
             <img src="${escapeHtml(image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-            <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-6" style="display: none;">
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-6" style="display: none; background-color: ${brandColor};">
               <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
               <div class="text-xl font-semibold">${escapeHtml(truncate(title, 30))}</div>
             </div>
           </div>`
-        : `<div class="aspect-[1.91/1] bg-gradient-to-br from-blue-500 to-blue-600 flex flex-col items-center justify-center text-white p-6">
+        : `<div class="aspect-[1.91/1] flex flex-col items-center justify-center text-white p-6" style="background-color: ${brandColor};">
             <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
             <div class="text-xl font-semibold">${escapeHtml(truncate(title, 30))}</div>
           </div>`}
@@ -98,13 +105,13 @@ export function generatePreviewHTML(state: MetaTagsState): string {
     <div class="text-xs text-muted-foreground mb-2 font-medium">Pinterest</div>
     <div class="border rounded-lg overflow-hidden bg-background max-w-xs">
       ${image
-        ? `<div class="aspect-square bg-gradient-to-br from-blue-500 to-blue-600 relative overflow-hidden">
+        ? `<div class="aspect-square relative overflow-hidden" style="background-color: ${brandColor};">
             <img src="${escapeHtml(image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-            <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-6" style="display: none;">
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-6" style="display: none; background-color: ${brandColor};">
               <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
             </div>
           </div>`
-        : `<div class="aspect-square bg-gradient-to-br from-blue-500 to-blue-600 flex flex-col items-center justify-center text-white p-6">
+        : `<div class="aspect-square flex flex-col items-center justify-center text-white p-6" style="background-color: ${brandColor};">
             <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
           </div>`}
       ${title ? `<div class="p-3">
@@ -118,7 +125,7 @@ export function generatePreviewHTML(state: MetaTagsState): string {
     <div class="text-xs text-muted-foreground mb-2 font-medium">Slack</div>
     <div class="border rounded-lg p-3 bg-background max-w-lg">
       <div class="flex items-start gap-2 mb-2">
-        <div class="w-4 h-4 rounded bg-blue-500 flex-shrink-0 mt-0.5"></div>
+        <div class="w-4 h-4 rounded shrink-0 mt-0.5" style="background-color: ${brandColor};"></div>
         <div class="text-sm font-medium text-muted-foreground">${escapeHtml(siteName || domain || "Link")}</div>
       </div>
       ${title ? `<div class="text-blue-600 dark:text-blue-400 font-semibold text-sm mb-1 leading-tight">${escapeHtml(title)}</div>` : ""}

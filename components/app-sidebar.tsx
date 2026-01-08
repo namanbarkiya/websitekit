@@ -1,11 +1,12 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronRightIcon, LockIcon, PaletteIcon } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
 
 import { AssetModal } from "@/components/asset-modal";
+import { Logo } from "@/components/logo";
 import { SettingsPopover } from "@/components/settings-popover";
 import { SidebarSearch } from "@/components/sidebar-search";
 import { Badge } from "@/components/ui/badge";
@@ -257,16 +258,18 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
-        <div className="flex items-center gap-2 py-1.5">
-          <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md font-semibold px-2">
-            W
-          </div>
-          <div className="group-data-[collapsible=icon]:hidden">
-            <div className="text-sm font-semibold leading-none">WebsiteKit</div>
-            <div className="text-muted-foreground text-xs">
-              Kickstart your site!
-            </div>
-          </div>
+        <div className="flex items-center gap-0 py-1.5 group-data-[collapsible=icon]:justify-center">
+          <Logo
+            variant="icon"
+            size="sm"
+            className="hidden group-data-[collapsible=icon]:flex"
+          />
+          <Logo
+            variant="full-with-tagline"
+            size="sm"
+            href="/"
+            className="group-data-[collapsible=icon]:hidden"
+          />
         </div>
         <SidebarSearch />
       </SidebarHeader>
@@ -320,7 +323,9 @@ export function AppSidebar() {
             isItemActive={isItemActive}
             onNavigate={handleNavigate}
             isOpen={openCategories[category.title] || false}
-            onOpenChange={(open) => handleCategoryOpenChange(category.title, open)}
+            onOpenChange={(open) =>
+              handleCategoryOpenChange(category.title, open)
+            }
             onCategoryClickWhileCollapsed={handleCategoryClickWhileCollapsed}
           />
         ))}

@@ -24,8 +24,8 @@ const categoryMeta: Record<
 > = {
   "Setup & Identity": {
     icon: PaletteIcon,
-    color: "text-amber-600 dark:text-amber-400",
-    accent: "bg-amber-500/10",
+    color: "text-primary",
+    accent: "bg-primary/10",
   },
   "SEO & Discoverability": {
     icon: BotIcon,

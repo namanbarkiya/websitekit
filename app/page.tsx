@@ -23,8 +23,8 @@ const categoryMeta: Record<
 > = {
   "Setup & Identity": {
     icon: PaletteIcon,
-    color: "text-amber-600 dark:text-amber-400",
-    bg: "bg-amber-500",
+    color: "text-primary",
+    bg: "bg-primary",
   },
   "SEO & Discoverability": {
     icon: BotIcon,
@@ -70,7 +70,7 @@ export default function Home() {
         {/* Ambient Background */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute top-0 right-0 size-[300px] md:size-[500px] rounded-full bg-primary/5 blur-[80px] md:blur-[100px]" />
-          <div className="absolute bottom-0 left-0 size-[250px] md:size-[400px] rounded-full bg-amber-500/5 blur-[60px] md:blur-[80px]" />
+          <div className="absolute bottom-0 left-0 size-[250px] md:size-[400px] rounded-full bg-primary/5 blur-[60px] md:blur-[80px]" />
         </div>
 
         <div className="max-w-3xl">
@@ -87,7 +87,7 @@ export default function Home() {
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.95] mb-6">
             Website setup,
             <br />
-            <span className="bg-gradient-to-r from-primary via-orange-500 to-amber-500 bg-clip-text text-transparent">
+            <span className="text-primary">
               done right.
             </span>
           </h1>

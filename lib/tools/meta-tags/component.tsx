@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import type { ToolProps } from "@/lib/utils/tool-registry";
+
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import type { ToolProps } from "@/lib/utils/tool-registry";
+
 import { generatePreviewHTML } from "./preview";
 
 export interface MetaTagsState {
@@ -64,7 +66,8 @@ export function MetaTagsComponent({
 }: ToolProps) {
   // Memoize assets for stable reference
   const assetsKey = useMemo(
-    () => `${assets.name}|${assets.domain}|${assets.description}|${assets.logo}`,
+    () =>
+      `${assets.name}|${assets.domain}|${assets.description}|${assets.logo}`,
     [assets.name, assets.domain, assets.description, assets.logo]
   );
 
@@ -151,7 +154,7 @@ export function MetaTagsComponent({
 
   useEffect(() => {
     const metaState = { ...DEFAULT_STATE, ...currentState };
-    const preview = generatePreviewHTML(metaState);
+    const preview = generatePreviewHTML(metaState, assets.primaryColor);
     const html = generateMetaTagsHTML(metaState);
 
     // Only update if there's meaningful content
@@ -178,7 +181,7 @@ export function MetaTagsComponent({
   const handleGenerate = () => {
     const metaState = { ...DEFAULT_STATE, ...currentState };
     const html = generateMetaTagsHTML(metaState);
-    const preview = generatePreviewHTML(metaState);
+    const preview = generatePreviewHTML(metaState, assets.primaryColor);
     onGenerate({
       type: "html",
       content: html,
@@ -449,21 +452,29 @@ function generateMetaTagsHTML(state: MetaTagsState): string {
   }
 
   if (state.canonicalUrl) {
-    tags.push(`<link rel="canonical" href="${escapeHtml(state.canonicalUrl)}" />`);
+    tags.push(
+      `<link rel="canonical" href="${escapeHtml(state.canonicalUrl)}" />`
+    );
   }
 
   // Open Graph / Facebook
   tags.push("\n<!-- Open Graph / Facebook -->");
   if (state.ogType) {
-    tags.push(`<meta property="og:type" content="${escapeHtml(state.ogType)}" />`);
+    tags.push(
+      `<meta property="og:type" content="${escapeHtml(state.ogType)}" />`
+    );
   }
 
   if (state.ogUrl) {
-    tags.push(`<meta property="og:url" content="${escapeHtml(state.ogUrl)}" />`);
+    tags.push(
+      `<meta property="og:url" content="${escapeHtml(state.ogUrl)}" />`
+    );
   }
 
   if (state.ogTitle) {
-    tags.push(`<meta property="og:title" content="${escapeHtml(state.ogTitle)}" />`);
+    tags.push(
+      `<meta property="og:title" content="${escapeHtml(state.ogTitle)}" />`
+    );
   }
 
   if (state.ogDescription) {
@@ -473,7 +484,9 @@ function generateMetaTagsHTML(state: MetaTagsState): string {
   }
 
   if (state.ogImage) {
-    tags.push(`<meta property="og:image" content="${escapeHtml(state.ogImage)}" />`);
+    tags.push(
+      `<meta property="og:image" content="${escapeHtml(state.ogImage)}" />`
+    );
   }
 
   if (state.ogSiteName) {
