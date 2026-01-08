@@ -4,10 +4,7 @@
  * Helper functions for handling tool outputs
  */
 
-import type {
-  ToolOutput,
-  ToolOutputFile,
-} from "@/lib/utils/tool-registry";
+import type { ToolOutput, ToolOutputFile } from "@/lib/utils/tool-registry";
 
 /**
  * Output format options for rendering
@@ -44,10 +41,7 @@ export function formatOutput(
 
   if (options.minify) {
     // Basic minification (remove extra whitespace)
-    formatted = formatted
-      .replace(/\s+/g, " ")
-      .replace(/>\s+</g, "><")
-      .trim();
+    formatted = formatted.replace(/\s+/g, " ").replace(/>\s+</g, "><").trim();
   } else {
     // Basic formatting
     if (options.indent !== undefined) {
@@ -103,9 +97,12 @@ export function downloadFile(
   content: string | Blob,
   options: FileDownloadOptions = {}
 ): void {
-  const blob = content instanceof Blob ? content : new Blob([content], {
-    type: options.mimeType || "text/plain",
-  });
+  const blob =
+    content instanceof Blob
+      ? content
+      : new Blob([content], {
+          type: options.mimeType || "text/plain",
+        });
 
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -131,7 +128,6 @@ export async function downloadFilesAsZip(
   // Dynamic import for JSZip (only load when needed)
   try {
     // Try to import JSZip (optional dependency)
-    // @ts-expect-error - jszip is an optional dependency
     const JSZipModule = await import("jszip");
     const JSZip = JSZipModule.default || JSZipModule;
 
@@ -175,8 +171,7 @@ export async function downloadFilesAsZip(
 export function getSyntaxLanguage(output: ToolOutput): string {
   if (output.type === "html") return "html";
   if (output.type === "json") return "json";
-  if (output.type === "text" && output.mimeType?.includes("css"))
-    return "css";
+  if (output.type === "text" && output.mimeType?.includes("css")) return "css";
   if (output.type === "text" && output.mimeType?.includes("javascript"))
     return "javascript";
   if (output.type === "text" && output.mimeType?.includes("xml")) return "xml";
