@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WebsiteKit
 
-## Getting Started
+**WebsiteKit** is a toolkit that helps you prepare websites for production by generating essential setup assets and best‑practice snippets in one place.
 
-First, run the development server:
+- **Live**: `https://websitekit.dev`
+
+## What you can do (today)
+
+- **Website Assets**: set your site name, domain, description, primary color, and logo once (stored locally) and reuse it across tools.
+- **Meta Tags**: generate SEO, Open Graph, and X/Twitter meta tags with a live preview.
+- **QR Code**: generate QR codes for URLs/text with SVG/PNG export.
+
+Most other tools are intentionally marked **Coming soon** while the core UX and tool system stabilizes.
+
+## Local development
+
+### Prerequisites
+
+- Node.js 20+
+
+### Install & run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Useful scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run type-check
+npm run build
+npm run check:all
+npm run format
+```
 
-## Learn More
+## Tech stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js (App Router)** + **React**
+- **Tailwind CSS**
+- **Radix UI** primitives
+- **Zustand** for local state
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Repo notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Tools live under** `lib/tools/*` and are registered via `lib/tools/index.ts`.
+- **Tool host page** is `app/tools/[toolId]/page.tsx`.
+- **Sidebar + tool catalog** config is `config/sidebar.ts`.
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+PRs are welcome—especially new tools that follow the existing tool pattern.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+See `LICENSE`.
