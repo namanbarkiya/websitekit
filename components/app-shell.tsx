@@ -51,7 +51,8 @@ function Header() {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isLandingPage = pathname === "/";
+  const isToolDetailPage =
+    pathname?.startsWith("/tools/") && pathname !== "/tools";
 
   return (
     <div className="h-screen overflow-hidden">
@@ -64,7 +65,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           <div
             className={`flex-1 p-6 min-h-0 ${
-              isLandingPage ? "overflow-y-auto" : "overflow-hidden"
+              isToolDetailPage ? "overflow-hidden" : "overflow-y-auto"
             }`}
           >
             {children}

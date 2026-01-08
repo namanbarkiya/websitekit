@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronRightIcon, LockIcon, PaletteIcon } from "lucide-react";
@@ -99,14 +99,12 @@ function CollapsibleCategory({
   onNavigate,
   isOpen,
   onOpenChange,
-  onCategoryClickWhileCollapsed,
 }: {
   category: SidebarNavCategory;
   isItemActive: (item: SidebarNavItem) => boolean;
   onNavigate?: () => void;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onCategoryClickWhileCollapsed?: (categoryTitle: string) => void;
 }) {
   const { state, setOpen, isMobile } = useSidebar();
   const isCollapsed = state === "collapsed" && !isMobile;
@@ -114,8 +112,6 @@ function CollapsibleCategory({
   // Handle category click when collapsed
   const handleCategoryClick = () => {
     if (isCollapsed) {
-      // Notify parent that this category was clicked
-      onCategoryClickWhileCollapsed?.(category.title);
       // Expand sidebar first
       setOpen(true);
       // Then open this category after a short delay to allow sidebar animation
@@ -186,8 +182,7 @@ function CollapsibleCategory({
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { isMobile, setOpenMobile, state } = useSidebar();
-  const isCollapsed = state === "collapsed" && !isMobile;
+  const { isMobile, setOpenMobile } = useSidebar();
   const [assetModalOpen, setAssetModalOpen] = useState(false);
 
   const isItemActive = (item: SidebarNavItem) =>
@@ -197,56 +192,15 @@ export function AppSidebar() {
   // Track which categories are open
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
     () => {
-      // Initialize with categories that have active items
+      // IMPORTANT: keep the initial render deterministic for SSR + hydration.
+      // We'll open the active category in an effect after mount.
       const initial: Record<string, boolean> = {};
       sidebarConfig.categories.forEach((category) => {
-        initial[category.title] = category.items.some(isItemActive);
+        initial[category.title] = false;
       });
       return initial;
     }
   );
-
-  // Track category that was clicked while collapsed (to preserve it when expanding)
-  const clickedCategoryRef = useRef<string | null>(null);
-
-  // Reset all categories to closed when sidebar collapses
-  // When sidebar expands, open categories that have active items or the clicked category
-  useEffect(() => {
-    if (isCollapsed) {
-      setOpenCategories({});
-      clickedCategoryRef.current = null;
-    } else {
-      // When sidebar expands, open categories that have active items
-      // Also preserve the category that was clicked while collapsed
-      const updated: Record<string, boolean> = {};
-      sidebarConfig.categories.forEach((category) => {
-        const hasActive = category.items.some(isItemActive);
-        const wasClicked = clickedCategoryRef.current === category.title;
-        updated[category.title] = hasActive || wasClicked;
-      });
-      setOpenCategories(updated);
-      // Clear the ref after using it
-      if (clickedCategoryRef.current) {
-        clickedCategoryRef.current = null;
-      }
-    }
-  }, [isCollapsed, pathname]);
-
-  // Update open state when active item changes (only when expanded)
-  useEffect(() => {
-    if (!isCollapsed) {
-      sidebarConfig.categories.forEach((category) => {
-        const hasActive = category.items.some(isItemActive);
-        if (hasActive) {
-          setOpenCategories((prev) => ({ ...prev, [category.title]: true }));
-        }
-      });
-    }
-  }, [pathname, isCollapsed]);
-
-  const handleCategoryClickWhileCollapsed = (categoryTitle: string) => {
-    clickedCategoryRef.current = categoryTitle;
-  };
 
   const handleCategoryOpenChange = (categoryTitle: string, open: boolean) => {
     setOpenCategories((prev) => ({ ...prev, [categoryTitle]: open }));
@@ -275,6 +229,28 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="gap-0">
+        {/* Main nav items (Get Started, etc.) */}
+        {sidebarConfig.main.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {sidebarConfig.main.map((item) => (
+                  <SidebarMenuItem key={item.href}>
+                    <NavItem
+                      item={item}
+                      isActive={isItemActive(item)}
+                      onNavigate={handleNavigate}
+                    />
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {/* Divider */}
+        <Separator className="my-2" />
+
         {/* Website Assets - Configuration (at top, separate from tools) */}
         <SidebarGroup>
           <SidebarGroupContent>
@@ -296,24 +272,33 @@ export function AppSidebar() {
         {/* Divider */}
         <Separator className="my-2" />
 
-        {/* Main nav items (Home, etc.) */}
-        {sidebarConfig.main.length > 0 && (
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {sidebarConfig.main.map((item) => (
-                  <SidebarMenuItem key={item.href}>
-                    <NavItem
-                      item={item}
-                      isActive={isItemActive(item)}
-                      onNavigate={handleNavigate}
-                    />
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
+        {/* Most Used (derived from config item flag) */}
+        {(() => {
+          const mostUsedItems = sidebarConfig.categories
+            .flatMap((cat) => cat.items)
+            .filter((item) => item.mostUsed && !item.locked);
+
+          if (mostUsedItems.length === 0) return null;
+
+          return (
+            <SidebarGroup>
+              <SidebarGroupLabel>Most Used</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {mostUsedItems.map((item) => (
+                    <SidebarMenuItem key={`most-used:${item.href}`}>
+                      <NavItem
+                        item={item}
+                        isActive={isItemActive(item)}
+                        onNavigate={handleNavigate}
+                      />
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          );
+        })()}
 
         {/* Collapsible categorized tools */}
         {sidebarConfig.categories.map((category) => (
@@ -326,7 +311,6 @@ export function AppSidebar() {
             onOpenChange={(open) =>
               handleCategoryOpenChange(category.title, open)
             }
-            onCategoryClickWhileCollapsed={handleCategoryClickWhileCollapsed}
           />
         ))}
       </SidebarContent>

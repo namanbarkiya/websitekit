@@ -5,7 +5,7 @@
  * loaded dynamically by the tool host page.
  */
 
-import type { ComponentType } from "react";
+import type { ComponentType, ReactNode } from "react";
 import type { WebsiteAssets } from "@/lib/store/asset-store";
 
 /**
@@ -40,6 +40,12 @@ export interface ToolOutputFile {
   mimeType?: string;
 }
 
+export interface HeaderGenerateConfig {
+  onGenerate: () => void | Promise<void>;
+  disabled?: boolean;
+  label?: string;
+}
+
 /**
  * Props passed to tool components
  */
@@ -52,6 +58,16 @@ export interface ToolProps {
   setState: (updates: Partial<Record<string, unknown>>) => void;
   /** Generate output callback */
   onGenerate: (output: ToolOutput) => void;
+  /**
+   * Optional: allow a tool to place an action (e.g. "Generate") in the host header.
+   * Tools should clear it on unmount (set to null) to avoid stale actions.
+   */
+  setHeaderAction?: (action: ReactNode | null) => void;
+  /**
+   * Optional: allow a tool to register a global "Generate" handler for the host header button.
+   * Tools should clear it on unmount (set to null) to avoid stale handlers.
+   */
+  setHeaderGenerate?: (config: HeaderGenerateConfig | null) => void;
 }
 
 /**

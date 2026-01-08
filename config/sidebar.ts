@@ -35,6 +35,8 @@ export interface SidebarNavItem {
   category?: string;
   locked?: boolean;
   badge?: "new" | "beta" | "soon";
+  /** Show this item in the "Most Used" group in the sidebar */
+  mostUsed?: boolean;
 }
 
 export interface SidebarNavCategory {
@@ -90,6 +92,7 @@ export const sidebarConfig: SidebarConfig = {
             "ai",
             "metadata",
           ],
+          mostUsed: true,
         },
         {
           title: "Favicon",
@@ -169,6 +172,8 @@ export const sidebarConfig: SidebarConfig = {
             "sitemap",
             "user agent",
           ],
+          locked: true,
+          badge: "soon",
         },
         {
           title: "Sitemap",
@@ -190,6 +195,8 @@ export const sidebarConfig: SidebarConfig = {
             "lastmod",
             "crawl",
           ],
+          locked: true,
+          badge: "soon",
         },
         {
           title: "Canonical URL",
@@ -290,6 +297,8 @@ export const sidebarConfig: SidebarConfig = {
             "thumbnail",
             "1200x630",
           ],
+          locked: true,
+          badge: "soon",
         },
         {
           title: "Logo Export",
@@ -310,6 +319,8 @@ export const sidebarConfig: SidebarConfig = {
             "background",
             "brand",
           ],
+          locked: true,
+          badge: "soon",
         },
         {
           title: "Brand Colors",
@@ -365,6 +376,8 @@ export const sidebarConfig: SidebarConfig = {
             "resource hint",
             "link",
           ],
+          locked: true,
+          badge: "soon",
         },
         {
           title: "Font Loading",
@@ -384,6 +397,8 @@ export const sidebarConfig: SidebarConfig = {
             "google fonts",
             "performance",
           ],
+          locked: true,
+          badge: "soon",
         },
         {
           title: "Image Guide",
@@ -457,6 +472,8 @@ export const sidebarConfig: SidebarConfig = {
             "safe",
             "protection",
           ],
+          locked: true,
+          badge: "soon",
         },
         {
           title: "CSP Generator",
@@ -476,6 +493,8 @@ export const sidebarConfig: SidebarConfig = {
             "nonce",
             "hash",
           ],
+          locked: true,
+          badge: "soon",
         },
         {
           title: "Permissions",
@@ -566,6 +585,7 @@ export const sidebarConfig: SidebarConfig = {
             "download",
           ],
           locked: false,
+          mostUsed: true,
         },
         {
           title: "Placeholder",
@@ -586,6 +606,8 @@ export const sidebarConfig: SidebarConfig = {
             "png",
             "url",
           ],
+          locked: true,
+          badge: "soon",
         },
         {
           title: "Gradient",
@@ -603,6 +625,8 @@ export const sidebarConfig: SidebarConfig = {
             "preview",
             "generator",
           ],
+          locked: true,
+          badge: "soon",
         },
         {
           title: "SVG Shapes",

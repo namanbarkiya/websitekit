@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "qrcode";
 import type { ToolProps } from "@/lib/utils/tool-registry";
 import { Input } from "@/components/ui/input";
@@ -34,6 +34,7 @@ export function QRCodeComponent({
   state,
   setState,
   onGenerate,
+  setHeaderGenerate,
 }: ToolProps) {
   const [qrSvg, setQrSvg] = useState<string>("");
   const [qrPng, setQrPng] = useState<Blob | null>(null);
@@ -41,6 +42,19 @@ export function QRCodeComponent({
 
   const currentState = (state as Partial<QRCodeState>) || {};
   const formState: QRCodeState = { ...DEFAULT_STATE, ...currentState };
+  const formStateRef = useRef(formState);
+  const qrSvgRef = useRef(qrSvg);
+  const qrPngRef = useRef(qrPng);
+
+  useEffect(() => {
+    formStateRef.current = formState;
+  }, [formState]);
+  useEffect(() => {
+    qrSvgRef.current = qrSvg;
+  }, [qrSvg]);
+  useEffect(() => {
+    qrPngRef.current = qrPng;
+  }, [qrPng]);
 
   // Memoize state values for effect dependencies
   const stateKey = useMemo(
@@ -134,23 +148,25 @@ export function QRCodeComponent({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stateKey]);
 
-  const handleGenerate = () => {
-    if (!formState.content.trim()) {
-      return;
-    }
+  const handleGenerate = useCallback(() => {
+    const st = formStateRef.current;
+    const svg = qrSvgRef.current;
+    const png = qrPngRef.current;
 
-    const selectedFormat = formState.format;
+    if (!st.content.trim()) return;
+
+    const selectedFormat = st.format;
     const filename = `qr-code-${Date.now()}.${selectedFormat}`;
 
     // Always use SVG for preview
-    const previewHtml = qrSvg
+    const previewHtml = svg
       ? `<div style="display: flex; justify-content: center; align-items: center; padding: 2rem;">
-           ${qrSvg}
+           ${svg}
          </div>`
       : undefined;
 
-    if (selectedFormat === "svg" && qrSvg) {
-      const svgBlob = new Blob([qrSvg], { type: "image/svg+xml" });
+    if (selectedFormat === "svg" && svg) {
+      const svgBlob = new Blob([svg], { type: "image/svg+xml" });
       onGenerate({
         type: "files",
         files: [
@@ -162,20 +178,32 @@ export function QRCodeComponent({
         ],
         preview: previewHtml,
       });
-    } else if (selectedFormat === "png" && qrPng) {
+    } else if (selectedFormat === "png" && png) {
       onGenerate({
         type: "files",
         files: [
           {
             filename,
-            content: qrPng,
+            content: png,
             mimeType: "image/png",
           },
         ],
         preview: previewHtml,
       });
     }
-  };
+  }, [onGenerate]);
+
+  // Register global header "Generate" button handler
+  useEffect(() => {
+    if (!setHeaderGenerate) return;
+    const disabled = !formState.content.trim() || isGenerating;
+    setHeaderGenerate({
+      onGenerate: handleGenerate,
+      disabled,
+      label: "Generate",
+    });
+    return () => setHeaderGenerate(null);
+  }, [formState.content, handleGenerate, isGenerating, setHeaderGenerate]);
 
   return (
     <div className="space-y-6">

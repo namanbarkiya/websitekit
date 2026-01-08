@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
 import { notFound, useParams } from "next/navigation";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, Zap } from "lucide-react";
 
 import { OutputRenderer } from "@/components/output-renderer";
+import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -18,6 +18,7 @@ import { useToolState } from "@/lib/hooks/use-tool-state";
 import { useWebsiteAssets } from "@/lib/hooks/use-website-assets";
 import {
   getTool,
+  type HeaderGenerateConfig,
   type ToolDefinition,
   type ToolOutput,
 } from "@/lib/utils/tool-registry";
@@ -50,6 +51,29 @@ export default function ToolHostPage() {
 
   const [output, setOutput] = useState<ToolOutput | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [headerAction, setHeaderAction] = useState<ReactNode | null>(null);
+  const [headerGenerate, setHeaderGenerateState] =
+    useState<HeaderGenerateConfig | null>(null);
+  const headerGenerateRef = useRef<HeaderGenerateConfig | null>(null);
+  const [isHeaderGenerating, setIsHeaderGenerating] = useState(false);
+
+  const handleToolGenerate = useCallback((o: ToolOutput) => {
+    setOutput(o);
+  }, []);
+
+  const setHeaderGenerate = useCallback(
+    (config: HeaderGenerateConfig | null) => {
+      const prev = headerGenerateRef.current;
+      const isSame =
+        prev?.onGenerate === config?.onGenerate &&
+        prev?.disabled === config?.disabled &&
+        prev?.label === config?.label;
+      if (isSame) return;
+      headerGenerateRef.current = config;
+      setHeaderGenerateState(config);
+    },
+    []
+  );
 
   const handleGenerate = async () => {
     if (!toolDef?.generate) return;
@@ -63,24 +87,64 @@ export default function ToolHostPage() {
   };
 
   const ToolComponent = toolDef?.Component;
+  const effectiveGenerate = headerGenerate?.onGenerate
+    ? headerGenerate.onGenerate
+    : toolDef?.generate
+      ? handleGenerate
+      : null;
+  const canGenerate = Boolean(effectiveGenerate);
+  const generateDisabled =
+    !canGenerate ||
+    Boolean(headerGenerate?.disabled) ||
+    isGenerating ||
+    isHeaderGenerating;
+  const generateLabel =
+    isGenerating || isHeaderGenerating
+      ? "Generating..."
+      : (headerGenerate?.label ?? "Generate");
+
+  const handleHeaderGenerate = useCallback(async () => {
+    if (!effectiveGenerate) return;
+    try {
+      const result = effectiveGenerate();
+      if (result && typeof (result as Promise<void>).then === "function") {
+        setIsHeaderGenerating(true);
+        await result;
+      }
+    } finally {
+      setIsHeaderGenerating(false);
+    }
+  }, [effectiveGenerate]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full min-h-0">
       {/* Left Card - Tool Form */}
-      <Card className="flex flex-col h-full min-h-0 overflow-hidden !py-0 gap-0">
+      <Card className="flex flex-col h-full min-h-0 overflow-hidden py-0! gap-0">
         <CardHeader className="shrink-0 border-b px-6 py-6">
-          <CardTitle className="flex items-center gap-2">
-            {toolMeta?.title ?? toolDef?.name ?? toolId}
-          </CardTitle>
-          {/* <div className="px-6 pt-4 pb-3 shrink-0">
-            <p className="text-sm text-muted-foreground"> */}
-          <CardDescription>
-            {toolMeta?.description ??
-              toolDef?.description ??
-              "This tool is not implemented yet. Check back soon."}
-          </CardDescription>
-          {/* </p> */}
-          {/* </div> */}
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <CardTitle className="flex items-center gap-2">
+                {toolMeta?.title ?? toolDef?.name ?? toolId}
+              </CardTitle>
+              <CardDescription>
+                {toolMeta?.description ??
+                  toolDef?.description ??
+                  "This tool is not implemented yet. Check back soon."}
+              </CardDescription>
+            </div>
+            <div className="shrink-0 flex items-center gap-2">
+              {headerAction}
+              <Button
+                size="sm"
+                className="gap-2"
+                onClick={handleHeaderGenerate}
+                disabled={generateDisabled}
+              >
+                <Zap className="size-4" />
+                {generateLabel}
+              </Button>
+            </div>
+          </div>
         </CardHeader>
         <div className="flex-1 min-h-0 overflow-hidden">
           <ScrollArea className="h-full w-full">
@@ -90,7 +154,9 @@ export default function ToolHostPage() {
                   assets={assets}
                   state={state}
                   setState={setState}
-                  onGenerate={(o) => setOutput(o)}
+                  onGenerate={handleToolGenerate}
+                  setHeaderAction={setHeaderAction}
+                  setHeaderGenerate={setHeaderGenerate}
                 />
               ) : (
                 <div className="rounded-md border p-4 flex items-start gap-3">
@@ -99,17 +165,6 @@ export default function ToolHostPage() {
                     This tool is not available yet. You can still preview how
                     outputs will appear here when implemented.
                   </div>
-                </div>
-              )}
-
-              {toolDef?.generate && (
-                <div>
-                  <button
-                    onClick={handleGenerate}
-                    className="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm hover:bg-accent transition-colors"
-                  >
-                    Generate
-                  </button>
                 </div>
               )}
             </div>

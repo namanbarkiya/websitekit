@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,6 +63,7 @@ export function MetaTagsComponent({
   state,
   setState,
   onGenerate,
+  setHeaderGenerate,
 }: ToolProps) {
   // Memoize assets for stable reference
   const assetsKey = useMemo(
@@ -119,7 +120,14 @@ export function MetaTagsComponent({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assetsKey, setState]);
 
-  const currentState = (state as Partial<MetaTagsState>) || {};
+  const currentState = useMemo(
+    () => (state as Partial<MetaTagsState>) || {},
+    [state]
+  );
+  const currentStateRef = useRef(currentState);
+  useEffect(() => {
+    currentStateRef.current = currentState;
+  }, [currentState]);
 
   // Generate real-time preview as user types
   const previewStateKey = useMemo(
@@ -178,8 +186,8 @@ export function MetaTagsComponent({
     setState({ [field]: value });
   };
 
-  const handleGenerate = () => {
-    const metaState = { ...DEFAULT_STATE, ...currentState };
+  const handleGenerate = useCallback(() => {
+    const metaState = { ...DEFAULT_STATE, ...currentStateRef.current };
     const html = generateMetaTagsHTML(metaState);
     const preview = generatePreviewHTML(metaState, assets.primaryColor);
     onGenerate({
@@ -188,7 +196,14 @@ export function MetaTagsComponent({
       preview: preview,
       filename: "meta-tags.html",
     });
-  };
+  }, [assets.primaryColor, onGenerate]);
+
+  // Register global header "Generate" button handler
+  useEffect(() => {
+    if (!setHeaderGenerate) return;
+    setHeaderGenerate({ onGenerate: handleGenerate, label: "Generate" });
+    return () => setHeaderGenerate(null);
+  }, [handleGenerate, setHeaderGenerate]);
 
   return (
     <div className="space-y-6">

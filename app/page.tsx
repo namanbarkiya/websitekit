@@ -1,12 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowRightIcon,
   BotIcon,
   CheckIcon,
-  CodeIcon,
   GaugeIcon,
+  HammerIcon,
   LockIcon,
   PaletteIcon,
   ShareIcon,
@@ -15,6 +16,8 @@ import {
   ZapIcon,
 } from "lucide-react";
 
+import { AssetModal } from "@/components/asset-modal";
+import { Button } from "@/components/ui/button";
 import { sidebarConfig } from "@/config/sidebar";
 
 const categoryMeta: Record<
@@ -54,6 +57,8 @@ const categoryMeta: Record<
 };
 
 export default function Home() {
+  const [assetModalOpen, setAssetModalOpen] = useState(false);
+
   const totalTools = sidebarConfig.categories.reduce(
     (acc, cat) => acc + cat.items.length,
     0
@@ -87,9 +92,7 @@ export default function Home() {
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.95] mb-6">
             Website setup,
             <br />
-            <span className="text-primary">
-              done right.
-            </span>
+            <span className="text-primary">done right.</span>
           </h1>
 
           <p className="text-xl text-muted-foreground leading-relaxed mb-10 max-w-xl">
@@ -98,19 +101,22 @@ export default function Home() {
           </p>
 
           <div className="flex flex-wrap items-center gap-4 mb-16">
-            <Link
-              href="/tools/assets"
-              className="group inline-flex items-center gap-2 bg-primary text-primary-foreground px-7 py-4 rounded-full font-medium transition-all hover:gap-3 hover:shadow-xl hover:shadow-primary/20"
+            <Button
+              onClick={() => setAssetModalOpen(true)}
+              className="group inline-flex items-center gap-2 px-7 py-4 h-auto rounded-full font-medium transition-all hover:gap-3 hover:shadow-xl hover:shadow-primary/20"
             >
-              Get Started
-              <ArrowRightIcon className="size-4" />
-            </Link>
+              Add your assets
+              {/* Wrap icon so Button's `has-[>svg]:px-*` rule doesn't override our custom padding */}
+              <span className="inline-flex">
+                <ArrowRightIcon className="size-4" />
+              </span>
+            </Button>
             <Link
-              href="/tools/meta-tags"
+              href="/tools"
               className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors px-4 py-4"
             >
-              <CodeIcon className="size-4" />
-              Try Meta Tags →
+              <HammerIcon className="size-4" />
+              All Tools →
             </Link>
           </div>
 
@@ -135,7 +141,7 @@ export default function Home() {
       </section>
 
       {/* Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-8" />
+      <div className="h-px bg-linear-to-r from-transparent via-border to-transparent my-8" />
 
       {/* Categories */}
       <section className="py-8">
@@ -223,7 +229,7 @@ export default function Home() {
       </section>
 
       {/* Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-8" />
+      <div className="h-px bg-linear-to-r from-transparent via-border to-transparent my-8" />
 
       {/* How It Works */}
       <section className="py-8">
@@ -271,14 +277,17 @@ export default function Home() {
         <p className="text-muted-foreground mb-6">
           Ready to set up your website properly?
         </p>
-        <Link
-          href="/tools/assets"
+        <button
+          type="button"
+          onClick={() => setAssetModalOpen(true)}
           className="group inline-flex items-center gap-2 text-lg font-medium text-primary hover:gap-3 transition-all"
         >
-          Start with Website Assets
+          Set Website Assets
           <ArrowRightIcon className="size-5" />
-        </Link>
+        </button>
       </section>
+
+      <AssetModal open={assetModalOpen} onOpenChange={setAssetModalOpen} />
     </div>
   );
 }
