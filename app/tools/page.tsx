@@ -324,7 +324,9 @@ export default function ToolsDashboardPage() {
       const items = hrefs
         .map((h) => (typeof h === "string" ? map.get(h) : undefined))
         .filter(Boolean) as SidebarNavItem[];
-      setRecents(items.slice(0, 6));
+      const next = items.slice(0, 6);
+      // Avoid synchronous setState directly inside the effect body.
+      Promise.resolve().then(() => setRecents(next));
     } catch {
       // ignore
     }
@@ -455,7 +457,7 @@ export default function ToolsDashboardPage() {
   return (
     <div className="min-h-full">
       {/* Sticky search header */}
-      <div className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur">
+      <div className="sticky -top-6 z-10 border-b bg-background/80 backdrop-blur -mx-6 -mt-6">
         <div className="mx-auto w-full max-w-7xl px-4 py-4 md:px-6 lg:px-8">
           <div className="flex items-start justify-between gap-4">
             <div>
