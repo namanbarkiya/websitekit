@@ -217,103 +217,57 @@ function buildToolJsonLd(tool: ToolPageMeta) {
   return faq ? [breadcrumbs, app, howTo, faq] : [breadcrumbs, app, howTo];
 }
 
-function ToolContentSection({
-  toolId,
+function ToolSeoText({
   toolTitle,
-  category,
+  content,
 }: {
-  toolId: string;
   toolTitle: string;
-  category?: string;
+  content: ReturnType<typeof getToolContent>;
 }) {
-  const content = getToolContent(toolId);
-
+  // Keep content in the HTML for SEO/AEO without adding UI noise.
+  // This matches what's shown in the (i) dialog, so it isn't misleading.
   return (
-    <details className="rounded-lg border bg-card p-5">
-      <summary className="cursor-pointer select-none font-semibold">
-        About this tool
-        <span className="ml-2 text-xs text-muted-foreground font-normal">
-          (what it is, how to use it, FAQ)
-        </span>
-      </summary>
+    <div className="sr-only" aria-hidden="true">
+      <h2>What is {toolTitle}?</h2>
+      <p>{content.whatIs}</p>
 
-      <div className="mt-4 space-y-6">
-        <section className="space-y-2">
-          <h2 className="text-base font-semibold">What is {toolTitle}?</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            {content.whatIs}
-          </p>
-        </section>
+      <h2>Features</h2>
+      <ul>
+        {content.features.map((f, i) => (
+          <li key={i}>{f}</li>
+        ))}
+      </ul>
 
-        <section className="space-y-2">
-          <h2 className="text-base font-semibold">Features</h2>
-          <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
-            {content.features.map((feature, i) => (
-              <li key={i}>{feature}</li>
+      <h2>How to use</h2>
+      <ol>
+        {content.howItWorks.map((s, i) => (
+          <li key={i}>{s}</li>
+        ))}
+      </ol>
+
+      {content.useCases?.length ? (
+        <>
+          <h2>Common use cases</h2>
+          <ul>
+            {content.useCases.map((u, i) => (
+              <li key={i}>{u}</li>
             ))}
           </ul>
-        </section>
+        </>
+      ) : null}
 
-        <section className="space-y-2">
-          <h2 className="text-base font-semibold">How to use it</h2>
-          <ol className="text-sm text-muted-foreground list-decimal pl-5 space-y-1">
-            {content.howItWorks.map((step, i) => (
-              <li key={i}>{step}</li>
-            ))}
-          </ol>
-        </section>
-
-        {content.useCases?.length ? (
-          <section className="space-y-2">
-            <h2 className="text-base font-semibold">Common use cases</h2>
-            <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
-              {content.useCases.map((useCase, i) => (
-                <li key={i}>{useCase}</li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-
-        {content.faq?.length ? (
-          <section className="space-y-3">
-            <h2 className="text-base font-semibold">FAQ</h2>
-            <div className="space-y-4">
-              {content.faq.map((item, i) => (
-                <article
-                  key={i}
-                  className="border-b last:border-0 pb-4 last:pb-0"
-                >
-                  <h3 className="font-medium text-sm">{item.question}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {item.answer}
-                  </p>
-                </article>
-              ))}
+      {content.faq?.length ? (
+        <>
+          <h2>Frequently Asked Questions</h2>
+          {content.faq.map((item, i) => (
+            <div key={i}>
+              <h3>{item.question}</h3>
+              <p>{item.answer}</p>
             </div>
-          </section>
-        ) : null}
-
-        <section className="space-y-2">
-          <h2 className="text-base font-semibold">Related tools</h2>
-          <ul className="text-sm text-muted-foreground space-y-1">
-            {sidebarConfig.categories
-              .find((c) => c.title === category)
-              ?.items.filter((it) => it.href !== `/tools/${toolId}`)
-              .slice(0, 5)
-              .map((it) => (
-                <li key={it.href}>
-                  <Link href={it.href} className="hover:underline">
-                    {it.title}
-                    {it.locked ? (
-                      <span className="ml-2 text-xs opacity-70">(Soon)</span>
-                    ) : null}
-                  </Link>
-                </li>
-              ))}
-          </ul>
-        </section>
-      </div>
-    </details>
+          ))}
+        </>
+      ) : null}
+    </div>
   );
 }
 
@@ -372,12 +326,8 @@ export default async function ToolPage({ params }: PageProps) {
         <>
           <ToolClient toolId={toolId} />
 
-          {/* Crawlable content section (helps ranking without affecting tool UX) */}
-          <ToolContentSection
-            toolId={toolId}
-            toolTitle={tool.title}
-            category={tool.category}
-          />
+          {/* Keep the SEO/AEO text in DOM without UI noise */}
+          <ToolSeoText toolTitle={tool.title} content={content} />
         </>
       )}
     </div>

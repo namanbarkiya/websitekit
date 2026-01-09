@@ -44,6 +44,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isToolDetailPage =
     pathname?.startsWith("/tools/") && pathname !== "/tools";
+  const contentOverflow = isToolDetailPage
+    ? // Allow scrolling on mobile so content isn't trapped off-screen.
+      // Keep the previous "no page scroll" behavior on md+ if desired.
+      "overflow-y-auto md:overflow-hidden"
+    : "overflow-y-auto";
 
   return (
     <div className="h-screen overflow-hidden">
@@ -54,11 +59,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="shrink-0">
             <Header />
           </div>
-          <div
-            className={`flex-1 p-6 min-h-0 ${
-              isToolDetailPage ? "overflow-hidden" : "overflow-y-auto"
-            }`}
-          >
+          <div className={`flex-1 p-6 min-h-0 ${contentOverflow}`}>
             {children}
           </div>
         </SidebarInset>
