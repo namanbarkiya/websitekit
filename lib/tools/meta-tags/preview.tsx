@@ -6,10 +6,6 @@
 
 import type { MetaTagsState } from "./component";
 
-interface PreviewProps {
-  state: MetaTagsState;
-}
-
 export function generatePreviewHTML(
   state: MetaTagsState,
   primaryColor?: string

@@ -71,7 +71,8 @@ export function OutputRenderer({
   // Set default tab when output changes
   useEffect(() => {
     if (availableTabs.length > 0 && !availableTabs.includes(activeTab)) {
-      setActiveTab(availableTabs[0]);
+      // Avoid synchronous setState in effect body.
+      Promise.resolve().then(() => setActiveTab(availableTabs[0]));
     }
   }, [availableTabs, activeTab]);
 

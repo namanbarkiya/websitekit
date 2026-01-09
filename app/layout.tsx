@@ -17,9 +17,45 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "WebsiteKit - Website setup, done right.",
+  metadataBase: new URL("https://websitekit.dev"),
+  title: {
+    default: "WebsiteKit - Website setup, done right.",
+    template: "%s",
+  },
   description:
     "Meta tags, favicons, sitemaps, security headers—everything your site needs to launch, generated in seconds.",
+  applicationName: "WebsiteKit",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "WebsiteKit - Website setup, done right.",
+    description:
+      "Meta tags, favicons, sitemaps, security headers—everything your site needs to launch, generated in seconds.",
+    type: "website",
+    siteName: "WebsiteKit",
+    images: [{ url: "https://websitekit.dev/logo/primary_bg.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@websitekitdev",
+    creator: "@websitekitdev",
+    title: "WebsiteKit - Website setup, done right.",
+    description:
+      "Meta tags, favicons, sitemaps, security headers—everything your site needs to launch, generated in seconds.",
+    images: ["https://websitekit.dev/logo/primary_bg.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   icons: {
     icon: [
       { url: "/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },

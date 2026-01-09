@@ -110,14 +110,17 @@ export function AssetForm({
   // Reset from store when form becomes active (modal open) or on mount (inline).
   useEffect(() => {
     if (!active) return;
-    setFormData({
-      name: assets.name,
-      domain: assets.domain,
-      description: assets.description,
-      primaryColor: assets.primaryColor,
-      logo: assets.logo,
+    // Avoid synchronous setState in effect body.
+    Promise.resolve().then(() => {
+      setFormData({
+        name: assets.name,
+        domain: assets.domain,
+        description: assets.description,
+        primaryColor: assets.primaryColor,
+        logo: assets.logo,
+      });
+      setErrors({});
     });
-    setErrors({});
   }, [
     active,
     assets.name,
@@ -161,7 +164,6 @@ export function AssetForm({
       toast.success("Logo uploaded successfully");
     } catch (error) {
       toast.error("Failed to upload logo");
-      // eslint-disable-next-line no-console
       console.error(error);
     }
   };

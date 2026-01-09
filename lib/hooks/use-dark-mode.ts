@@ -21,11 +21,12 @@ export function useDarkMode() {
       root.classList.remove("dark");
     }
 
-    setIsDark(root.classList.contains("dark"));
+    // Avoid synchronous setState in effect body.
+    Promise.resolve().then(() => setIsDark(root.classList.contains("dark")));
 
     // Listen for class changes
     const observer = new MutationObserver(() => {
-      setIsDark(root.classList.contains("dark"));
+      Promise.resolve().then(() => setIsDark(root.classList.contains("dark")));
     });
 
     observer.observe(root, {

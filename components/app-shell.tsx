@@ -13,7 +13,6 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-  useSidebar,
 } from "@/components/ui/sidebar";
 import { SonnerProvider } from "@/lib/providers/sonner-provider";
 
