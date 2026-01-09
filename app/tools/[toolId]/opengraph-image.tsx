@@ -11,14 +11,28 @@ export const size = {
 };
 export const contentType = "image/png";
 
-function findToolTitle(toolId: string) {
+const SITE_URL = "https://websitekit.dev";
+
+function findTool(toolId: string) {
   for (const category of sidebarConfig.categories) {
     const item = category.items.find(
       (it) => it.href.replace("/tools/", "") === toolId
     );
-    if (item) return item.title;
+    if (item) return item;
   }
-  return toolId;
+  return null;
+}
+
+// Helper to convert ArrayBuffer to base64 in edge runtime
+async function arrayBufferToBase64(buffer: ArrayBuffer): Promise<string> {
+  const bytes = new Uint8Array(buffer);
+  let binary = "";
+  const chunkSize = 8192;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    const chunk = bytes.subarray(i, i + chunkSize);
+    binary += String.fromCharCode(...chunk);
+  }
+  return btoa(binary);
 }
 
 export default async function Image({
@@ -27,7 +41,43 @@ export default async function Image({
   params: Promise<{ toolId: string }>;
 }) {
   const { toolId } = await params;
-  const toolTitle = findToolTitle(toolId);
+  const tool = findTool(toolId);
+  const toolTitle = tool?.title || toolId;
+  const toolDescription = tool?.description || "Free online tool";
+
+  // Fetch the tool banner template as background
+  const templateResponse = await fetch(
+    new URL("/logo/og_tool_banner.png", SITE_URL)
+  ).catch(() => null);
+
+  if (!templateResponse || !templateResponse.ok) {
+    // Fallback if image can't be loaded
+    return new ImageResponse(
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          background: "linear-gradient(135deg, #fd6d2c 0%, #ff8c5a 100%)",
+          padding: 72,
+          justifyContent: "center",
+          color: "white",
+        }}
+      >
+        <div style={{ fontSize: 64, fontWeight: 800 }}>{toolTitle}</div>
+        <div style={{ fontSize: 28, marginTop: 16, opacity: 0.9 }}>
+          Free online tool • No signup required
+        </div>
+      </div>,
+      { ...size }
+    );
+  }
+
+  // Convert to base64 for edge runtime
+  const templateArrayBuffer = await templateResponse.arrayBuffer();
+  const templateBase64 = await arrayBufferToBase64(templateArrayBuffer);
+  const templateDataUrl = `data:image/png;base64,${templateBase64}`;
 
   return new ImageResponse(
     <div
@@ -35,74 +85,62 @@ export default async function Image({
         width: "100%",
         height: "100%",
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        background:
-          "linear-gradient(135deg, #0b1220 0%, #141b2d 60%, #0b1220 100%)",
-        padding: 72,
+        position: "relative",
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-        <div
-          style={{
-            display: "flex",
-            gap: 10,
-            alignItems: "center",
-            fontSize: 26,
-            color: "rgba(255,255,255,0.8)",
-            letterSpacing: -0.2,
-          }}
-        >
-          <span style={{ fontWeight: 700, color: "white" }}>WebsiteKit</span>
-          <span style={{ opacity: 0.8 }}>•</span>
-          <span style={{ opacity: 0.85 }}>Tools</span>
-        </div>
+      {/* Background: og_tool_banner.png */}
+      <img
+        src={templateDataUrl}
+        alt="Tool Banner Template"
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          position: "absolute",
+          top: 0,
+          left: 0,
+        }}
+      />
 
+      {/* Dynamic tool title overlay - positioned on the left side */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: 235,
+          transform: "translateY(-50%)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 16,
+          alignItems: "flex-start",
+          textAlign: "left",
+          maxWidth: 500,
+        }}
+      >
         <div
           style={{
-            fontSize: 74,
-            lineHeight: 1.05,
+            fontSize: 64,
             fontWeight: 800,
-            color: "white",
+            color: "#1a1a1a",
             letterSpacing: -1.2,
+            lineHeight: 1.1,
+            textAlign: "left",
           }}
         >
           {toolTitle}
         </div>
-
         <div
           style={{
-            fontSize: 30,
-            lineHeight: 1.35,
-            color: "rgba(255,255,255,0.8)",
-            maxWidth: 980,
+            fontSize: 24,
+            fontWeight: 500,
+            color: "#666666",
+            lineHeight: 1.4,
+            textAlign: "left",
+            maxWidth: 450,
           }}
         >
-          Fast, production-ready website outputs.
+          {toolDescription}
         </div>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          color: "rgba(255,255,255,0.65)",
-          fontSize: 22,
-        }}
-      >
-        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-          <div
-            style={{
-              width: 14,
-              height: 14,
-              borderRadius: 999,
-              background: "#7c3aed",
-            }}
-          />
-          <span>websitekit</span>
-        </div>
-        <div style={{ opacity: 0.75 }}>{`/tools/${toolId}`}</div>
       </div>
     </div>,
     {

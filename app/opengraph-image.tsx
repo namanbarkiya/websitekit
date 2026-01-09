@@ -9,112 +9,76 @@ export const size = {
 };
 export const contentType = "image/png";
 
-export default function Image() {
-  return new ImageResponse(
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        background:
-          "linear-gradient(135deg, #0b1220 0%, #141b2d 60%, #0b1220 100%)",
-        padding: 72,
-      }}
-    >
-      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+const SITE_URL = "https://websitekit.dev";
+
+// Helper to convert ArrayBuffer to base64 in edge runtime
+async function arrayBufferToBase64(buffer: ArrayBuffer): Promise<string> {
+  const bytes = new Uint8Array(buffer);
+  let binary = "";
+  const chunkSize = 8192;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    const chunk = bytes.subarray(i, i + chunkSize);
+    binary += String.fromCharCode(...chunk);
+  }
+  return btoa(binary);
+}
+
+export default async function Image() {
+  // Fetch the banner image directly
+  const bannerResponse = await fetch(
+    new URL("/logo/og_banner.png", SITE_URL)
+  ).catch(() => null);
+
+  if (!bannerResponse || !bannerResponse.ok) {
+    // Fallback if image can't be loaded
+    return new ImageResponse(
+      (
         <div
           style={{
+            width: "100%",
+            height: "100%",
             display: "flex",
-            gap: 12,
+            background: "linear-gradient(135deg, #fd6d2c 0%, #ff8c5a 100%)",
             alignItems: "center",
-            fontSize: 28,
-            color: "rgba(255,255,255,0.9)",
-            letterSpacing: -0.3,
-          }}
-        >
-          <div
-            style={{
-              width: 16,
-              height: 16,
-              borderRadius: 999,
-              background: "#7c3aed",
-            }}
-          />
-          <span style={{ fontWeight: 700 }}>WebsiteKit</span>
-        </div>
-
-        <div
-          style={{
-            fontSize: 68,
-            lineHeight: 1.1,
-            fontWeight: 800,
+            justifyContent: "center",
             color: "white",
-            letterSpacing: -2,
-            maxWidth: 900,
+            fontSize: 48,
+            fontWeight: 800,
           }}
         >
-          Every website tool, in one place.
+          WebsiteKit
         </div>
+      ),
+      { ...size }
+    );
+  }
 
-        <div
-          style={{
-            fontSize: 28,
-            lineHeight: 1.4,
-            color: "rgba(255,255,255,0.75)",
-            maxWidth: 800,
-          }}
-        >
-          Meta tags, QR codes, favicons, sitemaps, security headers — generate
-          production-ready outputs in seconds.
-        </div>
-      </div>
+  // Convert to base64 for edge runtime
+  const bannerArrayBuffer = await bannerResponse.arrayBuffer();
+  const bannerBase64 = await arrayBufferToBase64(bannerArrayBuffer);
+  const bannerDataUrl = `data:image/png;base64,${bannerBase64}`;
 
+  // Return the banner image directly, no overlays
+  return new ImageResponse(
+    (
       <div
         style={{
+          width: "100%",
+          height: "100%",
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          color: "rgba(255,255,255,0.6)",
-          fontSize: 22,
         }}
       >
-        <div style={{ display: "flex", gap: 24 }}>
-          <span
-            style={{
-              background: "rgba(124, 58, 237, 0.3)",
-              padding: "8px 16px",
-              borderRadius: 8,
-              color: "rgba(255,255,255,0.9)",
-            }}
-          >
-            Free
-          </span>
-          <span
-            style={{
-              background: "rgba(124, 58, 237, 0.3)",
-              padding: "8px 16px",
-              borderRadius: 8,
-              color: "rgba(255,255,255,0.9)",
-            }}
-          >
-            No Signup
-          </span>
-          <span
-            style={{
-              background: "rgba(124, 58, 237, 0.3)",
-              padding: "8px 16px",
-              borderRadius: 8,
-              color: "rgba(255,255,255,0.9)",
-            }}
-          >
-            Production Ready
-          </span>
-        </div>
-        <div style={{ opacity: 0.75 }}>websitekit.dev</div>
+        <img
+          src={bannerDataUrl}
+          alt="WebsiteKit Banner"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
       </div>
-    </div>,
+    ),
     {
       ...size,
     }
