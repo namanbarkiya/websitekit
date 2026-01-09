@@ -8,6 +8,7 @@ import { sidebarConfig, type SidebarNavItem } from "@/config/sidebar";
 import { getToolContent } from "@/lib/tools";
 
 import { ToolClient } from "./tool-client";
+import { ToolInfoDialog } from "./tool-info-dialog";
 
 export const dynamicParams = false;
 
@@ -103,6 +104,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
+      site: "@websitekitdev",
+      creator: "@websitekitdev",
       title,
       description,
       images: [
@@ -216,7 +219,7 @@ function buildToolJsonLd(tool: ToolPageMeta) {
 
 function ToolContentSection({
   toolId,
-  toolTitle: title,
+  toolTitle,
   category,
 }: {
   toolId: string;
@@ -226,100 +229,91 @@ function ToolContentSection({
   const content = getToolContent(toolId);
 
   return (
-    <section className="space-y-4">
-      {/* "What is" intro - AEO/GEO optimized direct answer paragraph */}
-      <Card className="p-5">
-        <h2 className="text-lg font-semibold">What is a {title}?</h2>
-        <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-          {content.whatIs}
-        </p>
-      </Card>
+    <details className="rounded-lg border bg-card p-5">
+      <summary className="cursor-pointer select-none font-semibold">
+        About this tool
+        <span className="ml-2 text-xs text-muted-foreground font-normal">
+          (what it is, how to use it, FAQ)
+        </span>
+      </summary>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card className="p-5 lg:col-span-2 space-y-6">
-          <div>
-            <h2 className="text-lg font-semibold">
-              What can you do with this tool?
-            </h2>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground list-disc pl-5">
-              {content.features.map((feature, i) => (
-                <li key={i}>{feature}</li>
+      <div className="mt-4 space-y-6">
+        <section className="space-y-2">
+          <h2 className="text-base font-semibold">What is {toolTitle}?</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {content.whatIs}
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-base font-semibold">Features</h2>
+          <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
+            {content.features.map((feature, i) => (
+              <li key={i}>{feature}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-base font-semibold">How to use it</h2>
+          <ol className="text-sm text-muted-foreground list-decimal pl-5 space-y-1">
+            {content.howItWorks.map((step, i) => (
+              <li key={i}>{step}</li>
+            ))}
+          </ol>
+        </section>
+
+        {content.useCases?.length ? (
+          <section className="space-y-2">
+            <h2 className="text-base font-semibold">Common use cases</h2>
+            <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
+              {content.useCases.map((useCase, i) => (
+                <li key={i}>{useCase}</li>
               ))}
             </ul>
-          </div>
+          </section>
+        ) : null}
 
-          <div>
-            <h2 className="text-lg font-semibold">How do I use it?</h2>
-            <ol className="mt-3 space-y-2 text-sm text-muted-foreground list-decimal pl-5">
-              {content.howItWorks.map((step, i) => (
-                <li key={i}>{step}</li>
+        {content.faq?.length ? (
+          <section className="space-y-3">
+            <h2 className="text-base font-semibold">FAQ</h2>
+            <div className="space-y-4">
+              {content.faq.map((item, i) => (
+                <article
+                  key={i}
+                  className="border-b last:border-0 pb-4 last:pb-0"
+                >
+                  <h3 className="font-medium text-sm">{item.question}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {item.answer}
+                  </p>
+                </article>
               ))}
-            </ol>
-          </div>
-
-          {content.useCases && (
-            <div>
-              <h2 className="text-lg font-semibold">When should I use this?</h2>
-              <ul className="mt-3 space-y-2 text-sm text-muted-foreground list-disc pl-5">
-                {content.useCases.map((useCase, i) => (
-                  <li key={i}>{useCase}</li>
-                ))}
-              </ul>
             </div>
-          )}
-        </Card>
+          </section>
+        ) : null}
 
-        <Card className="p-5">
-          <h2 className="text-lg font-semibold">Related tools</h2>
-          <ul className="mt-3 space-y-2 text-sm">
+        <section className="space-y-2">
+          <h2 className="text-base font-semibold">Related tools</h2>
+          <ul className="text-sm text-muted-foreground space-y-1">
             {sidebarConfig.categories
               .find((c) => c.title === category)
               ?.items.filter((it) => it.href !== `/tools/${toolId}`)
               .slice(0, 5)
               .map((it) => (
                 <li key={it.href}>
-                  <Link
-                    href={it.href}
-                    className="text-muted-foreground hover:text-foreground hover:underline"
-                  >
+                  <Link href={it.href} className="hover:underline">
                     {it.title}
-                    {it.locked && (
-                      <span className="ml-2 text-xs opacity-60">(Soon)</span>
-                    )}
+                    {it.locked ? (
+                      <span className="ml-2 text-xs opacity-70">(Soon)</span>
+                    ) : null}
                   </Link>
                 </li>
               ))}
           </ul>
-
-          <div className="mt-6 pt-4 border-t">
-            <h3 className="text-sm font-semibold">Why use WebsiteKit?</h3>
-            <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-              <li>✓ 100% free, no signup</li>
-              <li>✓ No data sent to servers</li>
-              <li>✓ Production-ready output</li>
-              <li>✓ Works with any framework</li>
-            </ul>
-          </div>
-        </Card>
+        </section>
       </div>
-
-      {/* Visible FAQ section - AEO/GEO optimized */}
-      {content.faq && content.faq.length > 0 && (
-        <Card className="p-5">
-          <h2 className="text-lg font-semibold">Frequently Asked Questions</h2>
-          <div className="mt-4 space-y-4">
-            {content.faq.map((item, i) => (
-              <div key={i} className="border-b last:border-0 pb-4 last:pb-0">
-                <h3 className="font-medium text-sm">{item.question}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {item.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-        </Card>
-      )}
-    </section>
+    </details>
   );
 }
 
@@ -331,6 +325,7 @@ export default async function ToolPage({ params }: PageProps) {
   const locked = Boolean(tool.locked);
   const title = toolTitle(tool);
   const description = toolDescription(tool);
+  const content = getToolContent(toolId);
 
   return (
     <div className="space-y-6">
@@ -344,9 +339,16 @@ export default async function ToolPage({ params }: PageProps) {
           </p>
           {locked ? <Badge variant="outline">Coming soon</Badge> : null}
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-          {title}
-        </h1>
+        <div className="flex items-start gap-2">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight flex-1">
+            {title}
+          </h1>
+          <ToolInfoDialog
+            toolTitle={title}
+            toolName={tool.title}
+            content={content}
+          />
+        </div>
         <p className="text-muted-foreground max-w-3xl">{description}</p>
       </header>
 

@@ -35,6 +35,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@websitekitdev",
+    creator: "@websitekitdev",
     title: "WebsiteKit - Free Online Website Tools for Developers",
     description:
       "Generate meta tags, QR codes, favicons, sitemaps, and security headers in seconds. Free, no signup.",

@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
+    site: "@websitekitdev",
+    creator: "@websitekitdev",
     title: "Contact Us | WebsiteKit",
     description: "Get in touch with the WebsiteKit team.",
   },
