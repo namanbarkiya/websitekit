@@ -5,6 +5,7 @@
  */
 
 import { registerTool } from "@/lib/utils/tool-registry";
+
 import { MetaTagsComponent } from "./component";
 
 // Tool definition

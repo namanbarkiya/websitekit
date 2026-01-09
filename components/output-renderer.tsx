@@ -192,41 +192,41 @@ export function OutputRenderer({
                 </TabsList>
               </div>
               <div className="flex items-center gap-2 justify-end">
-              {canCopy && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleCopy}
-                  className="gap-2 px-2 sm:px-3"
-                  aria-label={copied ? "Copied" : "Copy"}
-                  title={copied ? "Copied" : "Copy"}
-                >
-                  {copied ? (
-                    <>
-                      <CheckIcon className="size-4" />
-                      <span className="hidden sm:inline">Copied</span>
-                    </>
-                  ) : (
-                    <>
-                      <CopyIcon className="size-4" />
-                      <span className="hidden sm:inline">Copy</span>
-                    </>
-                  )}
-                </Button>
-              )}
-              {canDownload && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleDownload}
-                  className="gap-2 px-2 sm:px-3"
-                  aria-label="Download"
-                  title="Download"
-                >
-                  <DownloadIcon className="size-4" />
-                  <span className="hidden sm:inline">Download</span>
-                </Button>
-              )}
+                {canCopy && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCopy}
+                    className="gap-2 px-2 sm:px-3"
+                    aria-label={copied ? "Copied" : "Copy"}
+                    title={copied ? "Copied" : "Copy"}
+                  >
+                    {copied ? (
+                      <>
+                        <CheckIcon className="size-4" />
+                        <span className="hidden sm:inline">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <CopyIcon className="size-4" />
+                        <span className="hidden sm:inline">Copy</span>
+                      </>
+                    )}
+                  </Button>
+                )}
+                {canDownload && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDownload}
+                    className="gap-2 px-2 sm:px-3"
+                    aria-label="Download"
+                    title="Download"
+                  >
+                    <DownloadIcon className="size-4" />
+                    <span className="hidden sm:inline">Download</span>
+                  </Button>
+                )}
               </div>
             </div>
           </div>

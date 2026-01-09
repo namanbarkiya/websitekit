@@ -7,8 +7,8 @@ import { PaletteIcon } from "lucide-react";
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { AssetModal } from "@/components/asset-modal";
-import { Button } from "@/components/ui/button";
 import { GlobalBreadcrumbs } from "@/components/global-breadcrumbs";
+import { Button } from "@/components/ui/button";
 import {
   SidebarInset,
   SidebarProvider,

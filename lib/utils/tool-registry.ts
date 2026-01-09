@@ -6,6 +6,7 @@
  */
 
 import type { ComponentType, ReactNode } from "react";
+
 import type { WebsiteAssets } from "@/lib/store/asset-store";
 
 /**
@@ -112,7 +113,9 @@ const toolRegistry: ToolRegistryMap = new Map();
  */
 export function registerTool(tool: ToolDefinition): void {
   if (toolRegistry.has(tool.id)) {
-    console.warn(`Tool with ID "${tool.id}" is already registered. Overwriting.`);
+    console.warn(
+      `Tool with ID "${tool.id}" is already registered. Overwriting.`
+    );
   }
 
   // Validate tool definition
@@ -123,7 +126,9 @@ export function registerTool(tool: ToolDefinition): void {
   }
 
   if (!tool.keywords || tool.keywords.length === 0) {
-    console.warn(`Tool "${tool.id}" has no keywords. This may affect searchability.`);
+    console.warn(
+      `Tool "${tool.id}" has no keywords. This may affect searchability.`
+    );
   }
 
   toolRegistry.set(tool.id, tool);
@@ -172,7 +177,11 @@ export function searchTools(query: string): ToolDefinition[] {
     if (tool.description.toLowerCase().includes(lowerQuery)) return true;
 
     // Search in keywords
-    if (tool.keywords.some((keyword) => keyword.toLowerCase().includes(lowerQuery)))
+    if (
+      tool.keywords.some((keyword) =>
+        keyword.toLowerCase().includes(lowerQuery)
+      )
+    )
       return true;
 
     // Search in category

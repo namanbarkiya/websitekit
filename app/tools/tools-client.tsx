@@ -716,11 +716,13 @@ export function ToolsClient() {
                   <ul className="mt-1 space-y-1">
                     <li className="flex items-center gap-2">
                       <CheckIcon className="size-4 text-emerald-500" />
-                      Use multiple keywords: &quot;meta twitter&quot; or &quot;qr png&quot;.
+                      Use multiple keywords: &quot;meta twitter&quot; or
+                      &quot;qr png&quot;.
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckIcon className="size-4 text-emerald-500" />
-                      Use filters to narrow down &quot;Live&quot; vs &quot;Soon&quot;.
+                      Use filters to narrow down &quot;Live&quot; vs
+                      &quot;Soon&quot;.
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckIcon className="size-4 text-emerald-500" />

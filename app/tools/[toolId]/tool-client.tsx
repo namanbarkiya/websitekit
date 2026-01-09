@@ -201,4 +201,3 @@ export function ToolClient({ toolId }: { toolId: string }) {
     </div>
   );
 }
-

@@ -65,25 +65,25 @@ If a tool needs to change something:
 /tools/[toolId] ← Tool host page
 
 /lib/store
-asset-store.ts        # Website assets store
-app-store.ts          # App-level state
-ui-store.ts           # UI state
-breadcrumb-store.ts   # Breadcrumb state
+asset-store.ts # Website assets store
+app-store.ts # App-level state
+ui-store.ts # UI state
+breadcrumb-store.ts # Breadcrumb state
 
 /lib/hooks
 use-website-assets.ts # Access website assets (read-only)
-use-tool-state.ts     # Tool local state management
-use-tool-context.tsx  # Tool context provider
+use-tool-state.ts # Tool local state management
+use-tool-context.tsx # Tool context provider
 
 /lib/utils
-tool-registry.ts      # Tool registry and definitions
-output-utils.ts       # Output formatting, copy, download
-search.ts             # Search utilities
+tool-registry.ts # Tool registry and definitions
+output-utils.ts # Output formatting, copy, download
+search.ts # Search utilities
 
 /components
-asset-modal.tsx       # Asset editing modal
-output-renderer.tsx   # Output display component
-ui/                   # UI primitives (shadcn/ui)
+asset-modal.tsx # Asset editing modal
+output-renderer.tsx # Output display component
+ui/ # UI primitives (shadcn/ui)
 
 /app/tools
 /meta-tags

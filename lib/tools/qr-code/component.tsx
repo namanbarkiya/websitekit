@@ -1,17 +1,24 @@
 "use client";
 
+import QRCode from "qrcode";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDownIcon } from "lucide-react";
-import QRCode from "qrcode";
-import type { ToolProps } from "@/lib/utils/tool-registry";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { ToolProps } from "@/lib/utils/tool-registry";
 
 export interface QRCodeState {
   content: string;
@@ -256,14 +263,16 @@ export function QRCodeComponent({
         <Input
           id="content"
           value={formState.content}
-          onChange={(e) =>
-            setState({ ...formState, content: e.target.value })
-          }
+          onChange={(e) => setState({ ...formState, content: e.target.value })}
           placeholder="https://example.com or any text"
         />
       </div>
 
-      <Collapsible open={optionsOpen} onOpenChange={setOptionsOpen} className="rounded-lg border">
+      <Collapsible
+        open={optionsOpen}
+        onOpenChange={setOptionsOpen}
+        className="rounded-lg border"
+      >
         <CollapsibleTrigger asChild>
           <button
             type="button"
@@ -309,7 +318,10 @@ export function QRCodeComponent({
                 max="10"
                 value={formState.margin}
                 onChange={(e) =>
-                  setState({ ...formState, margin: parseInt(e.target.value) || 4 })
+                  setState({
+                    ...formState,
+                    margin: parseInt(e.target.value) || 4,
+                  })
                 }
               />
             </div>

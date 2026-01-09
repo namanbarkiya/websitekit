@@ -11,8 +11,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "FAQ - Frequently Asked Questions | WebsiteKit",
-    description:
-      "Get answers to common questions about WebsiteKit tools.",
+    description: "Get answers to common questions about WebsiteKit tools.",
     url: "/faq",
     siteName: "WebsiteKit",
     type: "website",
@@ -20,8 +19,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "FAQ - Frequently Asked Questions | WebsiteKit",
-    description:
-      "Get answers to common questions about WebsiteKit tools.",
+    description: "Get answers to common questions about WebsiteKit tools.",
   },
 };
 

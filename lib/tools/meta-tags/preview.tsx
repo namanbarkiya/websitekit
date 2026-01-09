@@ -50,25 +50,29 @@ export function generatePreviewHTML(
   <div class="meta-preview-section">
     <div class="text-xs text-muted-foreground mb-2 font-medium">X (Formerly Twitter)</div>
     <div class="border rounded-lg overflow-hidden bg-background max-w-lg">
-      ${image
-        ? `<div class="aspect-[1.91/1] relative overflow-hidden" style="background-color: ${brandColor};">
+      ${
+        image
+          ? `<div class="aspect-[1.91/1] relative overflow-hidden" style="background-color: ${brandColor};">
             <img src="${escapeHtml(image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
             <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-6" style="display: none; background-color: ${brandColor};">
               <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
               <div class="text-xl font-semibold">${escapeHtml(truncate(title, 30))}</div>
             </div>
           </div>`
-        : `<div class="aspect-[1.91/1] flex flex-col items-center justify-center text-white p-6" style="background-color: ${brandColor};">
+          : `<div class="aspect-[1.91/1] flex flex-col items-center justify-center text-white p-6" style="background-color: ${brandColor};">
             <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
             <div class="text-xl font-semibold">${escapeHtml(truncate(title, 30))}</div>
-          </div>`}
-      ${title || description
-        ? `<div class="p-4 space-y-1">
+          </div>`
+      }
+      ${
+        title || description
+          ? `<div class="p-4 space-y-1">
             <div class="font-semibold text-sm line-clamp-2">${escapeHtml(title)}</div>
             ${description ? `<div class="text-muted-foreground text-sm line-clamp-2">${escapeHtml(truncate(description, 100))}</div>` : ""}
             ${domain ? `<div class="text-xs text-muted-foreground mt-1">From ${escapeHtml(domain)}</div>` : ""}
           </div>`
-        : ""}
+          : ""
+      }
     </div>
   </div>
 
@@ -76,18 +80,20 @@ export function generatePreviewHTML(
   <div class="meta-preview-section">
     <div class="text-xs text-muted-foreground mb-2 font-medium">Facebook</div>
     <div class="border rounded-lg overflow-hidden bg-background max-w-lg">
-      ${image
-        ? `<div class="aspect-[1.91/1] relative overflow-hidden" style="background-color: ${brandColor};">
+      ${
+        image
+          ? `<div class="aspect-[1.91/1] relative overflow-hidden" style="background-color: ${brandColor};">
             <img src="${escapeHtml(image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
             <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-6" style="display: none; background-color: ${brandColor};">
               <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
               <div class="text-xl font-semibold">${escapeHtml(truncate(title, 30))}</div>
             </div>
           </div>`
-        : `<div class="aspect-[1.91/1] flex flex-col items-center justify-center text-white p-6" style="background-color: ${brandColor};">
+          : `<div class="aspect-[1.91/1] flex flex-col items-center justify-center text-white p-6" style="background-color: ${brandColor};">
             <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
             <div class="text-xl font-semibold">${escapeHtml(truncate(title, 30))}</div>
-          </div>`}
+          </div>`
+      }
       <div class="p-3 space-y-1">
         ${domain ? `<div class="text-xs text-muted-foreground uppercase">${escapeHtml(domain)}</div>` : ""}
         ${title ? `<div class="font-semibold text-base leading-tight line-clamp-2">${escapeHtml(title)}</div>` : ""}
@@ -100,19 +106,25 @@ export function generatePreviewHTML(
   <div class="meta-preview-section">
     <div class="text-xs text-muted-foreground mb-2 font-medium">Pinterest</div>
     <div class="border rounded-lg overflow-hidden bg-background max-w-xs">
-      ${image
-        ? `<div class="aspect-square relative overflow-hidden" style="background-color: ${brandColor};">
+      ${
+        image
+          ? `<div class="aspect-square relative overflow-hidden" style="background-color: ${brandColor};">
             <img src="${escapeHtml(image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
             <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-6" style="display: none; background-color: ${brandColor};">
               <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
             </div>
           </div>`
-        : `<div class="aspect-square flex flex-col items-center justify-center text-white p-6" style="background-color: ${brandColor};">
+          : `<div class="aspect-square flex flex-col items-center justify-center text-white p-6" style="background-color: ${brandColor};">
             <div class="text-4xl font-bold mb-2">${escapeHtml(siteName || title.substring(0, 1).toUpperCase())}</div>
-          </div>`}
-      ${title ? `<div class="p-3">
+          </div>`
+      }
+      ${
+        title
+          ? `<div class="p-3">
         <div class="font-semibold text-sm line-clamp-2">${escapeHtml(title)}</div>
-      </div>` : ""}
+      </div>`
+          : ""
+      }
     </div>
   </div>
 
@@ -126,11 +138,13 @@ export function generatePreviewHTML(
       </div>
       ${title ? `<div class="text-blue-600 dark:text-blue-400 font-semibold text-sm mb-1 leading-tight">${escapeHtml(title)}</div>` : ""}
       ${description ? `<div class="text-sm text-muted-foreground mb-3 leading-snug line-clamp-3">${escapeHtml(truncate(description, 150))}</div>` : ""}
-      ${image
-        ? `<div class="rounded-lg overflow-hidden border">
+      ${
+        image
+          ? `<div class="rounded-lg overflow-hidden border">
             <img src="${escapeHtml(image)}" alt="${escapeHtml(title)}" class="w-full object-cover" style="max-height: 300px;" onerror="this.style.display='none';" />
           </div>`
-        : ""}
+          : ""
+      }
     </div>
   </div>
 </div>

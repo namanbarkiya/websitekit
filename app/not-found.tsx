@@ -1,12 +1,13 @@
-import Link from "next/link";
 import type { Metadata } from "next";
-import { HomeIcon, HammerIcon } from "lucide-react";
+import Link from "next/link";
+import { HammerIcon, HomeIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Page Not Found | WebsiteKit",
-  description: "The page you're looking for doesn't exist. Browse our tools or return to the homepage.",
+  description:
+    "The page you're looking for doesn't exist. Browse our tools or return to the homepage.",
   robots: {
     index: false,
     follow: true,

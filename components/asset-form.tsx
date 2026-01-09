@@ -199,9 +199,7 @@ export function AssetForm({
       <div className={variant === "compact" ? "space-y-4" : "space-y-6"}>
         <div
           className={
-            variant === "compact"
-              ? "grid gap-4 md:grid-cols-2"
-              : "space-y-6"
+            variant === "compact" ? "grid gap-4 md:grid-cols-2" : "space-y-6"
           }
         >
           {/* Website Name */}
@@ -424,4 +422,3 @@ export function AssetForm({
     </div>
   );
 }
-

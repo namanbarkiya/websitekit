@@ -9,6 +9,7 @@ This document outlines what's currently implemented and what needs to be built t
 **Current Status:** Basic UI infrastructure is in place, but core platform functionality is missing.
 
 **Critical Gaps:**
+
 1. Website Asset Context system (global state management)
 2. Tool Definition Contract & Registry
 3. Output System (shared renderer)
@@ -21,6 +22,7 @@ This document outlines what's currently implemented and what needs to be built t
 ## ✅ What's Currently Implemented
 
 ### UI Infrastructure (Complete)
+
 - ✅ Sidebar navigation with categories
 - ✅ Sidebar search functionality
 - ✅ Landing page (`/`)
@@ -31,6 +33,7 @@ This document outlines what's currently implemented and what needs to be built t
 - ✅ Settings popover
 
 ### Routing & Structure (Partial)
+
 - ✅ All tool routes exist (`/tools/[toolId]`)
 - ✅ Tool pages created (but only placeholders)
 - ✅ Sidebar configuration with 24 tools defined
@@ -38,6 +41,7 @@ This document outlines what's currently implemented and what needs to be built t
 - ❌ Dynamic tool host page - **MISSING**
 
 ### State Management (Complete)
+
 - ✅ App store (errors, loading states)
 - ✅ UI store (sidebar state, theme)
 - ✅ Breadcrumb store
@@ -45,6 +49,7 @@ This document outlines what's currently implemented and what needs to be built t
 - ✅ Asset hooks (`lib/hooks/use-website-assets.ts`)
 
 ### Search (Complete)
+
 - ✅ Keyword-based search
 - ✅ Category filtering
 - ✅ Tool discovery via sidebar
@@ -59,6 +64,7 @@ This document outlines what's currently implemented and what needs to be built t
 **Priority:** 🔴 Critical (Blocks all tool development)
 
 **What's Needed:**
+
 - Global state store for website assets:
   - `name` (string)
   - `domain` (string)
@@ -71,6 +77,7 @@ This document outlines what's currently implemented and what needs to be built t
 - Hook for tools to access assets: `useWebsiteAssets()`
 
 **Implementation Location:**
+
 ```
 lib/store/
   asset-store.ts      # Zustand store for assets (includes types)
@@ -81,6 +88,7 @@ components/
 ```
 
 **Key Requirements:**
+
 - Assets stored in localStorage key: `websitekit-assets`
 - Tools can read but never write
 - Changes only via Asset Modal
@@ -94,6 +102,7 @@ components/
 **Priority:** 🔴 Critical (Required for tool system)
 
 **What's Needed:**
+
 - TypeScript interfaces for tool definitions:
   ```typescript
   interface ToolDefinition {
@@ -102,8 +111,8 @@ components/
     description: string;
     category: string;
     keywords: string[];
-    acceptedContext: string[];  // e.g., ["name", "domain", "logo"]
-    outputs: OutputType[];       // e.g., ["html", "json", "file"]
+    acceptedContext: string[]; // e.g., ["name", "domain", "logo"]
+    outputs: OutputType[]; // e.g., ["html", "json", "file"]
     Component: React.ComponentType<ToolProps>;
     run?: (state: ToolState, context: WebsiteAssets) => ToolOutput;
   }
@@ -113,6 +122,7 @@ components/
 - Integration with sidebar config
 
 **Implementation Location:**
+
 ```
 lib/utils/
   tool-registry.ts    # ToolDefinition, ToolProps, ToolOutput types and registry
@@ -127,6 +137,7 @@ lib/tools/
 ```
 
 **Key Requirements:**
+
 - Tools must export a manifest
 - Tools are isolated (no cross-tool imports)
 - Tools cannot mutate global state
@@ -140,6 +151,7 @@ lib/tools/
 **Priority:** 🔴 Critical (Required for tool outputs)
 
 **What's Needed:**
+
 - Output renderer component that handles:
   - **Preview Tab** - Live preview of output (if applicable)
   - **Code Tab** - Syntax-highlighted code view
@@ -156,6 +168,7 @@ lib/tools/
   - Multiple files (zip)
 
 **Implementation Location:**
+
 ```
 components/
   output-renderer.tsx   # Main output renderer (includes Preview/Code/Files tabs)
@@ -166,6 +179,7 @@ lib/utils/
 ```
 
 **Key Requirements:**
+
 - Consistent UX across all tools
 - Tools return structured output, not rendered UI
 - Copy buttons with toast notifications
@@ -180,6 +194,7 @@ lib/utils/
 **Priority:** 🔴 Critical (Required to display tools)
 
 **What's Needed:**
+
 - Dynamic page at `/app/tools/[toolId]/page.tsx`
 - Responsibilities:
   - Load tool definition from registry
@@ -192,6 +207,7 @@ lib/utils/
 - Context passing to tool components
 
 **Implementation Location:**
+
 ```
 app/tools/[toolId]/
   page.tsx              # Dynamic tool host page
@@ -201,6 +217,7 @@ lib/hooks/
 ```
 
 **Key Requirements:**
+
 - Tools receive website assets as read-only context
 - Tools manage their own local state
 - Tools return outputs, host renders them
@@ -214,6 +231,7 @@ lib/hooks/
 **Priority:** 🟡 High (Better UX than landing page for tools)
 
 **What's Needed:**
+
 - Page at `/app/tools/page.tsx`
 - Display categorized tools
 - Search and filter functionality
@@ -221,12 +239,14 @@ lib/hooks/
 - Quick access to popular/recent tools (future)
 
 **Implementation Location:**
+
 ```
 app/tools/
   page.tsx              # Tools dashboard
 ```
 
 **Key Requirements:**
+
 - Reuses sidebar config for tool listing
 - Integrates with search functionality
 - Prominent "Set Website Assets" CTA
@@ -240,6 +260,7 @@ app/tools/
 **Priority:** 🔴 Critical (Required for global context)
 
 **What's Needed:**
+
 - Modal/Drawer component to edit website assets
 - Form fields:
   - Website name (text input)
@@ -255,6 +276,7 @@ app/tools/
   - Tool pages (via header button)
 
 **Implementation Location:**
+
 ```
 components/
   asset-modal.tsx       # Main modal component (includes form and validation)
@@ -263,6 +285,7 @@ lib/store/
 ```
 
 **Key Requirements:**
+
 - Single source of truth for asset editing
 - Validation (domain format, color hex, etc.)
 - Image upload handling (base64 or blob URL)
@@ -276,28 +299,33 @@ lib/store/
 All 24 tools have placeholder pages. One tool is fully implemented.
 
 ### Priority 1: Foundation Tools (Must implement first)
+
 1. **Website Assets** (`/tools/assets`) - ✅ **Functional** (Asset modal integrated)
 2. **Meta Tags** (`/tools/meta-tags`) - ✅ **Fully Implemented**
 3. **robots.txt** (`/tools/robots`) - ❌ Placeholder
 4. **Sitemap** (`/tools/sitemap`) - ❌ Placeholder
 
 ### Priority 2: SEO Tools
+
 5. **Canonical URL** (`/tools/canonical-url`) - ❌ Placeholder
 6. **JSON-LD Schema** (`/tools/json-ld`) - ❌ Placeholder
 7. **SEO Checklist** (`/tools/seo-checklist`) - ❌ Placeholder
 
 ### Priority 3: Social & Branding
+
 8. **Social Preview** (`/tools/social-preview`) - ❌ Placeholder
 9. **Logo Export** (`/tools/logo-export`) - ❌ Placeholder
 10. **Brand Colors** (`/tools/brand-colors`) - ❌ Placeholder
 
 ### Priority 4: Performance
+
 11. **Preload Hints** (`/tools/preload`) - ❌ Placeholder
 12. **Font Loading** (`/tools/font-loading`) - ❌ Placeholder
 13. **Image Guide** (`/tools/image-guide`) - ❌ Placeholder
 14. **Minifier** (`/tools/minifier`) - ❌ Placeholder
 
 ### Priority 5: Security
+
 15. **Security Headers** (`/tools/security-headers`) - ❌ Placeholder
 16. **CSP Generator** (`/tools/csp`) - ❌ Placeholder
 17. **Permissions** (`/tools/permissions`) - ❌ Placeholder
@@ -305,12 +333,14 @@ All 24 tools have placeholder pages. One tool is fully implemented.
 19. **Cookie Consent** (`/tools/cookie-consent`) - ❌ Placeholder
 
 ### Priority 6: Utilities
+
 20. **Placeholder** (`/tools/placeholder`) - ❌ Placeholder
 21. **Gradient** (`/tools/gradient`) - ❌ Placeholder
 22. **SVG Shapes** (`/tools/svg-shapes`) - ❌ Placeholder
 23. **QR Code** (`/tools/qr-code`) - ❌ Placeholder
 
 ### Priority 7: Advanced (Future)
+
 24. **Favicon** (`/tools/favicon`) - ❌ Placeholder
 25. **HTML Head** (`/tools/html-head`) - ❌ Placeholder
 
@@ -319,6 +349,7 @@ All 24 tools have placeholder pages. One tool is fully implemented.
 ## 📦 Recommended Implementation Order
 
 ### Phase 1: Core Platform (Week 1)
+
 **Goal:** Enable tool development infrastructure
 
 1. **Website Asset Context System**
@@ -344,6 +375,7 @@ All 24 tools have placeholder pages. One tool is fully implemented.
    - Add copy-to-clipboard and download functionality
 
 ### Phase 2: Tool Hosting (Week 1-2)
+
 **Goal:** Enable dynamic tool rendering
 
 5. **Tool Host Page**
@@ -358,6 +390,7 @@ All 24 tools have placeholder pages. One tool is fully implemented.
    - Add "Set Assets" CTA
 
 ### Phase 3: First Tool Implementation (Week 2)
+
 **Goal:** Validate architecture with working tool
 
 7. **Meta Tags Tool** ✅ **COMPLETE**
@@ -368,6 +401,7 @@ All 24 tools have placeholder pages. One tool is fully implemented.
    - ✅ Validate context integration (initializes from website assets)
 
 ### Phase 4: Tool Expansion (Week 3+)
+
 **Goal:** Build remaining tools
 
 8. **Website Assets Tool** (Priority 1)
@@ -418,6 +452,7 @@ All 24 tools have placeholder pages. One tool is fully implemented.
 ```
 
 **Note:** The project follows this structure:
+
 - `lib/store/` - All Zustand stores
 - `lib/hooks/` - All React hooks
 - `lib/utils/` - Utility functions and shared logic
@@ -428,24 +463,29 @@ All 24 tools have placeholder pages. One tool is fully implemented.
 ## 🔍 Key Technical Decisions Needed
 
 ### 1. State Management
+
 - **Decision:** Use Zustand for asset store (consistent with existing stores)
 - **Rationale:** Already in use, simple API, good TypeScript support
 
 ### 2. Tool Loading Strategy
+
 - **Option A:** Static imports (all tools bundled)
 - **Option B:** Dynamic imports (code splitting per tool)
 - **Recommendation:** Option B for better performance as tool count grows
 
 ### 3. Output Formatting
+
 - **Decision:** Tools return structured data, host formats for display
 - **Rationale:** Separation of concerns, consistent UX
 
 ### 4. File Handling
+
 - **Decision:** Use browser APIs (Blob, File) for downloads
 - **For ZIP:** Use `jszip` library
 - **For Images:** Canvas API for generation
 
 ### 5. Syntax Highlighting
+
 - **Decision:** Use `react-syntax-highlighter` or `shiki`
 - **Recommendation:** `shiki` for better performance (server-side highlighting)
 
@@ -454,6 +494,7 @@ All 24 tools have placeholder pages. One tool is fully implemented.
 ## 📝 Implementation Checklist
 
 ### Core Platform
+
 - [ ] Website Asset Context store
 - [ ] Asset types & interfaces
 - [ ] `useWebsiteAssets()` hook
@@ -469,6 +510,7 @@ All 24 tools have placeholder pages. One tool is fully implemented.
 - [ ] Download utility (single & zip)
 
 ### Tool Hosting
+
 - [ ] Dynamic tool host page
 - [ ] Tool context provider
 - [ ] Tool state management hook
@@ -476,6 +518,7 @@ All 24 tools have placeholder pages. One tool is fully implemented.
 - [ ] Tools Dashboard page
 
 ### First Tool (Meta Tags)
+
 - [ ] Tool definition
 - [ ] Tool component UI
 - [ ] Form inputs (title, description, OG tags, etc.)

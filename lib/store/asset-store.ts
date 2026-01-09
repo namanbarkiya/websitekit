@@ -5,8 +5,8 @@
  * Assets are persisted to localStorage and are read-only for tools.
  */
 
-import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { create } from "zustand";
 
 /**
  * Website Asset Types

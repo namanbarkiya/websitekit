@@ -3,14 +3,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDownIcon } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import type { ToolProps } from "@/lib/utils/tool-registry";
 
 import { generatePreviewHTML } from "./preview";
@@ -216,7 +216,11 @@ export function MetaTagsComponent({
   return (
     <div className="space-y-4">
       {/* Basic SEO Meta Tags */}
-      <Collapsible open={basicOpen} onOpenChange={setBasicOpen} className="rounded-lg border">
+      <Collapsible
+        open={basicOpen}
+        onOpenChange={setBasicOpen}
+        className="rounded-lg border"
+      >
         <CollapsibleTrigger asChild>
           <button
             type="button"
@@ -299,7 +303,11 @@ export function MetaTagsComponent({
       </Collapsible>
 
       {/* Open Graph Meta Tags */}
-      <Collapsible open={ogOpen} onOpenChange={setOgOpen} className="rounded-lg border">
+      <Collapsible
+        open={ogOpen}
+        onOpenChange={setOgOpen}
+        className="rounded-lg border"
+      >
         <CollapsibleTrigger asChild>
           <button
             type="button"

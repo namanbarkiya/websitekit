@@ -1,10 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import type { Metadata } from "next";
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { sidebarConfig, type SidebarNavItem } from "@/config/sidebar";
+import { getToolContent } from "@/lib/tools";
 
 import { ToolClient } from "./tool-client";
 
@@ -68,81 +69,6 @@ function toolCanonical(toolId: string) {
   return `/tools/${toolId}`;
 }
 
-// Tool-specific content for better SEO (unique content per tool)
-interface ToolContent {
-  features: string[];
-  howItWorks: string[];
-  useCases?: string[];
-}
-
-function getToolContent(toolId: string): ToolContent {
-  const content: Record<string, ToolContent> = {
-    "meta-tags": {
-      features: [
-        "Generate complete <head> section with all essential meta tags",
-        "Include Open Graph tags for Facebook, LinkedIn, and other social platforms",
-        "Add Twitter Card meta tags for rich previews on X (Twitter)",
-        "Set canonical URLs to prevent duplicate content issues",
-        "Configure robots directives to control search engine indexing",
-        "Preview how your page will look in search results and social shares",
-      ],
-      howItWorks: [
-        "Enter your page title, description, and URL",
-        "Add optional Open Graph image URL for social previews",
-        "Configure advanced settings like robots directives",
-        "Click Generate to create your meta tags",
-        "Copy the HTML snippet and paste into your <head> section",
-      ],
-      useCases: [
-        "Launching a new website or landing page",
-        "Improving SEO for existing pages",
-        "Setting up social media sharing previews",
-        "Ensuring consistent metadata across your site",
-      ],
-    },
-    "qr-code": {
-      features: [
-        "Generate QR codes for any URL or text content",
-        "Download as high-quality SVG for print materials",
-        "Export as PNG for digital use and applications",
-        "Customize QR code size for different use cases",
-        "Preview QR code before downloading",
-        "No watermarks or branding on generated codes",
-      ],
-      howItWorks: [
-        "Enter the URL or text you want to encode",
-        "Adjust the size if needed (default works for most cases)",
-        "Click Generate to create your QR code",
-        "Preview the result and test with your phone camera",
-        "Download as SVG for print or PNG for digital use",
-      ],
-      useCases: [
-        "Business cards and marketing materials",
-        "Restaurant menus and product packaging",
-        "Event tickets and conference badges",
-        "App download links and contact sharing",
-      ],
-    },
-  };
-
-  return (
-    content[toolId] || {
-      features: [
-        "Generate production-ready output instantly",
-        "Copy and paste directly into your codebase",
-        "No signup or account required",
-        "Works with any website or framework",
-      ],
-      howItWorks: [
-        "Enter the required information",
-        "Click Generate to create your output",
-        "Preview and verify the result",
-        "Copy the output and use in your project",
-      ],
-    }
-  );
-}
-
 export async function generateStaticParams() {
   return sidebarConfig.categories
     .flatMap((c) => c.items)
@@ -179,7 +105,9 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [new URL(`/tools/${toolId}/opengraph-image`, SITE_URL).toString()],
+      images: [
+        new URL(`/tools/${toolId}/opengraph-image`, SITE_URL).toString(),
+      ],
     },
     robots: {
       index: true,
@@ -208,6 +136,7 @@ function buildToolJsonLd(tool: ToolPageMeta) {
   const url = new URL(toolCanonical(tool.toolId), SITE_URL).toString();
   const name = toolTitle(tool);
   const description = toolDescription(tool);
+  const content = getToolContent(tool.toolId);
 
   const breadcrumbs = {
     "@context": "https://schema.org",
@@ -249,148 +178,147 @@ function buildToolJsonLd(tool: ToolPageMeta) {
     },
   };
 
-  const faq =
-    tool.toolId === "meta-tags"
-      ? {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: [
-            {
-              "@type": "Question",
-              name: "What meta tags should every page have?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "At minimum: title, meta description, canonical URL, and Open Graph/Twitter tags for social sharing. Many sites also add robots directives and structured data (JSON-LD) where relevant.",
-              },
-            },
-            {
-              "@type": "Question",
-              name: "Do meta keywords help SEO?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "No. Most major search engines ignore the meta keywords tag. Focus on title, description, canonical, and structured data instead.",
-              },
-            },
-            {
-              "@type": "Question",
-              name: "How long should my meta description be?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "Aim for 150-160 characters. Google typically displays up to 155-160 characters in search results, so keep your most important information at the beginning.",
-              },
-            },
-          ],
-        }
-      : tool.toolId === "qr-code"
-        ? {
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: [
-              {
-                "@type": "Question",
-                name: "What format should I download: SVG or PNG?",
-                acceptedAnswer: {
-                  "@type": "Answer",
-                  text: "Use SVG for crisp scaling in print and web. Use PNG when you need a fixed-size raster image for apps or platforms that don't accept SVG.",
-                },
-              },
-              {
-                "@type": "Question",
-                name: "What makes a QR code scan reliably?",
-                acceptedAnswer: {
-                  "@type": "Answer",
-                  text: "High contrast, sufficient size, quiet zone padding, and avoiding overly dense content. Always test with multiple camera apps.",
-                },
-              },
-              {
-                "@type": "Question",
-                name: "What is the minimum size for a printed QR code?",
-                acceptedAnswer: {
-                  "@type": "Answer",
-                  text: "For reliable scanning, print QR codes at minimum 2x2 cm (0.8x0.8 inches). Larger sizes are recommended for scanning from a distance.",
-                },
-              },
-            ],
-          }
-        : null;
+  // HowTo schema for AI answer extraction (AEO/GEO)
+  const howTo = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: `How to use ${tool.title}`,
+    description: `Step-by-step guide to using the ${tool.title} tool on WebsiteKit.`,
+    step: content.howItWorks.map((text, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      text,
+    })),
+    tool: {
+      "@type": "HowToTool",
+      name: "WebsiteKit",
+    },
+  };
 
-  return faq ? [breadcrumbs, app, faq] : [breadcrumbs, app];
+  // FAQ schema from content (if available)
+  const faq = content.faq
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: content.faq.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.answer,
+          },
+        })),
+      }
+    : null;
+
+  return faq ? [breadcrumbs, app, howTo, faq] : [breadcrumbs, app, howTo];
 }
 
 function ToolContentSection({
   toolId,
+  toolTitle: title,
   category,
 }: {
   toolId: string;
+  toolTitle: string;
   category?: string;
 }) {
   const content = getToolContent(toolId);
 
   return (
-    <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <Card className="p-5 lg:col-span-2 space-y-6">
-        <div>
-          <h2 className="text-lg font-semibold">Features</h2>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground list-disc pl-5">
-            {content.features.map((feature, i) => (
-              <li key={i}>{feature}</li>
-            ))}
-          </ul>
-        </div>
+    <section className="space-y-4">
+      {/* "What is" intro - AEO/GEO optimized direct answer paragraph */}
+      <Card className="p-5">
+        <h2 className="text-lg font-semibold">What is a {title}?</h2>
+        <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+          {content.whatIs}
+        </p>
+      </Card>
 
-        <div>
-          <h2 className="text-lg font-semibold">How it works</h2>
-          <ol className="mt-3 space-y-2 text-sm text-muted-foreground list-decimal pl-5">
-            {content.howItWorks.map((step, i) => (
-              <li key={i}>{step}</li>
-            ))}
-          </ol>
-        </div>
-
-        {content.useCases && (
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <Card className="p-5 lg:col-span-2 space-y-6">
           <div>
-            <h2 className="text-lg font-semibold">Common use cases</h2>
+            <h2 className="text-lg font-semibold">
+              What can you do with this tool?
+            </h2>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground list-disc pl-5">
-              {content.useCases.map((useCase, i) => (
-                <li key={i}>{useCase}</li>
+              {content.features.map((feature, i) => (
+                <li key={i}>{feature}</li>
               ))}
             </ul>
           </div>
-        )}
-      </Card>
 
-      <Card className="p-5">
-        <h2 className="text-lg font-semibold">Related tools</h2>
-        <ul className="mt-3 space-y-2 text-sm">
-          {sidebarConfig.categories
-            .find((c) => c.title === category)
-            ?.items.filter((it) => it.href !== `/tools/${toolId}`)
-            .slice(0, 5)
-            .map((it) => (
-              <li key={it.href}>
-                <Link
-                  href={it.href}
-                  className="text-muted-foreground hover:text-foreground hover:underline"
-                >
-                  {it.title}
-                  {it.locked && (
-                    <span className="ml-2 text-xs opacity-60">(Soon)</span>
-                  )}
-                </Link>
-              </li>
-            ))}
-        </ul>
+          <div>
+            <h2 className="text-lg font-semibold">How do I use it?</h2>
+            <ol className="mt-3 space-y-2 text-sm text-muted-foreground list-decimal pl-5">
+              {content.howItWorks.map((step, i) => (
+                <li key={i}>{step}</li>
+              ))}
+            </ol>
+          </div>
 
-        <div className="mt-6 pt-4 border-t">
-          <h3 className="text-sm font-semibold">Why use WebsiteKit?</h3>
-          <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-            <li>✓ 100% free, no signup</li>
-            <li>✓ No data sent to servers</li>
-            <li>✓ Production-ready output</li>
-            <li>✓ Works with any framework</li>
+          {content.useCases && (
+            <div>
+              <h2 className="text-lg font-semibold">When should I use this?</h2>
+              <ul className="mt-3 space-y-2 text-sm text-muted-foreground list-disc pl-5">
+                {content.useCases.map((useCase, i) => (
+                  <li key={i}>{useCase}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </Card>
+
+        <Card className="p-5">
+          <h2 className="text-lg font-semibold">Related tools</h2>
+          <ul className="mt-3 space-y-2 text-sm">
+            {sidebarConfig.categories
+              .find((c) => c.title === category)
+              ?.items.filter((it) => it.href !== `/tools/${toolId}`)
+              .slice(0, 5)
+              .map((it) => (
+                <li key={it.href}>
+                  <Link
+                    href={it.href}
+                    className="text-muted-foreground hover:text-foreground hover:underline"
+                  >
+                    {it.title}
+                    {it.locked && (
+                      <span className="ml-2 text-xs opacity-60">(Soon)</span>
+                    )}
+                  </Link>
+                </li>
+              ))}
           </ul>
-        </div>
-      </Card>
+
+          <div className="mt-6 pt-4 border-t">
+            <h3 className="text-sm font-semibold">Why use WebsiteKit?</h3>
+            <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+              <li>✓ 100% free, no signup</li>
+              <li>✓ No data sent to servers</li>
+              <li>✓ Production-ready output</li>
+              <li>✓ Works with any framework</li>
+            </ul>
+          </div>
+        </Card>
+      </div>
+
+      {/* Visible FAQ section - AEO/GEO optimized */}
+      {content.faq && content.faq.length > 0 && (
+        <Card className="p-5">
+          <h2 className="text-lg font-semibold">Frequently Asked Questions</h2>
+          <div className="mt-4 space-y-4">
+            {content.faq.map((item, i) => (
+              <div key={i} className="border-b last:border-0 pb-4 last:pb-0">
+                <h3 className="font-medium text-sm">{item.question}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {item.answer}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
     </section>
   );
 }
@@ -443,7 +371,11 @@ export default async function ToolPage({ params }: PageProps) {
           <ToolClient toolId={toolId} />
 
           {/* Crawlable content section (helps ranking without affecting tool UX) */}
-          <ToolContentSection toolId={toolId} category={tool.category} />
+          <ToolContentSection
+            toolId={toolId}
+            toolTitle={tool.title}
+            category={tool.category}
+          />
         </>
       )}
     </div>

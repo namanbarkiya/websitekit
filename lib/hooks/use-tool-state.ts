@@ -4,7 +4,7 @@
  * Hook for tools to manage their local state
  */
 
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
 export interface UseToolStateOptions {
   /** Initial state */
@@ -26,9 +26,8 @@ export interface UseToolStateOptions {
 export function useToolState(options: UseToolStateOptions = {}) {
   const { initialState = {}, onStateChange } = options;
 
-  const [state, setStateInternal] = useState<Record<string, unknown>>(
-    initialState
-  );
+  const [state, setStateInternal] =
+    useState<Record<string, unknown>>(initialState);
 
   const setState = useCallback(
     (updates: Partial<Record<string, unknown>>) => {

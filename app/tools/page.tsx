@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 
 import { sidebarConfig } from "@/config/sidebar";
@@ -130,7 +131,9 @@ export default function ToolsPage() {
       {jsonLdData.map((data, i) => (
         <JsonLd key={i} data={data} />
       ))}
-      <ToolsClient />
+      <Suspense fallback={null}>
+        <ToolsClient />
+      </Suspense>
     </>
   );
 }

@@ -7,6 +7,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
+
 import type { WebsiteAssets } from "@/lib/store/asset-store";
 
 export interface ToolContextValue {
@@ -26,9 +27,7 @@ export interface ToolProviderProps {
  */
 export function ToolProvider({ assets, children }: ToolProviderProps) {
   return (
-    <ToolContext.Provider value={{ assets }}>
-      {children}
-    </ToolContext.Provider>
+    <ToolContext.Provider value={{ assets }}>{children}</ToolContext.Provider>
   );
 }
 

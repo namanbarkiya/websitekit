@@ -106,8 +106,14 @@ export function HomeClient() {
               </p>
 
               <div className="mt-4 flex items-center gap-3">
-                <Button asChild className="group relative overflow-hidden gap-2 group-hover:animate-[wk-button-shake_450ms_ease-in-out_both]">
-                  <Link href="/tools" className="inline-flex items-center gap-2">
+                <Button
+                  asChild
+                  className="group relative overflow-hidden gap-2 group-hover:animate-[wk-button-shake_450ms_ease-in-out_both]"
+                >
+                  <Link
+                    href="/tools"
+                    className="inline-flex items-center gap-2"
+                  >
                     <span className="inline-flex origin-bottom-left group-hover:animate-[wk-hammer-swing_450ms_ease-in-out_both]">
                       <HammerIcon className="size-4" />
                     </span>

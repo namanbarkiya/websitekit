@@ -30,85 +30,83 @@ export default async function Image({
   const toolTitle = findToolTitle(toolId);
 
   return new ImageResponse(
-    (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          background: "linear-gradient(135deg, #0b1220 0%, #141b2d 60%, #0b1220 100%)",
-          padding: 72,
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              alignItems: "center",
-              fontSize: 26,
-              color: "rgba(255,255,255,0.8)",
-              letterSpacing: -0.2,
-            }}
-          >
-            <span style={{ fontWeight: 700, color: "white" }}>WebsiteKit</span>
-            <span style={{ opacity: 0.8 }}>•</span>
-            <span style={{ opacity: 0.85 }}>Tools</span>
-          </div>
-
-          <div
-            style={{
-              fontSize: 74,
-              lineHeight: 1.05,
-              fontWeight: 800,
-              color: "white",
-              letterSpacing: -1.2,
-            }}
-          >
-            {toolTitle}
-          </div>
-
-          <div
-            style={{
-              fontSize: 30,
-              lineHeight: 1.35,
-              color: "rgba(255,255,255,0.8)",
-              maxWidth: 980,
-            }}
-          >
-            Fast, production-ready website outputs.
-          </div>
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        background:
+          "linear-gradient(135deg, #0b1220 0%, #141b2d 60%, #0b1220 100%)",
+        padding: 72,
+      }}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <div
+          style={{
+            display: "flex",
+            gap: 10,
+            alignItems: "center",
+            fontSize: 26,
+            color: "rgba(255,255,255,0.8)",
+            letterSpacing: -0.2,
+          }}
+        >
+          <span style={{ fontWeight: 700, color: "white" }}>WebsiteKit</span>
+          <span style={{ opacity: 0.8 }}>•</span>
+          <span style={{ opacity: 0.85 }}>Tools</span>
         </div>
 
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            color: "rgba(255,255,255,0.65)",
-            fontSize: 22,
+            fontSize: 74,
+            lineHeight: 1.05,
+            fontWeight: 800,
+            color: "white",
+            letterSpacing: -1.2,
           }}
         >
-          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-            <div
-              style={{
-                width: 14,
-                height: 14,
-                borderRadius: 999,
-                background: "#7c3aed",
-              }}
-            />
-            <span>websitekit</span>
-          </div>
-          <div style={{ opacity: 0.75 }}>{`/tools/${toolId}`}</div>
+          {toolTitle}
+        </div>
+
+        <div
+          style={{
+            fontSize: 30,
+            lineHeight: 1.35,
+            color: "rgba(255,255,255,0.8)",
+            maxWidth: 980,
+          }}
+        >
+          Fast, production-ready website outputs.
         </div>
       </div>
-    ),
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          color: "rgba(255,255,255,0.65)",
+          fontSize: 22,
+        }}
+      >
+        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+          <div
+            style={{
+              width: 14,
+              height: 14,
+              borderRadius: 999,
+              background: "#7c3aed",
+            }}
+          />
+          <span>websitekit</span>
+        </div>
+        <div style={{ opacity: 0.75 }}>{`/tools/${toolId}`}</div>
+      </div>
+    </div>,
     {
       ...size,
     }
   );
 }
-
