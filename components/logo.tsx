@@ -28,7 +28,7 @@ interface LogoProps {
 }
 
 const LOGO_PATHS: Record<LogoVariant, string> = {
-  icon: "/logo/primary_icon.png",
+  icon: "/logo/primary_logo.png",
   full: "/logo/primary_logo.svg",
   "full-with-tagline": "/logo/primary_logo.svg",
   "primary-bg": "/logo/primary_bg.png",
@@ -99,7 +99,7 @@ export function Logo({
                 taglineSizeClasses[size]
               )}
             >
-              Everything you need to get started
+              Tools as a Service
             </span>
           )}
         </div>
