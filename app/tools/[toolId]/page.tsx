@@ -282,8 +282,8 @@ export default async function ToolPage({ params }: PageProps) {
   const content = getToolContent(toolId);
 
   return (
-    <div className="space-y-6">
-      <header className="space-y-3">
+    <div className="flex flex-col h-full min-h-0">
+      <header className="space-y-3 shrink-0 pb-6">
         <div className="flex flex-wrap items-center gap-2">
           <p className="text-xs text-muted-foreground">
             <Link href="/tools" className="hover:underline">
@@ -324,7 +324,9 @@ export default async function ToolPage({ params }: PageProps) {
         </Card>
       ) : (
         <>
-          <ToolClient toolId={toolId} />
+          <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+            <ToolClient toolId={toolId} />
+          </div>
 
           {/* Keep the SEO/AEO text in DOM without UI noise */}
           <ToolSeoText toolTitle={tool.title} content={content} />

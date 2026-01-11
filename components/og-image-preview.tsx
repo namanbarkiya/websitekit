@@ -4,7 +4,7 @@ import Image from "next/image";
 
 /**
  * Sample OG Image Preview Component
- * 
+ *
  * This shows how the OG images will look when generated.
  * Use this to verify positioning and styling before deploying.
  */
@@ -62,9 +62,7 @@ export function OGImagePreview() {
       <div className="rounded-lg border bg-muted/30 p-4 space-y-2">
         <h3 className="font-semibold">Note:</h3>
         <ul className="text-sm text-muted-foreground space-y-1 list-disc pl-5">
-          <li>
-            Tool title will be dynamically inserted based on the tool ID
-          </li>
+          <li>Tool title will be dynamically inserted based on the tool ID</li>
           <li>
             Text positioning (bottom: 120px, left: 72px) can be adjusted based
             on your template design

@@ -134,7 +134,7 @@ export function ToolClient({ toolId }: { toolId: string }) {
   }, [effectiveGenerate]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full min-h-0">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-0">
       {/* Left Card - Tool Form */}
       <Card className="flex flex-col h-full min-h-0 overflow-hidden py-0! gap-0">
         <CardHeader className="shrink-0 border-b px-6 py-6">

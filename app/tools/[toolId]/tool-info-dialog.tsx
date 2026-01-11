@@ -102,4 +102,3 @@ export function ToolInfoDialog({ toolTitle, toolName, content }: Props) {
     </Dialog>
   );
 }
-
