@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { sidebarConfig, type SidebarNavItem } from "@/config/sidebar";
-import { getToolContent } from "@/lib/tools";
+import { getToolContent } from "@/tools";
 
 import { ToolClient } from "./tool-client";
 import { ToolInfoDialog } from "./tool-info-dialog";

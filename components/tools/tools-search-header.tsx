@@ -39,8 +39,7 @@ export function ToolsSearchHeader({
             <h1 className="text-2xl font-semibold">Browse tools</h1>
             <p className="text-muted-foreground">
               Search by name, category, or keyword. Jump in with{" "}
-              <kbd className="rounded border px-1 font-mono text-xs">/</kbd>{" "}
-              or{" "}
+              <kbd className="rounded border px-1 font-mono text-xs">/</kbd> or{" "}
               <kbd className="rounded border px-1 font-mono text-xs">⌘K</kbd>.
             </p>
           </div>

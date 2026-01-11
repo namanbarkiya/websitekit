@@ -1,10 +1,12 @@
 /**
- * Meta Tags Preview Component
+ * Meta Tags Preview Generator
  *
- * Shows how meta tags appear on different platforms (Google, X, Facebook, etc.)
+ * Generates HTML string showing how meta tags appear on different platforms
+ * (Google, X, Facebook, etc.). This HTML is passed to output.preview and
+ * rendered by the shared PreviewTab component.
  */
 
-import type { MetaTagsState } from "./component";
+import type { MetaTagsState } from "../types";
 
 export function generatePreviewHTML(
   state: MetaTagsState,

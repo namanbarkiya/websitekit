@@ -4,8 +4,8 @@ import Link from "next/link";
 import { LockIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils/cn";
 import type { SidebarNavItem } from "@/config/sidebar";
+import { cn } from "@/lib/utils/cn";
 
 import { ToolHighlight } from "./tool-highlight";
 

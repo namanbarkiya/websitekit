@@ -24,7 +24,9 @@ export function ToolsQuickPicks({
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               Recent
             </h2>
-            <span className="text-xs text-muted-foreground">Stored locally</span>
+            <span className="text-xs text-muted-foreground">
+              Stored locally
+            </span>
           </div>
           <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
             {recents.map((t) => (

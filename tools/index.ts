@@ -11,8 +11,8 @@ import "./qr-code";
 
 // Tool content for SEO/AEO pages
 import { defaultToolContent, type ToolContent } from "./content-types";
-import { content as metaTagsContent } from "./meta-tags/content";
-import { content as qrCodeContent } from "./qr-code/content";
+import { content as metaTagsContent } from "./meta-tags/lib/content";
+import { content as qrCodeContent } from "./qr-code/lib/content";
 
 export type { ToolContent };
 

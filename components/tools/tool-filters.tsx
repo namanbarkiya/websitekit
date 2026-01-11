@@ -3,11 +3,8 @@
 import { FlameIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import type { SidebarNavCategory, SidebarNavItem } from "@/config/sidebar";
 import { cn } from "@/lib/utils/cn";
-import type {
-  SidebarNavCategory,
-  SidebarNavItem,
-} from "@/config/sidebar";
 
 type Availability = "live" | "soon";
 

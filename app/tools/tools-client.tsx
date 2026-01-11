@@ -4,6 +4,10 @@ import { useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { CheckIcon, SparklesIcon } from "lucide-react";
 
+import { ToolFilters } from "@/components/tools/tool-filters";
+import { ToolsQuickPicks } from "@/components/tools/tools-quick-picks";
+import { ToolsResults } from "@/components/tools/tools-results";
+import { ToolsSearchHeader } from "@/components/tools/tools-search-header";
 import { Card } from "@/components/ui/card";
 import {
   Sheet,
@@ -11,21 +15,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import {
-  sidebarConfig,
-  type SidebarNavItem,
-} from "@/config/sidebar";
+import { sidebarConfig, type SidebarNavItem } from "@/config/sidebar";
 import { useRecentTools } from "@/lib/hooks/use-recent-tools";
 import { useSearchKeyboardShortcuts } from "@/lib/hooks/use-search-keyboard-shortcuts";
 import { useToolsSearch } from "@/lib/hooks/use-tools-search";
-import { ToolFilters } from "@/components/tools/tool-filters";
-import { ToolsSearchHeader } from "@/components/tools/tools-search-header";
-import { ToolsResults } from "@/components/tools/tools-results";
-import { ToolsQuickPicks } from "@/components/tools/tools-quick-picks";
 
 type SortMode = "relevance" | "az" | "category";
 type Availability = "live" | "soon";
-
 
 export function ToolsClient() {
   const inputRef = useRef<HTMLInputElement>(null);

@@ -1,4 +1,4 @@
-import type { ToolContent } from "../content-types";
+import type { ToolContent } from "../../content-types";
 
 export const content: ToolContent = {
   whatIs:

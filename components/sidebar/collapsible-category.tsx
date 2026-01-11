@@ -12,8 +12,8 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
 import type { SidebarNavCategory, SidebarNavItem } from "@/config/sidebar";

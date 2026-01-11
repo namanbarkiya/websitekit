@@ -11,7 +11,11 @@ type SortMode = "relevance" | "az" | "category";
 
 interface ToolsResultsProps {
   filtered: SidebarNavItem[];
-  grouped: Array<{ title: string; icon: React.ComponentType<{ className?: string }>; items: SidebarNavItem[] }>;
+  grouped: Array<{
+    title: string;
+    icon: React.ComponentType<{ className?: string }>;
+    items: SidebarNavItem[];
+  }>;
   sortMode: SortMode;
   query: string;
   onQueryChange: (query: string) => void;
@@ -73,8 +77,8 @@ export function ToolsResults({
             <div className="min-w-0">
               <h2 className="font-semibold">{group.title}</h2>
               <p className="text-xs text-muted-foreground tabular-nums">
-                {group.items.filter((i) => !i.locked).length}/{group.items.length}{" "}
-                live
+                {group.items.filter((i) => !i.locked).length}/
+                {group.items.length} live
               </p>
             </div>
             <span className="ml-auto text-xs text-muted-foreground tabular-nums">

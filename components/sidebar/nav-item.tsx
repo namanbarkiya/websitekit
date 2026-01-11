@@ -4,10 +4,7 @@ import Link from "next/link";
 import { LockIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import {
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import type { SidebarNavItem } from "@/config/sidebar";
 
 interface NavItemProps {

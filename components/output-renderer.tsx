@@ -2,13 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { CodeTab } from "@/components/output/code-tab";
+import { FilesTab } from "@/components/output/files-tab";
+import { OutputActions } from "@/components/output/output-actions";
+import { PreviewTab } from "@/components/output/preview-tab";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { ToolOutput } from "@/lib/utils/tool-registry";
-import { CodeTab } from "@/components/output/code-tab";
-import { FilesTab } from "@/components/output/files-tab";
-import { PreviewTab } from "@/components/output/preview-tab";
-import { OutputActions } from "@/components/output/output-actions";
 
 interface OutputRendererProps {
   /** Tool output to render */

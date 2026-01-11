@@ -4,7 +4,13 @@ function escapeRegExp(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export function ToolHighlight({ text, query }: { text: string; query: string }) {
+export function ToolHighlight({
+  text,
+  query,
+}: {
+  text: string;
+  query: string;
+}) {
   const q = query.trim();
   if (!q) return <>{text}</>;
   const tokens = q

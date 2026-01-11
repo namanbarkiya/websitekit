@@ -30,7 +30,7 @@ import {
 } from "@/lib/utils/tool-registry";
 
 // Initialize tools (this triggers registration)
-import "@/lib/tools";
+import "@/tools";
 
 const RECENTS_STORAGE_KEY = "websitekit-recent-tools";
 
