@@ -60,6 +60,15 @@ export const metadata: Metadata = {
     icon: [
       { url: "/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      // Google Search favicons are expected to be at least 48x48.
+      // Include a larger square icon to ensure eligibility.
+      {
+        url: "/favicon/android-chrome-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      // Also expose /favicon.ico for maximum compatibility.
+      { url: "/favicon.ico" },
     ],
     apple: [
       {

@@ -172,8 +172,7 @@ export const sidebarConfig: SidebarConfig = {
             "sitemap",
             "user agent",
           ],
-          locked: true,
-          badge: "soon",
+          locked: false,
         },
         {
           title: "Sitemap",
