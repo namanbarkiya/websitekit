@@ -134,9 +134,9 @@ export function ToolClient({ toolId }: { toolId: string }) {
   }, [effectiveGenerate]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-0">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:flex-1 lg:min-h-0">
       {/* Left Card - Tool Form */}
-      <Card className="flex flex-col h-full min-h-0 overflow-hidden py-0! gap-0">
+      <Card className="flex flex-col min-h-[520px] lg:min-h-0 lg:h-full overflow-visible lg:overflow-hidden py-0! gap-0">
         <CardHeader className="shrink-0 border-b px-6 py-6">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
@@ -164,8 +164,31 @@ export function ToolClient({ toolId }: { toolId: string }) {
             </div>
           </div>
         </CardHeader>
-        <div className="flex-1 min-h-0 overflow-hidden">
-          <ScrollArea className="h-full w-full">
+        <div className="flex-1 lg:min-h-0 lg:overflow-hidden">
+          {/* Mobile: let the page scroll naturally (no nested scroll areas) */}
+          <div className="px-6 space-y-4 py-4 lg:hidden">
+            {ToolComponent ? (
+              <ToolComponent
+                assets={assets}
+                state={state}
+                setState={setState}
+                onGenerate={handleToolGenerate}
+                setHeaderAction={setHeaderAction}
+                setHeaderGenerate={setHeaderGenerate}
+              />
+            ) : (
+              <div className="rounded-md border p-4 flex items-start gap-3">
+                <InfoIcon className="size-4 mt-0.5 text-muted-foreground" />
+                <div className="text-sm text-muted-foreground">
+                  This tool is not available yet. You can still preview how
+                  outputs will appear here when implemented.
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Desktop: keep content constrained with an internal scroll area */}
+          <ScrollArea className="hidden lg:block h-full w-full">
             <div className="px-6 space-y-4 py-4">
               {ToolComponent ? (
                 <ToolComponent
@@ -191,7 +214,7 @@ export function ToolClient({ toolId }: { toolId: string }) {
       </Card>
 
       {/* Right Card - Output */}
-      <div className="h-full min-h-0 overflow-hidden">
+      <div className="min-h-[520px] lg:min-h-0 lg:h-full overflow-hidden">
         <OutputRenderer
           output={output}
           toolName={toolMeta?.title ?? toolDef?.name ?? toolId}

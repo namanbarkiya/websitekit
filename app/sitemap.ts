@@ -25,42 +25,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }))
   );
 
+  const liveTools = tools.filter((t) => !t.locked);
+
   const urls: MetadataRoute.Sitemap = [
-    // Homepage - highest priority
+    // Homepage
     {
       url: `${baseUrl}/`,
       lastModified: LAST_MODIFIED.home,
-      changeFrequency: "weekly",
-      priority: 1,
     },
-    // Tools index - high priority
+    // Tools index
     {
       url: `${baseUrl}/tools`,
       lastModified: LAST_MODIFIED.tools,
-      changeFrequency: "weekly",
-      priority: 0.9,
     },
-    // Individual tool pages
-    ...tools.map(({ toolId, locked }) => ({
-      url: `${baseUrl}/tools/${toolId}`,
+    // Content-rich SEO pages (preferred for indexing)
+    ...liveTools.map(({ toolId }) => ({
+      url: `${baseUrl}/tools/${toolId}/info`,
       lastModified: LAST_MODIFIED.toolDefault,
-      changeFrequency: "monthly" as const,
-      // Live tools get higher priority than coming soon tools
-      priority: locked ? 0.5 : 0.8,
     })),
     // FAQ page
     {
       url: `${baseUrl}/faq`,
       lastModified: LAST_MODIFIED.faq,
-      changeFrequency: "monthly",
-      priority: 0.6,
     },
     // Contact page
     {
       url: `${baseUrl}/contact`,
       lastModified: LAST_MODIFIED.contact,
-      changeFrequency: "yearly",
-      priority: 0.4,
     },
   ];
 

@@ -18,7 +18,6 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
@@ -103,20 +102,27 @@ export function AppSidebar() {
 
         {/* Most Used (derived from config item flag) */}
         {(() => {
-          const mostUsedItems = sidebarConfig.categories
+          const liveItems = sidebarConfig.categories
             .flatMap((cat) => cat.items)
-            .filter((item) => item.mostUsed && !item.locked);
+            .filter((item) => !item.locked)
+            .sort((a, b) => {
+              // Prefer "most used" tools first, then alphabetical.
+              const aRank = a.mostUsed ? 1 : 0;
+              const bRank = b.mostUsed ? 1 : 0;
+              if (aRank !== bRank) return bRank - aRank;
+              return a.title.localeCompare(b.title);
+            });
 
-          if (mostUsedItems.length === 0) return null;
+          if (liveItems.length === 0) return null;
 
           return (
             <SidebarGroup>
               <SidebarGroupLabel>Live</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {mostUsedItems.map((item) => (
+                  {liveItems.map((item) => (
                     <NavItem
-                      key={`most-used:${item.href}`}
+                      key={`live:${item.href}`}
                       item={item}
                       isActive={isItemActive(item)}
                       onNavigate={handleNavigate}

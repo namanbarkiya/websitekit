@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { sidebarConfig, type SidebarNavItem } from "@/config/sidebar";
 import { getToolContent } from "@/tools";
 
 import { ToolClient } from "./tool-client";
-import { ToolInfoDialog } from "./tool-info-dialog";
 
 export const dynamicParams = false;
 
@@ -113,10 +113,12 @@ export async function generateMetadata({
       ],
     },
     robots: {
-      index: true,
+      // Prefer ranking the content-rich /info page (programmatic SEO),
+      // while still allowing crawlers to discover and follow internal links.
+      index: false,
       follow: true,
       googleBot: {
-        index: true,
+        index: false,
         follow: true,
         "max-image-preview": "large",
         "max-snippet": -1,
@@ -285,23 +287,15 @@ export default async function ToolPage({ params }: PageProps) {
     <div className="flex flex-col h-full min-h-0">
       <header className="space-y-3 shrink-0 pb-6">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-xs text-muted-foreground">
-            <Link href="/tools" className="hover:underline">
-              Tools
-            </Link>{" "}
-            / <span className="text-foreground">{tool.title}</span>
-          </p>
           {locked ? <Badge variant="outline">Coming soon</Badge> : null}
         </div>
         <div className="flex items-start gap-2">
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight flex-1">
             {title}
           </h1>
-          <ToolInfoDialog
-            toolTitle={title}
-            toolName={tool.title}
-            content={content}
-          />
+          <Button asChild variant="outline" size="sm" className="shrink-0">
+            <Link href={`/tools/${toolId}/info`}>Learn more</Link>
+          </Button>
         </div>
         <p className="text-muted-foreground max-w-3xl">{description}</p>
       </header>
@@ -324,7 +318,7 @@ export default async function ToolPage({ params }: PageProps) {
         </Card>
       ) : (
         <>
-          <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+          <div className="flex-1 min-h-0 flex flex-col overflow-visible md:overflow-hidden">
             <ToolClient toolId={toolId} />
           </div>
 
