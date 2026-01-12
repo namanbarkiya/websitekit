@@ -97,4 +97,3 @@ export function generateRobotsOutput(
     preview: previewHtml,
   };
 }
-

@@ -1,5 +1,4 @@
 import type { ToolContent } from "./content-types";
-
 // Built tools should own a dedicated `seo-content.ts` file.
 // Import them here one-by-one as the tool ships.
 import { seoContent as metaTagsSeoContent } from "./meta-tags/seo-content";
@@ -60,7 +59,8 @@ export const toolContentMap: Record<string, ToolContent> = {
           "It’s optional, but recommended for maximum compatibility—some older browsers and tooling still look for /favicon.ico by default.",
       },
       {
-        question: "Why does Google require at least 48×48 for favicons in results?",
+        question:
+          "Why does Google require at least 48×48 for favicons in results?",
         answer:
           "Google expects a square icon of at least 48×48 for eligibility in some search surfaces. Shipping a larger icon (like 192×192) ensures you meet requirements and looks better on high-DPI screens.",
       },
@@ -160,7 +160,7 @@ export const toolContentMap: Record<string, ToolContent> = {
 
   "canonical-url": {
     whatIs:
-      "A canonical URL generator creates the <link rel=\"canonical\"> tag that tells search engines which URL is the preferred (primary) version of a page. Canonicals help consolidate ranking signals when you have duplicates—like tracking parameters, alternate URLs, or trailing slash variations.",
+      'A canonical URL generator creates the <link rel="canonical"> tag that tells search engines which URL is the preferred (primary) version of a page. Canonicals help consolidate ranking signals when you have duplicates—like tracking parameters, alternate URLs, or trailing slash variations.',
     features: [
       "Generate correct canonical tags for any page URL",
       "Handle www vs non-www and http vs https preferences",
@@ -211,7 +211,7 @@ export const toolContentMap: Record<string, ToolContent> = {
     features: [
       "Generate Organization and WebSite schema quickly",
       "Create page-specific schemas (Article, FAQ, Breadcrumb, Product, etc.)",
-      "Valid JSON-LD output ready to paste into <script type=\"application/ld+json\">",
+      'Valid JSON-LD output ready to paste into <script type="application/ld+json">',
       "Avoid common errors like invalid types or missing required fields",
       "Keep schemas consistent across pages and environments",
     ],
@@ -852,4 +852,3 @@ export const toolContentMap: Record<string, ToolContent> = {
     ],
   },
 };
-

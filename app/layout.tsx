@@ -58,8 +58,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      // Google SERP favicon requirement: >= 48x48 and crawlable.
+      { url: "/favicon/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      // Common browser sizes
       { url: "/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       // Google Search favicons are expected to be at least 48x48.
       // Include a larger square icon to ensure eligibility.
       {
@@ -68,7 +71,7 @@ export const metadata: Metadata = {
         type: "image/png",
       },
       // Also expose /favicon.ico for maximum compatibility.
-      { url: "/favicon.ico" },
+      { url: "/favicon.ico", sizes: "any" },
     ],
     apple: [
       {

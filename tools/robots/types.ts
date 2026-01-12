@@ -25,4 +25,3 @@ export const DEFAULT_STATE: RobotsState = {
   includeSitemap: true,
   sitemapUrl: "",
 };
-

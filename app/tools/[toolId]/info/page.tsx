@@ -218,7 +218,9 @@ function buildToolInfoJsonLd(tool: ToolPageMeta) {
       }
     : null;
 
-  return faq ? [breadcrumbs, webpage, howTo, faq] : [breadcrumbs, webpage, howTo];
+  return faq
+    ? [breadcrumbs, webpage, howTo, faq]
+    : [breadcrumbs, webpage, howTo];
 }
 
 export default async function ToolInfoPage({ params }: PageProps) {
@@ -339,4 +341,3 @@ export default async function ToolInfoPage({ params }: PageProps) {
     </div>
   );
 }
-

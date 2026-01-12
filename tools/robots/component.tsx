@@ -269,8 +269,8 @@ export function RobotsComponent({
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="top" sideOffset={6}>
-                  Adding a Sitemap line helps crawlers find all your URLs faster.
-                  Recommended for most sites.
+                  Adding a Sitemap line helps crawlers find all your URLs
+                  faster. Recommended for most sites.
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -303,4 +303,3 @@ export function RobotsComponent({
     </div>
   );
 }
-

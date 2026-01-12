@@ -33,4 +33,3 @@ registerTool({
   outputs: ["files"],
   Component: RobotsComponent,
 });
-
