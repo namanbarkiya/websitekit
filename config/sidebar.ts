@@ -194,8 +194,7 @@ export const sidebarConfig: SidebarConfig = {
             "lastmod",
             "crawl",
           ],
-          locked: true,
-          badge: "soon",
+          locked: false,
         },
         {
           title: "Canonical URL",

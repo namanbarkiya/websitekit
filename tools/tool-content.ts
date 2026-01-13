@@ -4,6 +4,7 @@ import type { ToolContent } from "./content-types";
 import { seoContent as metaTagsSeoContent } from "./meta-tags/seo-content";
 import { seoContent as qrCodeSeoContent } from "./qr-code/seo-content";
 import { seoContent as robotsSeoContent } from "./robots/seo-content";
+import { seoContent as sitemapSeoContent } from "./sitemap/seo-content";
 
 /**
  * SEO/AEO tool content map
@@ -18,6 +19,7 @@ export const toolContentMap: Record<string, ToolContent> = {
   "meta-tags": metaTagsSeoContent,
   "qr-code": qrCodeSeoContent,
   robots: robotsSeoContent,
+  sitemap: sitemapSeoContent,
 
   // Locked tools (content still provided; /info is currently noindex until tool ships)
   favicon: {
@@ -106,54 +108,6 @@ export const toolContentMap: Record<string, ToolContent> = {
         question: "Should I put this in every page?",
         answer:
           "Put shared tags in a global layout, then override page-specific tags (title/description/OG) per page. Avoid repeating identical tags across many pages if your framework already handles them centrally.",
-      },
-    ],
-  },
-
-  sitemap: {
-    whatIs:
-      "A sitemap generator creates an XML sitemap (sitemap.xml) that lists the pages you want search engines to crawl and index. Sitemaps help discovery—especially for new sites, large sites, or sites with pages that aren’t easily reachable through links.",
-    features: [
-      "Generate a valid sitemap.xml quickly",
-      "Include only indexable, canonical URLs",
-      "Optional last modified dates per URL",
-      "Support multiple sitemaps and sitemap index (for large sites)",
-      "Copyable XML output and downloadable file",
-      "Works for any site structure (static pages, blogs, docs, apps)",
-    ],
-    howItWorks: [
-      "Enter your site’s base domain (https://example.com)",
-      "Add the URLs you want indexed (one per line)",
-      "Optionally set accurate last modified dates for key pages",
-      "Generate the sitemap.xml",
-      "Host it at /sitemap.xml and reference it in robots.txt",
-    ],
-    useCases: [
-      "Helping Google discover new pages faster",
-      "Submitting a sitemap in Google Search Console",
-      "Auditing which URLs you actually want indexed",
-      "Creating a sitemap for a marketing site or documentation site",
-    ],
-    faq: [
-      {
-        question: "Does Google use changefreq and priority in sitemaps?",
-        answer:
-          "Google has stated it ignores <changefreq> and <priority>. The field that matters most is an accurate <lastmod> when you make meaningful content updates.",
-      },
-      {
-        question: "Should I include noindex pages in my sitemap?",
-        answer:
-          "No. Include only URLs you want indexed. If a URL is noindex or blocked, keeping it out of the sitemap reduces confusion and crawl waste.",
-      },
-      {
-        question: "What should lastmod represent?",
-        answer:
-          "Use lastmod only when the page’s primary content changes in a way that matters to users (not minor cosmetic changes). Inaccurate lastmod dates can cause search engines to ignore it.",
-      },
-      {
-        question: "How many URLs can a sitemap contain?",
-        answer:
-          "A single sitemap is limited to 50,000 URLs or 50MB uncompressed. For larger sites, use multiple sitemaps and a sitemap index file.",
       },
     ],
   },

@@ -9,6 +9,7 @@
 import "./meta-tags";
 import "./qr-code";
 import "./robots";
+import "./sitemap";
 
 // Tool content for SEO/AEO pages
 import { defaultToolContent, type ToolContent } from "./content-types";
