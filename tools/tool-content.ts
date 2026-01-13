@@ -6,6 +6,7 @@ import { seoContent as qrCodeSeoContent } from "./qr-code/seo-content";
 import { seoContent as robotsSeoContent } from "./robots/seo-content";
 import { seoContent as securityHeadersSeoContent } from "./security-headers/seo-content";
 import { seoContent as sitemapSeoContent } from "./sitemap/seo-content";
+import { seoContent as gradientSeoContent } from "./gradient/seo-content";
 
 /**
  * SEO/AEO tool content map
@@ -22,6 +23,7 @@ export const toolContentMap: Record<string, ToolContent> = {
   robots: robotsSeoContent,
   sitemap: sitemapSeoContent,
   "security-headers": securityHeadersSeoContent,
+  gradient: gradientSeoContent,
 
   // Locked tools (content still provided; /info is currently noindex until tool ships)
   favicon: {
@@ -688,43 +690,6 @@ export const toolContentMap: Record<string, ToolContent> = {
         question: "Will placeholders affect SEO?",
         answer:
           "Placeholders are mainly for development. For production, ensure real images have descriptive alt text and that your LCP image is properly optimized and prioritized.",
-      },
-    ],
-  },
-
-  gradient: {
-    whatIs:
-      "A gradient generator helps you design linear or radial gradients and outputs the exact CSS you can paste into your project. It’s a fast way to create polished backgrounds, hero sections, and UI accents without guessing color stops.",
-    features: [
-      "Create linear and radial gradients",
-      "Adjust angle/direction and multiple color stops",
-      "Live preview of the gradient",
-      "Copy CSS background declarations",
-      "Export reusable gradient tokens for design systems",
-    ],
-    howItWorks: [
-      "Pick gradient type (linear or radial)",
-      "Choose 2+ colors and position stops",
-      "Adjust angle (for linear) or shape/position (for radial)",
-      "Copy the generated CSS",
-      "Use it in your stylesheet or Tailwind config",
-    ],
-    useCases: [
-      "Designing hero backgrounds quickly",
-      "Creating subtle UI depth without images",
-      "Standardizing gradients in a design system",
-      "Generating background tokens for dark mode",
-    ],
-    faq: [
-      {
-        question: "Do gradients impact performance?",
-        answer:
-          "CSS gradients are generally lightweight compared to large images. They can be a great alternative to heavy background images, especially for simple visual effects.",
-      },
-      {
-        question: "How do I avoid banding?",
-        answer:
-          "Use subtle color transitions, add more intermediate stops, and consider a tiny noise overlay for large, flat gradients where banding is noticeable on some displays.",
       },
     ],
   },

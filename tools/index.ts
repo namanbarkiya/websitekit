@@ -11,6 +11,7 @@ import "./qr-code";
 import "./robots";
 import "./sitemap";
 import "./security-headers";
+import "./gradient";
 
 // Tool content for SEO/AEO pages
 import { defaultToolContent, type ToolContent } from "./content-types";

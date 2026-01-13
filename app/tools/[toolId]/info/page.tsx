@@ -9,6 +9,8 @@ import { Separator } from "@/components/ui/separator";
 import { sidebarConfig, type SidebarNavItem } from "@/config/sidebar";
 import { getToolContent } from "@/tools";
 
+import { toolDescription, toolKeywords, toolTitle } from "../tool-seo";
+
 export const dynamicParams = false;
 
 type PageProps = {
@@ -30,39 +32,6 @@ function findTool(toolId: string): ToolPageMeta | null {
     return { ...item, toolId };
   }
   return null;
-}
-
-function toolTitle(tool: ToolPageMeta) {
-  // High-intent keyword framing without keyword stuffing.
-  const base = `${tool.title} Tool`;
-  if (tool.toolId === "meta-tags") return `Best Meta Tags Generator (Free)`;
-  if (tool.toolId === "qr-code") return `Best QR Code Generator (Free)`;
-  return base;
-}
-
-function toolDescription(tool: ToolPageMeta) {
-  const fallback =
-    tool.description ??
-    `Generate ${tool.title.toLowerCase()} outputs in seconds with WebsiteKit.`;
-  if (tool.toolId === "meta-tags") {
-    return "Generate SEO meta tags, Open Graph, and Twitter Cards in one clean <head> snippet. Fast, correct, and copy‑paste ready.";
-  }
-  if (tool.toolId === "qr-code") {
-    return "Create scannable QR codes for URLs or text and download as SVG/PNG. Crisp output, no signup.";
-  }
-  return fallback;
-}
-
-function toolKeywords(tool: ToolPageMeta) {
-  const kw = tool.keywords ?? [];
-  const extras = [
-    "free",
-    "online",
-    "generator",
-    "websitekit",
-    tool.title.toLowerCase(),
-  ];
-  return Array.from(new Set([...kw, ...extras])).slice(0, 25);
 }
 
 function toolInfoCanonical(toolId: string) {

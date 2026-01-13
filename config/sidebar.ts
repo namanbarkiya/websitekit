@@ -622,8 +622,8 @@ export const sidebarConfig: SidebarConfig = {
             "preview",
             "generator",
           ],
-          locked: true,
-          badge: "soon",
+          locked: false,
+          mostUsed: true,
         },
         {
           title: "SVG Shapes",
