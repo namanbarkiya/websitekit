@@ -4,6 +4,7 @@ import type { ToolContent } from "./content-types";
 import { seoContent as metaTagsSeoContent } from "./meta-tags/seo-content";
 import { seoContent as qrCodeSeoContent } from "./qr-code/seo-content";
 import { seoContent as robotsSeoContent } from "./robots/seo-content";
+import { seoContent as securityHeadersSeoContent } from "./security-headers/seo-content";
 import { seoContent as sitemapSeoContent } from "./sitemap/seo-content";
 
 /**
@@ -20,6 +21,7 @@ export const toolContentMap: Record<string, ToolContent> = {
   "qr-code": qrCodeSeoContent,
   robots: robotsSeoContent,
   sitemap: sitemapSeoContent,
+  "security-headers": securityHeadersSeoContent,
 
   // Locked tools (content still provided; /info is currently noindex until tool ships)
   favicon: {
@@ -491,48 +493,6 @@ export const toolContentMap: Record<string, ToolContent> = {
         question: "Can minification break code?",
         answer:
           "It can if a minifier is misconfigured or the code relies on formatting quirks. Always test after minifying, especially for JavaScript that depends on automatic semicolon insertion edge cases.",
-      },
-    ],
-  },
-
-  "security-headers": {
-    whatIs:
-      "A security headers generator produces recommended HTTP response headers that protect your site against common attacks like clickjacking, MIME sniffing, and some forms of data leakage. Instead of hunting down syntax and defaults, you select your needs and get a set of headers you can paste into your CDN, server, or framework config.",
-    features: [
-      "Generate production-safe defaults for common security headers",
-      "Include HSTS, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, and more",
-      "Create framework-friendly snippets (platform-agnostic output)",
-      "Avoid dangerous misconfigurations (like overly strict policies that break the site)",
-      "Quickly audit and compare recommended vs current headers",
-    ],
-    howItWorks: [
-      "Choose your deployment target (CDN, server, framework config)",
-      "Select the headers you want and their strictness",
-      "Generate the header set",
-      "Apply in your hosting layer (preferred) or server middleware",
-      "Test critical flows (auth, embeds, assets) after enabling",
-    ],
-    useCases: [
-      "Hardening a new site before launch",
-      "Meeting baseline security requirements for enterprise clients",
-      "Preventing clickjacking and content sniffing issues",
-      "Adding HSTS safely after verifying HTTPS everywhere",
-    ],
-    faq: [
-      {
-        question: "Where should I set security headers?",
-        answer:
-          "Set them as close to the edge as possible (CDN/hosting config) so they apply consistently. App-level middleware can work, but edge configuration is usually simpler and more reliable.",
-      },
-      {
-        question: "Can security headers break my site?",
-        answer:
-          "Yes—especially CSP. Start with conservative defaults, roll out changes gradually, and test key pages and third-party scripts (analytics, embeds) before enforcing strict policies.",
-      },
-      {
-        question: "When should I enable HSTS?",
-        answer:
-          "Only after you’re confident all traffic is served over HTTPS and you won’t need HTTP access (including subdomains, if you include them). Misconfigured HSTS can lock users out until it expires.",
       },
     ],
   },

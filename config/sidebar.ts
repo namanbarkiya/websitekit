@@ -470,8 +470,7 @@ export const sidebarConfig: SidebarConfig = {
             "safe",
             "protection",
           ],
-          locked: true,
-          badge: "soon",
+          locked: false,
         },
         {
           title: "CSP Generator",
