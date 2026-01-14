@@ -105,9 +105,7 @@ function buildSitemapXml({
 }): string {
   const lines: string[] = [];
   lines.push(`<?xml version="1.0" encoding="UTF-8"?>`);
-  lines.push(
-    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`
-  );
+  lines.push(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`);
 
   const pr = clamp(priority, 0, 1).toFixed(1);
 
@@ -222,7 +220,11 @@ export function generateSitemapOutput(
       locs,
       title: origin ? `Sitemap for ${origin}` : "HTML Sitemap",
     });
-    files.push({ filename: "sitemap.html", content: html, mimeType: "text/html" });
+    files.push({
+      filename: "sitemap.html",
+      content: html,
+      mimeType: "text/html",
+    });
   }
 
   const xmlPreview = xml.split("\n").slice(0, 60).join("\n");

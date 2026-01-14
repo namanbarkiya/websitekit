@@ -11,7 +11,8 @@ import { FaviconComponent } from "./component";
 registerTool({
   id: "favicon",
   name: "Favicon Generator",
-  description: "Create browser icons, Apple touch icons, Android icons, and HTML tags",
+  description:
+    "Create browser icons, Apple touch icons, Android icons, and HTML tags",
   category: "Setup & Identity",
   keywords: [
     "favicon",
@@ -31,4 +32,3 @@ registerTool({
   outputs: ["files"],
   Component: FaviconComponent,
 });
-

@@ -92,9 +92,7 @@ ${items}
 `;
 }
 
-function asVercelJson(
-  headers: Array<{ key: string; value: string }>
-): string {
+function asVercelJson(headers: Array<{ key: string; value: string }>): string {
   const headerItems = headers
     .map(
       (h) =>
@@ -157,4 +155,3 @@ export function generateSecurityHeadersOutput(
 
   return { type: "files", files, preview: previewHtml };
 }
-

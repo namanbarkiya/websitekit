@@ -145,7 +145,10 @@ export function GradientComponent({
 
   const stops = currentState.stops ?? DEFAULT_STATE.stops;
 
-  const updateStop = (idx: number, updates: Partial<(typeof stops)[number]>) => {
+  const updateStop = (
+    idx: number,
+    updates: Partial<(typeof stops)[number]>
+  ) => {
     const next = stops.map((s, i) => (i === idx ? { ...s, ...updates } : s));
     setState({ stops: next });
   };
@@ -254,7 +257,9 @@ export function GradientComponent({
     updateStop(idx, { position: positionFromClientX(bar, e.clientX) });
   };
 
-  const onStopHandlePointerMove = (e: React.PointerEvent<HTMLButtonElement>) => {
+  const onStopHandlePointerMove = (
+    e: React.PointerEvent<HTMLButtonElement>
+  ) => {
     const idx = draggingStopIdxRef.current;
     const bar = stopBarRef.current;
     if (idx === null || !bar) return;
@@ -292,8 +297,9 @@ export function GradientComponent({
           ) : (
             <div className="absolute inset-0 pointer-events-none">
               <div className="absolute left-3 top-3 rounded-md bg-background/70 px-2 py-1 text-xs text-foreground backdrop-blur">
-                Drag to move focal point • {round(clamp(currentState.radialX, 0, 100))}%
-                , {round(clamp(currentState.radialY, 0, 100))}%
+                Drag to move focal point •{" "}
+                {round(clamp(currentState.radialX, 0, 100))}% ,{" "}
+                {round(clamp(currentState.radialY, 0, 100))}%
               </div>
               <div
                 className="absolute size-3 rounded-full border border-foreground/60 bg-background/70 backdrop-blur"
@@ -308,7 +314,9 @@ export function GradientComponent({
         <div className="border-t bg-muted/20 p-3 space-y-2">
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm font-semibold">Stops (drag handles)</p>
-            <p className="text-xs text-muted-foreground">Drag dots to reposition</p>
+            <p className="text-xs text-muted-foreground">
+              Drag dots to reposition
+            </p>
           </div>
           <div
             ref={stopBarRef}
@@ -420,7 +428,11 @@ export function GradientComponent({
                     value={clamp(currentState.radialX, 0, 100)}
                     onChange={(e) =>
                       setState({
-                        radialX: clamp(parseInt(e.target.value || "0", 10), 0, 100),
+                        radialX: clamp(
+                          parseInt(e.target.value || "0", 10),
+                          0,
+                          100
+                        ),
                       })
                     }
                     className="w-full accent-primary"
@@ -443,7 +455,11 @@ export function GradientComponent({
                     value={clamp(currentState.radialY, 0, 100)}
                     onChange={(e) =>
                       setState({
-                        radialY: clamp(parseInt(e.target.value || "0", 10), 0, 100),
+                        radialY: clamp(
+                          parseInt(e.target.value || "0", 10),
+                          0,
+                          100
+                        ),
                       })
                     }
                     className="w-full accent-primary"
@@ -465,7 +481,9 @@ export function GradientComponent({
           <Switch
             className="shrink-0 mt-0.5"
             checked={currentState.includeFallback}
-            onCheckedChange={(checked) => setState({ includeFallback: checked })}
+            onCheckedChange={(checked) =>
+              setState({ includeFallback: checked })
+            }
             aria-label="Include fallback color"
           />
         </div>
@@ -528,7 +546,11 @@ export function GradientComponent({
                     value={clamp(stop.position, 0, 100)}
                     onChange={(e) =>
                       updateStop(idx, {
-                        position: clamp(parseInt(e.target.value || "0", 10), 0, 100),
+                        position: clamp(
+                          parseInt(e.target.value || "0", 10),
+                          0,
+                          100
+                        ),
                       })
                     }
                     className="w-full accent-primary"
@@ -561,11 +583,10 @@ export function GradientComponent({
         </div>
 
         <p className="text-xs text-muted-foreground">
-          Tip: Keep stops ordered by position for predictable results (we sort them
-          automatically in output).
+          Tip: Keep stops ordered by position for predictable results (we sort
+          them automatically in output).
         </p>
       </div>
     </div>
   );
 }
-

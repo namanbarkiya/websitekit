@@ -27,4 +27,3 @@ registerTool({
   outputs: ["files"],
   Component: GradientComponent,
 });
-

@@ -96,9 +96,7 @@ function drawIcon({
   return canvas;
 }
 
-async function buildPngIcons(
-  state: FaviconState
-): Promise<FaviconImage[]> {
+async function buildPngIcons(state: FaviconState): Promise<FaviconImage[]> {
   const s: FaviconState = { ...DEFAULT_STATE, ...state };
   const img = await loadImage(s.sourceImage);
 
@@ -108,8 +106,16 @@ async function buildPngIcons(
     { size: 48, filename: "favicon-48x48.png", enabled: s.includeBrowserPngs },
     { size: 96, filename: "favicon-96x96.png", enabled: s.includeBrowserPngs },
     { size: 180, filename: "apple-touch-icon.png", enabled: s.includeApple },
-    { size: 192, filename: "android-chrome-192x192.png", enabled: s.includeAndroid },
-    { size: 512, filename: "android-chrome-512x512.png", enabled: s.includeAndroid },
+    {
+      size: 192,
+      filename: "android-chrome-192x192.png",
+      enabled: s.includeAndroid,
+    },
+    {
+      size: 512,
+      filename: "android-chrome-512x512.png",
+      enabled: s.includeAndroid,
+    },
   ];
 
   const results: FaviconImage[] = [];
@@ -141,7 +147,10 @@ function buildIco(images: Array<{ size: number; data: ArrayBuffer }>): Blob {
   const headerSize = 6;
   const entrySize = 16;
   const entriesSize = count * entrySize;
-  const imageDataSize = images.reduce((sum, img) => sum + img.data.byteLength, 0);
+  const imageDataSize = images.reduce(
+    (sum, img) => sum + img.data.byteLength,
+    0
+  );
   const totalSize = headerSize + entriesSize + imageDataSize;
 
   const buffer = new ArrayBuffer(totalSize);
@@ -194,11 +203,17 @@ function buildTagsHtml({
 }): string {
   const lines: string[] = [];
   if (includeBrowserPngs) {
-    lines.push(`<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">`);
-    lines.push(`<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">`);
+    lines.push(
+      `<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">`
+    );
+    lines.push(
+      `<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">`
+    );
   }
   if (includeApple) {
-    lines.push(`<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">`);
+    lines.push(
+      `<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">`
+    );
   }
   if (includeManifest) {
     lines.push(`<link rel="manifest" href="/site.webmanifest">`);
@@ -311,9 +326,9 @@ export async function generateFaviconOutput({
         <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
           <div style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(120,120,120,0.2);border-radius:10px;background:#fff;">
             <img src="${img.dataUrl}" alt="${img.filename}" style="width:${Math.min(
-        48,
-        img.size
-      )}px;height:${Math.min(48, img.size)}px;object-fit:contain;" />
+              48,
+              img.size
+            )}px;height:${Math.min(48, img.size)}px;object-fit:contain;" />
           </div>
           <div style="font-size:11px;color:rgba(120,120,120,1);text-align:center;">${
             img.size
@@ -347,6 +362,9 @@ export async function generateFaviconToolOutput({
   state: Partial<FaviconState>;
   appName?: string;
 }): Promise<ToolOutput> {
-  const { files, previewHtml } = await generateFaviconOutput({ state, appName });
+  const { files, previewHtml } = await generateFaviconOutput({
+    state,
+    appName,
+  });
   return { type: "files", files, preview: previewHtml };
 }

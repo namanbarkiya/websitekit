@@ -31,4 +31,3 @@ registerTool({
   outputs: ["files"],
   Component: SecurityHeadersComponent,
 });
-

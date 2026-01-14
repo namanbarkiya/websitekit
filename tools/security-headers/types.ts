@@ -15,7 +15,10 @@ export type CrossOriginOpenerPolicy =
   | "same-origin"
   | "same-origin-allow-popups";
 
-export type CrossOriginResourcePolicy = "same-site" | "same-origin" | "cross-origin";
+export type CrossOriginResourcePolicy =
+  | "same-site"
+  | "same-origin"
+  | "cross-origin";
 
 export interface SecurityHeadersState {
   /** Strict-Transport-Security */

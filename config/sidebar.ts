@@ -201,8 +201,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/canonical-url",
           icon: LinkIcon,
           category: "SEO & Discoverability",
-          description:
-            "Need a canonical tag? Generate <link rel=\"canonical\">",
+          description: 'Need a canonical tag? Generate <link rel="canonical">',
           keywords: [
             "canonical",
             "url",
@@ -222,8 +221,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/json-ld",
           icon: ScrollTextIcon,
           category: "SEO & Discoverability",
-          description:
-            "Need JSON-LD schema? Generate structured data for SEO",
+          description: "Need JSON-LD schema? Generate structured data for SEO",
           keywords: [
             "json-ld",
             "schema",
@@ -325,8 +323,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/brand-colors",
           icon: PaletteIcon,
           category: "Social & Branding",
-          description:
-            "Need a brand palette? Generate accessible color scales",
+          description: "Need a brand palette? Generate accessible color scales",
           keywords: [
             "brand",
             "color",

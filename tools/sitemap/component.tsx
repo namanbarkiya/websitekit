@@ -144,7 +144,10 @@ export function SitemapComponent({
   }, [previewKey]);
 
   const handleGenerate = useCallback(() => {
-    const output = generateSitemapOutput(currentStateRef.current, assets.domain);
+    const output = generateSitemapOutput(
+      currentStateRef.current,
+      assets.domain
+    );
     onGenerate(output);
   }, [assets.domain, onGenerate]);
 
@@ -154,9 +157,19 @@ export function SitemapComponent({
     const disabled =
       !currentState.urls.trim() ||
       (!currentState.baseUrl.trim() && !assets.domain?.trim());
-    setHeaderGenerate({ onGenerate: handleGenerate, label: "Generate", disabled });
+    setHeaderGenerate({
+      onGenerate: handleGenerate,
+      label: "Generate",
+      disabled,
+    });
     return () => setHeaderGenerate(null);
-  }, [assets.domain, currentState.baseUrl, currentState.urls, handleGenerate, setHeaderGenerate]);
+  }, [
+    assets.domain,
+    currentState.baseUrl,
+    currentState.urls,
+    handleGenerate,
+    setHeaderGenerate,
+  ]);
 
   return (
     <div className="space-y-4">
@@ -223,7 +236,9 @@ export function SitemapComponent({
           </div>
           <Switch
             checked={currentState.stripQueryAndHash}
-            onCheckedChange={(checked) => setState({ stripQueryAndHash: checked })}
+            onCheckedChange={(checked) =>
+              setState({ stripQueryAndHash: checked })
+            }
             aria-label="Strip query and hash"
           />
         </div>
@@ -237,7 +252,9 @@ export function SitemapComponent({
           </div>
           <Switch
             checked={currentState.includeTrailingSlash}
-            onCheckedChange={(checked) => setState({ includeTrailingSlash: checked })}
+            onCheckedChange={(checked) =>
+              setState({ includeTrailingSlash: checked })
+            }
             aria-label="Include trailing slash"
           />
         </div>
@@ -342,7 +359,9 @@ export function SitemapComponent({
           </div>
           <Switch
             checked={currentState.includePriority}
-            onCheckedChange={(checked) => setState({ includePriority: checked })}
+            onCheckedChange={(checked) =>
+              setState({ includePriority: checked })
+            }
             aria-label="Include priority"
           />
         </div>
@@ -391,7 +410,7 @@ export function SitemapComponent({
             aria-label="Include HTML sitemap"
           />
         </div>
-          </div>
+      </div>
     </div>
   );
 }

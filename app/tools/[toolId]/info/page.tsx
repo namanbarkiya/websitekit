@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { sidebarConfig, type SidebarNavItem } from "@/config/sidebar";
-import { getToolSeo, getRelatedTools } from "@/tools";
+import { getRelatedTools, getToolSeo } from "@/tools";
 
 import {
   toolDescription,
@@ -44,7 +44,10 @@ function toolInfoCanonical(toolId: string) {
   return `/tools/${toolId}/info`;
 }
 
-function findRelatedToolsFromSidebar(toolId: string, count = 2): SidebarNavItem[] {
+function findRelatedToolsFromSidebar(
+  toolId: string,
+  count = 2
+): SidebarNavItem[] {
   // First try to get related tools from SEO data
   const seoRelated = getRelatedTools(toolId);
   if (seoRelated.length > 0) {
@@ -276,17 +279,18 @@ function buildToolInfoJsonLd(tool: ToolPageMeta) {
     },
   };
 
-  const faq = seo.faq.length > 0
-    ? {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        mainEntity: seo.faq.map((item) => ({
-          "@type": "Question",
-          name: item.question,
-          acceptedAnswer: { "@type": "Answer", text: item.answer },
-        })),
-      }
-    : null;
+  const faq =
+    seo.faq.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: seo.faq.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: { "@type": "Answer", text: item.answer },
+          })),
+        }
+      : null;
 
   return faq
     ? [breadcrumbs, webpage, howTo, faq]
@@ -369,8 +373,8 @@ export default async function ToolInfoPage({ params }: PageProps) {
               <p className="text-muted-foreground leading-relaxed">
                 {concept} matters because it reduces ambiguity about how your
                 pages should be discovered, rendered, or shared. Clear signals
-                help search engines crawl efficiently, improve consistency across
-                URLs, and reduce mistakes that can hurt visibility.
+                help search engines crawl efficiently, improve consistency
+                across URLs, and reduce mistakes that can hurt visibility.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Even for non-SEO tools, the output affects user experience,

@@ -5,16 +5,16 @@
  */
 
 import type { Metadata } from "next";
-import { type ToolSeo, defaultToolSeo } from "../content-types";
 
+import { defaultToolSeo, type ToolSeo } from "../content-types";
+import { seo as faviconSeo } from "../favicon/seo-content";
+import { seo as gradientSeo } from "../gradient/seo-content";
 // Import SEO content from each tool
 import { seo as metaTagsSeo } from "../meta-tags/seo-content";
 import { seo as qrCodeSeo } from "../qr-code/seo-content";
 import { seo as robotsSeo } from "../robots/seo-content";
-import { seo as sitemapSeo } from "../sitemap/seo-content";
 import { seo as securityHeadersSeo } from "../security-headers/seo-content";
-import { seo as gradientSeo } from "../gradient/seo-content";
-import { seo as faviconSeo } from "../favicon/seo-content";
+import { seo as sitemapSeo } from "../sitemap/seo-content";
 
 /** Aggregated SEO data for all tools */
 export const toolSeoMap: Record<string, ToolSeo> = {
@@ -99,11 +99,19 @@ export function toolInfoMetaDescription(tool: ToolMeta): string {
 }
 
 /** Keywords for meta tags */
-export function toolKeywords(tool: ToolMeta): NonNullable<Metadata["keywords"]> {
+export function toolKeywords(
+  tool: ToolMeta
+): NonNullable<Metadata["keywords"]> {
   const seo = toolSeoMap[tool.toolId];
   const toolKw = seo?.meta.keywords ?? [];
   const baseKw = tool.keywords ?? [];
-  const extras = ["free", "online", "generator", "websitekit", tool.title.toLowerCase()];
+  const extras = [
+    "free",
+    "online",
+    "generator",
+    "websitekit",
+    tool.title.toLowerCase(),
+  ];
   return Array.from(new Set([...toolKw, ...baseKw, ...extras])).slice(0, 25);
 }
 

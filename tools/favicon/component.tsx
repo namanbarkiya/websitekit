@@ -170,7 +170,12 @@ export function FaviconComponent({
       disabled: !currentState.sourceImage || isGenerating,
     });
     return () => setHeaderGenerate(null);
-  }, [currentState.sourceImage, handleGenerate, isGenerating, setHeaderGenerate]);
+  }, [
+    currentState.sourceImage,
+    handleGenerate,
+    isGenerating,
+    setHeaderGenerate,
+  ]);
 
   const handleFileUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -293,7 +298,11 @@ export function FaviconComponent({
             value={clamp(currentState.paddingPercent, 0, 40)}
             onChange={(e) =>
               setState({
-                paddingPercent: clamp(parseInt(e.target.value || "0", 10), 0, 40),
+                paddingPercent: clamp(
+                  parseInt(e.target.value || "0", 10),
+                  0,
+                  40
+                ),
               })
             }
             className="w-full accent-primary"
@@ -425,7 +434,9 @@ export function FaviconComponent({
           <Switch
             className="shrink-0 mt-0.5"
             checked={currentState.includeManifest}
-            onCheckedChange={(checked) => setState({ includeManifest: checked })}
+            onCheckedChange={(checked) =>
+              setState({ includeManifest: checked })
+            }
             aria-label="Include manifest"
           />
         </div>
@@ -433,4 +444,3 @@ export function FaviconComponent({
     </div>
   );
 }
-
