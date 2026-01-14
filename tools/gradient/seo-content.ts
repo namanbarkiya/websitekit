@@ -1,49 +1,79 @@
-import type { ToolContent } from "../content-types";
+import type { ToolSeo } from "../content-types";
 
-/**
- * SEO content for /tools/gradient/info
- * Keep this content human-first, specific, and up to date.
- */
-export const seoContent: ToolContent = {
+export const seo: ToolSeo = {
+  meta: {
+    title: "Create CSS gradients for UI – Free CSS Gradient Generator",
+    description:
+      "Need to create CSS gradients for UI? Generate clean gradient code you can paste into your styles without images in seconds with this free tool.",
+    infoTitle: "How to Create CSS Gradients – Gradient Guide",
+    infoDescription:
+      "Learn what CSS gradients are, how to use them in UI design, and common mistakes that hurt readability.",
+    keywords: ["css gradient", "linear gradient", "radial gradient", "css"],
+  },
+  concept: "CSS gradients",
+  definition:
+    "CSS gradients are color transitions defined in CSS that render smooth blends without image files.",
   whatIs:
-    "A gradient generator helps you design CSS gradients (linear or radial) and outputs the exact CSS you can paste into your project. Gradients are a lightweight way to create modern backgrounds, hero sections, and UI accents without using large images.",
+    "A CSS gradient generator creates linear or radial gradient code you can paste directly into your stylesheets. Gradients add visual depth to backgrounds, buttons, and sections without requiring image files. This tool lets you pick colors, adjust stops, and preview the result before copying the CSS.",
   features: [
-    "Create linear gradients with adjustable angle",
-    "Create radial gradients for spotlight-style backgrounds",
-    "Add up to 5 color stops with percentage positions",
-    "Live preview of the gradient",
-    "Copy/download a ready-to-use CSS snippet",
-    "Optional fallback background color output",
+    "Generate linear and radial gradients",
+    "Customize color stops and positions",
+    "Live preview as you adjust",
+    "Copy clean CSS code for any project",
+    "No images required for smooth visuals",
   ],
   howItWorks: [
-    "Choose linear or radial gradient",
-    "Pick your colors and adjust stop positions",
-    "Set an angle (for linear gradients)",
-    "Preview the result",
-    "Copy or download the generated CSS",
+    "Choose gradient type and direction",
+    "Pick your color stops",
+    "Adjust positions for the blend you want",
+    "Copy the CSS code into your styles",
   ],
   useCases: [
-    "Hero section backgrounds",
-    "Buttons and call-to-action highlights",
-    "Cards and section dividers with subtle depth",
-    "Brand-themed backgrounds without heavy images",
+    "Adding background visuals without images",
+    "Creating button or card hover effects",
+    "Building consistent UI themes",
+    "Prototyping design ideas quickly",
+  ],
+  whenToUse: [
+    "You need lightweight background visuals without images",
+    "You want consistent gradients across a design system",
+    "You are prototyping new UI themes quickly",
+  ],
+  commonMistakes: [
+    "Using low contrast that reduces text readability",
+    "Overusing gradients in busy layouts",
+    "Forgetting to test gradients in dark mode",
   ],
   faq: [
     {
-      question: "What’s a good default angle for linear gradients?",
+      question: "Linear or radial—which should I use?",
       answer:
-        "135deg is a popular modern default (top-left to bottom-right). 90deg goes left-to-right, and 45deg goes bottom-left to top-right.",
+        "Linear gradients work well for backgrounds and sections. Radial gradients suit circular elements or spotlight effects. Choose based on the shape you want.",
     },
     {
-      question: "Why include a fallback color?",
+      question: "Can gradients hurt accessibility?",
       answer:
-        "A fallback background-color provides a safe base if gradients are disabled or if a browser fails to render the gradient for any reason.",
+        "Yes, if text over a gradient has poor contrast. Always test readability and consider using solid fallbacks for critical text.",
     },
     {
-      question: "Do gradients hurt performance?",
+      question: "Do gradients work in all browsers?",
       answer:
-        "CSS gradients are typically lightweight compared to large background images. They can be a great way to improve perceived polish without increasing image payload.",
+        "Modern CSS gradients are widely supported. Older browsers may need prefixes, but most current browsers handle them natively.",
     },
   ],
+  summary: {
+    whatThisToolDoes:
+      "This tool generates CSS gradient code with live preview. It helps you build lightweight visual backgrounds without images.",
+    whenToUse:
+      "Use it when you want a fast way to create gradients that stay consistent across your UI.",
+    howToUse: [
+      "Choose gradient type and direction",
+      "Pick your color stops",
+      "Adjust positions for the blend you want",
+      "Copy the CSS code into your styles",
+    ],
+    mistakesPrevented:
+      "It prevents unreadable gradients and inconsistent color stop usage.",
+  },
+  relatedTools: ["brand-colors", "svg-shapes"],
 };
-

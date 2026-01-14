@@ -12,13 +12,23 @@ import "./robots";
 import "./sitemap";
 import "./security-headers";
 import "./gradient";
+import "./favicon";
 
-// Tool content for SEO/AEO pages
-import { defaultToolContent, type ToolContent } from "./content-types";
-import { toolContentMap } from "./tool-content";
+// Re-export SEO helpers and types from the central seo module
+export {
+  getToolSeo,
+  toolSeoMap,
+  toolMetaTitle,
+  toolMetaDescription,
+  toolTitle,
+  toolDescription,
+  toolInfoMetaTitle,
+  toolInfoMetaDescription,
+  toolKeywords,
+  getRelatedTools,
+  type ToolSeo,
+  type ToolMeta,
+} from "./seo";
 
-export type { ToolContent };
-
-export function getToolContent(toolId: string): ToolContent {
-  return toolContentMap[toolId] ?? defaultToolContent;
-}
+// Re-export content types
+export { type ToolSeo as ToolContent, defaultToolSeo } from "./content-types";

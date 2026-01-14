@@ -75,7 +75,7 @@ export const sidebarConfig: SidebarConfig = {
           icon: CodeIcon,
           category: "Setup & Identity",
           description:
-            "Generate SEO, Open Graph, Twitter, and AI-friendly meta tags",
+            "Need SEO meta tags? Generate title, Open Graph, and Twitter cards",
           keywords: [
             "meta",
             "tags",
@@ -100,7 +100,7 @@ export const sidebarConfig: SidebarConfig = {
           icon: ImageIcon,
           category: "Setup & Identity",
           description:
-            "Create browser favicon, Apple touch, Android, and Windows icons",
+            "Need a favicon? Generate favicon.ico, Apple, and Android icons",
           keywords: [
             "favicon",
             "icon",
@@ -115,8 +115,8 @@ export const sidebarConfig: SidebarConfig = {
             "image",
             "png",
           ],
-          locked: true,
-          badge: "soon",
+          locked: false,
+          mostUsed: true,
         },
         {
           title: "HTML Head",
@@ -124,7 +124,7 @@ export const sidebarConfig: SidebarConfig = {
           icon: FileTextIcon,
           category: "Setup & Identity",
           description:
-            "Merge meta, favicon, PWA outputs into a single <head> block",
+            "Need a full <head> snippet? Combine meta tags, icons, and PWA tags",
           keywords: [
             "html",
             "head",
@@ -155,7 +155,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/robots",
           icon: BotIcon,
           category: "SEO & Discoverability",
-          description: "Generate crawler rules for search engines and AI bots",
+          description: "Need robots.txt? Generate Allow/Disallow rules fast",
           keywords: [
             "robots",
             "robots.txt",
@@ -179,7 +179,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/sitemap",
           icon: MapIcon,
           category: "SEO & Discoverability",
-          description: "Create XML sitemaps with priority and change frequency",
+          description: "Need sitemap.xml? Generate a clean sitemap from URLs",
           keywords: [
             "sitemap",
             "xml",
@@ -202,7 +202,7 @@ export const sidebarConfig: SidebarConfig = {
           icon: LinkIcon,
           category: "SEO & Discoverability",
           description:
-            "Generate canonical tags to prevent duplicate content issues",
+            "Need a canonical tag? Generate <link rel=\"canonical\">",
           keywords: [
             "canonical",
             "url",
@@ -223,7 +223,7 @@ export const sidebarConfig: SidebarConfig = {
           icon: ScrollTextIcon,
           category: "SEO & Discoverability",
           description:
-            "Create structured data for Organization, Website, Article, FAQ",
+            "Need JSON-LD schema? Generate structured data for SEO",
           keywords: [
             "json-ld",
             "schema",
@@ -246,7 +246,7 @@ export const sidebarConfig: SidebarConfig = {
           icon: CheckSquareIcon,
           category: "SEO & Discoverability",
           description:
-            "Audit meta completeness, crawlability, and AI visibility",
+            "Need an SEO checklist? Audit titles, indexing, and crawlability",
           keywords: [
             "seo",
             "checklist",
@@ -280,7 +280,7 @@ export const sidebarConfig: SidebarConfig = {
           icon: ShareIcon,
           category: "Social & Branding",
           description:
-            "Generate Open Graph and Twitter preview images with brand colors",
+            "Need social images? Generate Open Graph and Twitter previews",
           keywords: [
             "social",
             "preview",
@@ -303,7 +303,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/logo-export",
           icon: SparklesIcon,
           category: "Social & Branding",
-          description: "Create light/dark logo variants with SVG/PNG exports",
+          description: "Need logo exports? Generate light/dark SVG and PNG",
           keywords: [
             "logo",
             "export",
@@ -326,7 +326,7 @@ export const sidebarConfig: SidebarConfig = {
           icon: PaletteIcon,
           category: "Social & Branding",
           description:
-            "Generate accessible color palette from primary brand color",
+            "Need a brand palette? Generate accessible color scales",
           keywords: [
             "brand",
             "color",
@@ -360,7 +360,7 @@ export const sidebarConfig: SidebarConfig = {
           icon: ZapIcon,
           category: "Performance",
           description:
-            "Generate preload, preconnect, and prefetch resource hints",
+            "Need preload/preconnect tags? Generate resource hints fast",
           keywords: [
             "preload",
             "preconnect",
@@ -382,7 +382,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/font-loading",
           icon: TypeIcon,
           category: "Performance",
-          description: "Configure font-display strategies and preload patterns",
+          description: "Need font loading tips? Generate font-display snippets",
           keywords: [
             "font",
             "loading",
@@ -404,7 +404,7 @@ export const sidebarConfig: SidebarConfig = {
           icon: ImageIcon,
           category: "Performance",
           description:
-            "Best practices for WebP, AVIF, lazy loading, and sizing",
+            "Need image optimization? Get WebP/AVIF and lazy-load guidance",
           keywords: [
             "image",
             "optimization",
@@ -425,7 +425,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/minifier",
           icon: GaugeIcon,
           category: "Performance",
-          description: "Minify HTML, CSS, and JavaScript code snippets",
+          description: "Need to minify code? Compress HTML, CSS, or JS",
           keywords: [
             "minify",
             "minifier",
@@ -458,7 +458,7 @@ export const sidebarConfig: SidebarConfig = {
           icon: ShieldIcon,
           category: "Security",
           description:
-            "Generate HSTS, X-Frame-Options, Referrer-Policy headers",
+            "Need security headers? Generate HSTS and X-Frame-Options",
           keywords: [
             "security",
             "headers",
@@ -477,7 +477,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/csp",
           icon: ShieldCheckIcon,
           category: "Security",
-          description: "Build Content Security Policy with safe defaults",
+          description: "Need a CSP header? Build Content Security Policy rules",
           keywords: [
             "csp",
             "content security policy",
@@ -498,7 +498,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/permissions",
           icon: KeyIcon,
           category: "Security",
-          description: "Control camera, mic, location, and browser features",
+          description: "Need a Permissions-Policy? Control browser features",
           keywords: [
             "permissions",
             "policy",
@@ -518,7 +518,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/privacy-policy",
           icon: ScrollTextIcon,
           category: "Security",
-          description: "Generate basic GDPR/CCPA-ready privacy policy",
+          description: "Need a privacy policy? Generate a GDPR/CCPA draft",
           keywords: [
             "privacy",
             "policy",
@@ -538,7 +538,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/cookie-consent",
           icon: CookieIcon,
           category: "Security",
-          description: "Create lightweight GDPR-friendly cookie consent banner",
+          description: "Need a cookie banner? Generate a consent snippet",
           keywords: [
             "cookie",
             "consent",
@@ -567,8 +567,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/qr-code",
           icon: QrCodeIcon,
           category: "Utilities",
-          description:
-            "Generate QR codes for URLs and text with SVG/PNG export",
+          description: "Need a QR code? Generate SVG/PNG for URLs or text",
           keywords: [
             "qr",
             "code",
@@ -590,7 +589,7 @@ export const sidebarConfig: SidebarConfig = {
           icon: SquareIcon,
           category: "Utilities",
           description:
-            "Generate placeholder images with custom dimensions and colors",
+            "Need placeholder images? Generate custom sizes and colors",
           keywords: [
             "placeholder",
             "image",
@@ -611,7 +610,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/gradient",
           icon: PaletteIcon,
           category: "Utilities",
-          description: "Create linear and radial CSS gradients with preview",
+          description: "Need a CSS gradient? Create linear or radial gradients",
           keywords: [
             "gradient",
             "linear",
@@ -630,7 +629,7 @@ export const sidebarConfig: SidebarConfig = {
           href: "/tools/svg-shapes",
           icon: SparklesIcon,
           category: "Utilities",
-          description: "Generate organic SVG blobs and shapes",
+          description: "Need SVG blobs? Generate organic shapes and dividers",
           keywords: [
             "svg",
             "shape",

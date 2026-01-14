@@ -7,9 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { sidebarConfig, type SidebarNavItem } from "@/config/sidebar";
-import { getToolContent } from "@/tools";
+import { getToolSeo, getRelatedTools } from "@/tools";
 
-import { toolDescription, toolKeywords, toolTitle } from "../tool-seo";
+import {
+  toolDescription,
+  toolInfoMetaDescription,
+  toolInfoMetaTitle,
+  toolKeywords,
+  toolTitle,
+} from "../tool-seo";
 
 export const dynamicParams = false;
 
@@ -38,6 +44,103 @@ function toolInfoCanonical(toolId: string) {
   return `/tools/${toolId}/info`;
 }
 
+function findRelatedToolsFromSidebar(toolId: string, count = 2): SidebarNavItem[] {
+  // First try to get related tools from SEO data
+  const seoRelated = getRelatedTools(toolId);
+  if (seoRelated.length > 0) {
+    const items: SidebarNavItem[] = [];
+    for (const relatedId of seoRelated.slice(0, count)) {
+      const tool = findTool(relatedId);
+      if (tool) items.push(tool);
+    }
+    if (items.length > 0) return items;
+  }
+
+  // Fallback to category-based related tools
+  const category = sidebarConfig.categories.find((cat) =>
+    cat.items.some((item) => item.href === `/tools/${toolId}`)
+  );
+  if (!category) return [];
+  const unlocked = category.items.filter(
+    (item) => item.href !== `/tools/${toolId}` && !item.locked
+  );
+  const fallback = category.items.filter(
+    (item) => item.href !== `/tools/${toolId}`
+  );
+  return (unlocked.length ? unlocked : fallback).slice(0, count);
+}
+
+function findCoreSeoTools() {
+  const ids = new Set(["/tools/robots", "/tools/sitemap", "/tools/meta-tags"]);
+  const items: SidebarNavItem[] = [];
+  for (const category of sidebarConfig.categories) {
+    for (const item of category.items) {
+      if (ids.has(item.href)) items.push(item);
+    }
+  }
+  return items;
+}
+
+function countWords(text: string) {
+  return text.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function normalizeFaqAnswer(answer: string, concept: string) {
+  const words = countWords(answer);
+  if (words < 40) {
+    return `${answer} In most cases, the safest approach is to validate your ${concept} setup and check results before shipping.`;
+  }
+  if (words > 70) {
+    return `${answer.split(/\s+/).slice(0, 70).join(" ")}.`;
+  }
+  return answer;
+}
+
+function ensureFaqs(
+  baseFaqs: { question: string; answer: string }[],
+  concept: string
+) {
+  const faq: { question: string; answer: string }[] = [];
+  if (baseFaqs.length > 0) {
+    faq.push(
+      ...baseFaqs.map((item) => ({
+        question: item.question,
+        answer: normalizeFaqAnswer(item.answer, concept),
+      }))
+    );
+  }
+
+  const fallback = [
+    {
+      question: `Do I need ${concept}?`,
+      answer: `You need ${concept} when it impacts how your site is crawled, rendered, or shared. If ${concept} affects discovery, performance, or compliance, setting it correctly reduces future fixes and makes auditing easier.`,
+    },
+    {
+      question: `Does ${concept} affect SEO?`,
+      answer: `${concept} can influence SEO indirectly by improving clarity, crawlability, and user experience. Clear signals help search engines interpret your pages correctly and reduce ambiguity that can lead to weaker rankings.`,
+    },
+    {
+      question: `What happens if ${concept} is missing?`,
+      answer: `If ${concept} is missing, defaults apply and you may lose control over how search engines or browsers treat your pages. That can lead to inconsistent behavior, weaker previews, or missed optimization opportunities.`,
+    },
+    {
+      question: `Can ${concept} cause issues if configured incorrectly?`,
+      answer: `Yes. Incorrect ${concept} can block crawling, break previews, or introduce inconsistent behavior across pages. A consistent configuration and validation step helps prevent regressions.`,
+    },
+  ];
+
+  for (const item of fallback) {
+    if (faq.length >= 6) break;
+    if (faq.some((existing) => existing.question === item.question)) continue;
+    faq.push({
+      question: item.question,
+      answer: normalizeFaqAnswer(item.answer, concept),
+    });
+  }
+
+  return faq.slice(0, 6);
+}
+
 export async function generateStaticParams() {
   return sidebarConfig.categories
     .flatMap((c) => c.items)
@@ -54,8 +157,8 @@ export async function generateMetadata({
   if (!tool) return {};
 
   const canonical = new URL(toolInfoCanonical(toolId), SITE_URL);
-  const title = `${toolTitle(tool)} Guide & FAQ | WebsiteKit`;
-  const description = `${toolDescription(tool)} Learn what it is, how to use it, common use cases, and FAQs.`;
+  const title = toolInfoMetaTitle(tool);
+  const description = toolInfoMetaDescription(tool);
 
   const isLocked = Boolean(tool.locked);
 
@@ -82,8 +185,6 @@ export async function generateMetadata({
         new URL(`/tools/${toolId}/opengraph-image`, SITE_URL).toString(),
       ],
     },
-    // Only index “info” pages for live tools with real utility.
-    // Locked tools would be thin content and can reduce site quality.
     robots: isLocked
       ? {
           index: false,
@@ -123,7 +224,7 @@ function buildToolInfoJsonLd(tool: ToolPageMeta) {
   const url = new URL(toolInfoCanonical(tool.toolId), SITE_URL).toString();
   const name = `${toolTitle(tool)} Guide`;
   const description = `Guide and FAQ for the ${tool.title} tool on WebsiteKit.`;
-  const content = getToolContent(tool.toolId);
+  const seo = getToolSeo(tool.toolId);
 
   const breadcrumbs = {
     "@context": "https://schema.org",
@@ -164,7 +265,7 @@ function buildToolInfoJsonLd(tool: ToolPageMeta) {
     "@type": "HowTo",
     name: `How to use ${tool.title}`,
     description: `Step-by-step guide to using the ${tool.title} tool on WebsiteKit.`,
-    step: content.howItWorks.map((text, i) => ({
+    step: seo.howItWorks.map((text, i) => ({
       "@type": "HowToStep",
       position: i + 1,
       text,
@@ -175,11 +276,11 @@ function buildToolInfoJsonLd(tool: ToolPageMeta) {
     },
   };
 
-  const faq = content.faq?.length
+  const faq = seo.faq.length > 0
     ? {
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        mainEntity: content.faq.map((item) => ({
+        mainEntity: seo.faq.map((item) => ({
           "@type": "Question",
           name: item.question,
           acceptedAnswer: { "@type": "Answer", text: item.answer },
@@ -197,10 +298,14 @@ export default async function ToolInfoPage({ params }: PageProps) {
   const tool = findTool(toolId);
   if (!tool) notFound();
 
-  const content = getToolContent(toolId);
+  const seo = getToolSeo(toolId);
   const locked = Boolean(tool.locked);
-  const title = toolTitle(tool);
-  const description = toolDescription(tool);
+  const concept = seo.concept;
+  const relatedTools = findRelatedToolsFromSidebar(toolId, 2);
+  const coreSeoTools = findCoreSeoTools().filter(
+    (item) => item.href !== `/tools/${toolId}`
+  );
+  const faqs = ensureFaqs(seo.faq, concept);
 
   return (
     <div className="h-full min-h-0 overflow-y-auto">
@@ -208,14 +313,13 @@ export default async function ToolInfoPage({ params }: PageProps) {
         <header className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-              {title}: Guide & FAQ
+              What is {concept} and how does it work?
             </h1>
             {locked ? <Badge variant="outline">Coming soon</Badge> : null}
           </div>
 
           <p className="text-muted-foreground max-w-3xl">
-            {description} This page explains what it is, how it works, common
-            use cases, and answers the most common questions.
+            {toolInfoMetaDescription(tool)}
           </p>
 
           <div className="flex flex-wrap gap-3 pt-2">
@@ -241,68 +345,129 @@ export default async function ToolInfoPage({ params }: PageProps) {
         ) : (
           <div className="space-y-8">
             <Card className="p-6 space-y-3">
-              <h2 className="text-xl font-semibold">What is it?</h2>
               <p className="text-muted-foreground leading-relaxed">
-                {content.whatIs}
+                {seo.definition}
               </p>
             </Card>
 
             <Card className="p-6 space-y-3">
-              <h2 className="text-xl font-semibold">Key features</h2>
+              <h2 className="text-xl font-semibold">What is {concept}?</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                {seo.whatIs}
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                In practice, {concept} depends on consistent formatting,
+                predictable URLs, and accurate values so search engines and
+                browsers interpret your intent correctly.
+              </p>
+            </Card>
+
+            <Card className="p-6 space-y-3">
+              <h2 className="text-xl font-semibold">
+                Why {concept} matters for SEO
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                {concept} matters because it reduces ambiguity about how your
+                pages should be discovered, rendered, or shared. Clear signals
+                help search engines crawl efficiently, improve consistency across
+                URLs, and reduce mistakes that can hurt visibility.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Even for non-SEO tools, the output affects user experience,
+                performance, or accessibility. Those signals influence rankings
+                through engagement and crawlability over time.
+              </p>
+            </Card>
+
+            <Card className="p-6 space-y-3">
+              <h2 className="text-xl font-semibold">How {concept} works</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                {concept} works by following a small set of rules that browsers
+                and search engines expect. When those rules are consistent, you
+                get predictable behavior across pages and platforms.
+              </p>
+              <ol className="list-decimal pl-5 space-y-2 text-muted-foreground">
+                {seo.howItWorks.map((step, i) => (
+                  <li key={i}>{step}</li>
+                ))}
+              </ol>
+            </Card>
+
+            <Card className="p-6 space-y-3">
+              <h2 className="text-xl font-semibold">
+                You should use {concept} when
+              </h2>
               <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
-                {content.features.map((f, i) => (
-                  <li key={i}>{f}</li>
+                {seo.whenToUse.map((item, i) => (
+                  <li key={i}>{item}</li>
                 ))}
               </ul>
             </Card>
 
             <Card className="p-6 space-y-3">
-              <h2 className="text-xl font-semibold">How to use it</h2>
-              <ol className="list-decimal pl-5 space-y-2 text-muted-foreground">
-                {content.howItWorks.map((s, i) => (
-                  <li key={i}>{s}</li>
+              <h2 className="text-xl font-semibold">Examples and use cases</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Common scenarios for {concept} include the following. These
+                examples help you decide when to apply it and what to check
+                during implementation.
+              </p>
+              <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
+                {seo.useCases.map((item, i) => (
+                  <li key={i}>{item}</li>
                 ))}
-              </ol>
+              </ul>
             </Card>
 
-            {content.useCases?.length ? (
-              <Card className="p-6 space-y-3">
-                <h2 className="text-xl font-semibold">Common use cases</h2>
-                <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
-                  {content.useCases.map((u, i) => (
-                    <li key={i}>{u}</li>
-                  ))}
-                </ul>
-              </Card>
-            ) : null}
+            <Card className="p-6 space-y-3">
+              <h2 className="text-xl font-semibold">Common mistakes</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Most issues come from inconsistent configuration or skipping
+                validation. Avoid the mistakes below to keep results predictable
+                across pages.
+              </p>
+              <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
+                {seo.commonMistakes.map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+            </Card>
 
-            {content.faq?.length ? (
-              <Card className="p-6 space-y-4">
-                <h2 className="text-xl font-semibold">FAQ</h2>
-                <Separator />
-                <div className="space-y-4">
-                  {content.faq.map((item, i) => (
-                    <div key={i} className="space-y-1">
-                      <h3 className="font-medium">{item.question}</h3>
-                      <p className="text-muted-foreground leading-relaxed">
-                        {item.answer}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </Card>
-            ) : null}
+            <Card className="p-6 space-y-4">
+              <h2 className="text-xl font-semibold">FAQs</h2>
+              <Separator />
+              <div className="space-y-4">
+                {faqs.map((item, i) => (
+                  <div key={i} className="space-y-1">
+                    <h3 className="font-medium">{item.question}</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item.answer}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </Card>
 
             <Card className="p-6">
-              <h2 className="text-xl font-semibold">Ready to generate?</h2>
+              <h2 className="text-xl font-semibold">Related resources</h2>
               <p className="text-muted-foreground mt-2">
-                Use the tool to generate copy‑paste ready output in seconds.
+                These links help you connect related SEO setup tasks and keep
+                your implementation consistent.
               </p>
-              <div className="mt-4">
-                <Button asChild>
+              <ul className="list-disc pl-5 space-y-1 text-muted-foreground mt-3">
+                <li>
                   <Link href={`/tools/${toolId}`}>Use {tool.title}</Link>
-                </Button>
-              </div>
+                </li>
+                {relatedTools.map((item) => (
+                  <li key={item.href}>
+                    <Link href={`${item.href}/info`}>{item.title} guide</Link>
+                  </li>
+                ))}
+                {coreSeoTools.map((item) => (
+                  <li key={item.href}>
+                    <Link href={`${item.href}/info`}>{item.title} guide</Link>
+                  </li>
+                ))}
+              </ul>
             </Card>
           </div>
         )}

@@ -1,55 +1,91 @@
-import type { ToolContent } from "../content-types";
+import type { ToolSeo } from "../content-types";
 
-/**
- * SEO content for /tools/sitemap/info
- * Keep this content human-first, specific, and up to date.
- */
-export const seoContent: ToolContent = {
+export const seo: ToolSeo = {
+  meta: {
+    title: "Create sitemap.xml files fast – Free Sitemap.xml Generator",
+    description:
+      "Need to create a sitemap.xml file? Generate valid XML with URLs, lastmod dates, and priorities ready to submit in seconds with this free tool.",
+    infoTitle: "How to Create a Sitemap.xml – Sitemap Guide",
+    infoDescription:
+      "Learn what an XML sitemap is, why it matters for SEO, common mistakes, and how to submit it correctly.",
+    keywords: [
+      "sitemap",
+      "sitemap.xml",
+      "xml",
+      "seo",
+      "search engine",
+      "crawl",
+    ],
+  },
+  concept: "XML sitemap",
+  definition:
+    "An XML sitemap is a file that lists your site's important URLs and metadata so search engines can crawl them efficiently.",
   whatIs:
-    "A sitemap generator creates an XML sitemap (sitemap.xml) that lists the pages you want search engines to crawl and index. Sitemaps help discovery—especially for new sites, large sites, or sites with pages that aren’t easily reachable through links.",
+    "A sitemap.xml generator builds a clean XML sitemap from your URLs so search engines can discover and index your pages. It supports lastmod dates, priorities, and change frequencies—all in a valid XML format you can submit to Google Search Console or Bing Webmaster Tools. Instead of writing XML by hand, you paste your URLs and get a ready-to-deploy file.",
   features: [
-    "Generate a valid sitemap.xml quickly",
-    "Include only indexable, canonical URLs",
-    "Optional last modified dates (lastmod)",
-    "Optional changefreq and priority fields (when you need them)",
-    "Copyable XML output and downloadable file",
-    "Optional sitemap.html output for humans",
-    "Works for any site structure (static pages, blogs, docs, apps)",
+    "Generate valid XML sitemap from a list of URLs",
+    "Add lastmod, priority, and changefreq values",
+    "Support for multiple URL entries",
+    "Download ready-to-deploy sitemap.xml",
+    "Validate XML structure before export",
   ],
   howItWorks: [
-    "Enter your site’s base URL (https://example.com)",
-    "Add the URLs you want indexed (one per line)",
-    "Optionally configure lastmod / changefreq / priority",
-    "Generate the sitemap.xml (and optionally sitemap.html)",
-    "Host it at /sitemap.xml and reference it in robots.txt",
+    "Paste or upload your page URLs",
+    "Add optional lastmod, priority, and changefreq values",
+    "Generate the XML sitemap",
+    "Host it and submit to search consoles",
   ],
   useCases: [
-    "Helping Google discover new pages faster",
-    "Submitting a sitemap in Google Search Console",
-    "Auditing which URLs you actually want indexed",
-    "Creating a sitemap for a marketing site or documentation site",
+    "Launching a new site and helping search engines discover pages",
+    "Updating sitemap after adding new sections",
+    "Migrating URLs and ensuring new paths are indexed",
+    "Improving crawl efficiency for large sites",
+  ],
+  whenToUse: [
+    "You want search engines to find new or updated pages faster",
+    "Your site has many pages or complex navigation",
+    "You are launching a new site or migrating URLs",
+  ],
+  commonMistakes: [
+    "Including non-canonical or blocked URLs",
+    "Forgetting to update lastmod values",
+    "Submitting sitemaps with invalid XML or 404 URLs",
   ],
   faq: [
     {
-      question: "Does Google use changefreq and priority in sitemaps?",
+      question: "Do I need a sitemap for a small site?",
       answer:
-        "Google has stated it ignores <changefreq> and <priority>. The field that matters most is an accurate <lastmod> when you make meaningful content updates.",
+        "It's not required, but it helps search engines discover pages faster. Even small sites benefit from clear sitemap submissions.",
     },
     {
-      question: "Should I include noindex pages in my sitemap?",
+      question: "How often should I update my sitemap?",
       answer:
-        "No. Include only URLs you want indexed. If a URL is noindex or blocked, keeping it out of the sitemap reduces confusion and crawl waste.",
+        "Update it when you add, remove, or significantly change pages. Automated sitemaps (via frameworks or CMS) often update on each build.",
     },
     {
-      question: "What should lastmod represent?",
+      question: "What URLs should I include?",
       answer:
-        "Use lastmod only when the page’s primary content changes in a way that matters to users (not minor cosmetic changes). Inaccurate lastmod dates can cause search engines to ignore it.",
+        "Include canonical, indexable pages. Exclude pages with noindex, blocked by robots.txt, or non-canonical variants.",
     },
     {
-      question: "How many URLs can a sitemap contain?",
+      question: "Does priority actually affect ranking?",
       answer:
-        "A single sitemap is limited to 50,000 URLs or 50MB uncompressed. For larger sites, use multiple sitemaps and a sitemap index file.",
+        "Google largely ignores priority values. It's more useful for internal reference. Focus on correct URLs and lastmod instead.",
     },
   ],
+  summary: {
+    whatThisToolDoes:
+      "This tool builds a clean XML sitemap from your URLs. It helps search engines discover and prioritize your important pages.",
+    whenToUse:
+      "Use it when you launch a site, add new sections, or need a fast way to update sitemap entries.",
+    howToUse: [
+      "Paste or upload your page URLs",
+      "Add optional lastmod, priority, and changefreq values",
+      "Generate the XML sitemap",
+      "Host it and submit it to search consoles",
+    ],
+    mistakesPrevented:
+      "It avoids invalid XML, missing URLs, and accidental inclusion of blocked pages.",
+  },
+  relatedTools: ["robots", "meta-tags", "canonical-url"],
 };
-

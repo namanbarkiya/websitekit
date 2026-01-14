@@ -6,10 +6,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { sidebarConfig, type SidebarNavItem } from "@/config/sidebar";
-import { getToolContent } from "@/tools";
+import { getRelatedTools, getToolSeo } from "@/tools";
 
 import { ToolClient } from "./tool-client";
-import { toolDescription, toolKeywords, toolTitle } from "./tool-seo";
+import {
+  toolDescription,
+  toolKeywords,
+  toolMetaDescription,
+  toolMetaTitle,
+  toolTitle,
+} from "./tool-seo";
 
 export const dynamicParams = false;
 
@@ -38,6 +44,45 @@ function toolCanonical(toolId: string) {
   return `/tools/${toolId}`;
 }
 
+function findRelatedToolsFromSidebar(
+  toolId: string,
+  count = 2
+): SidebarNavItem[] {
+  // First try to get related tools from SEO data
+  const seoRelated = getRelatedTools(toolId);
+  if (seoRelated.length > 0) {
+    const items: SidebarNavItem[] = [];
+    for (const relatedId of seoRelated.slice(0, count)) {
+      const tool = findTool(relatedId);
+      if (tool) items.push(tool);
+    }
+    if (items.length > 0) return items;
+  }
+
+  // Fallback to category-based related tools
+  const category = sidebarConfig.categories.find((cat) =>
+    cat.items.some((item) => item.href === `/tools/${toolId}`)
+  );
+  if (!category) return [];
+  const unlocked = category.items.filter(
+    (item) => item.href !== `/tools/${toolId}` && !item.locked
+  );
+  const fallback = category.items.filter(
+    (item) => item.href !== `/tools/${toolId}`
+  );
+  return (unlocked.length ? unlocked : fallback).slice(0, count);
+}
+
+function findSeoChecklist() {
+  for (const category of sidebarConfig.categories) {
+    const item = category.items.find(
+      (it) => it.href === "/tools/seo-checklist"
+    );
+    if (item) return item;
+  }
+  return null;
+}
+
 export async function generateStaticParams() {
   return sidebarConfig.categories
     .flatMap((c) => c.items)
@@ -54,8 +99,9 @@ export async function generateMetadata({
   if (!tool) return {};
 
   const canonical = new URL(toolCanonical(toolId), SITE_URL);
-  const title = `${toolTitle(tool)} | WebsiteKit`;
-  const description = toolDescription(tool);
+  const title = toolMetaTitle(tool);
+  const description = toolMetaDescription(tool);
+  const isLocked = Boolean(tool.locked);
 
   return {
     title,
@@ -80,19 +126,29 @@ export async function generateMetadata({
         new URL(`/tools/${toolId}/opengraph-image`, SITE_URL).toString(),
       ],
     },
-    robots: {
-      // Prefer ranking the content-rich /info page (programmatic SEO),
-      // while still allowing crawlers to discover and follow internal links.
-      index: false,
-      follow: true,
-      googleBot: {
-        index: false,
-        follow: true,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-        "max-video-preview": -1,
-      },
-    },
+    robots: isLocked
+      ? {
+          index: false,
+          follow: true,
+          googleBot: {
+            index: false,
+            follow: true,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+            "max-video-preview": -1,
+          },
+        }
+      : {
+          index: true,
+          follow: true,
+          googleBot: {
+            index: true,
+            follow: true,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+            "max-video-preview": -1,
+          },
+        },
   };
 }
 
@@ -109,7 +165,7 @@ function buildToolJsonLd(tool: ToolPageMeta) {
   const url = new URL(toolCanonical(tool.toolId), SITE_URL).toString();
   const name = toolTitle(tool);
   const description = toolDescription(tool);
-  const content = getToolContent(tool.toolId);
+  const seo = getToolSeo(tool.toolId);
 
   const breadcrumbs = {
     "@context": "https://schema.org",
@@ -157,7 +213,7 @@ function buildToolJsonLd(tool: ToolPageMeta) {
     "@type": "HowTo",
     name: `How to use ${tool.title}`,
     description: `Step-by-step guide to using the ${tool.title} tool on WebsiteKit.`,
-    step: content.howItWorks.map((text, i) => ({
+    step: seo.howItWorks.map((text, i) => ({
       "@type": "HowToStep",
       position: i + 1,
       text,
@@ -169,74 +225,74 @@ function buildToolJsonLd(tool: ToolPageMeta) {
   };
 
   // FAQ schema from content (if available)
-  const faq = content.faq
-    ? {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        mainEntity: content.faq.map((item) => ({
-          "@type": "Question",
-          name: item.question,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: item.answer,
-          },
-        })),
-      }
-    : null;
+  const faq =
+    seo.faq.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: seo.faq.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
+        }
+      : null;
 
   return faq ? [breadcrumbs, app, howTo, faq] : [breadcrumbs, app, howTo];
 }
 
 function ToolSeoText({
   toolTitle,
-  content,
+  seo,
 }: {
   toolTitle: string;
-  content: ReturnType<typeof getToolContent>;
+  seo: ReturnType<typeof getToolSeo>;
 }) {
   // Keep content in the HTML for SEO/AEO without adding UI noise.
-  // This matches what's shown in the (i) dialog, so it isn't misleading.
   return (
     <div className="sr-only" aria-hidden="true">
       <h2>What is {toolTitle}?</h2>
-      <p>{content.whatIs}</p>
+      <p>{seo.whatIs}</p>
 
       <h2>Features</h2>
       <ul>
-        {content.features.map((f, i) => (
+        {seo.features.map((f, i) => (
           <li key={i}>{f}</li>
         ))}
       </ul>
 
       <h2>How to use</h2>
       <ol>
-        {content.howItWorks.map((s, i) => (
+        {seo.howItWorks.map((s, i) => (
           <li key={i}>{s}</li>
         ))}
       </ol>
 
-      {content.useCases?.length ? (
+      {seo.useCases.length > 0 && (
         <>
           <h2>Common use cases</h2>
           <ul>
-            {content.useCases.map((u, i) => (
+            {seo.useCases.map((u, i) => (
               <li key={i}>{u}</li>
             ))}
           </ul>
         </>
-      ) : null}
+      )}
 
-      {content.faq?.length ? (
+      {seo.faq.length > 0 && (
         <>
           <h2>Frequently Asked Questions</h2>
-          {content.faq.map((item, i) => (
+          {seo.faq.map((item, i) => (
             <div key={i}>
               <h3>{item.question}</h3>
               <p>{item.answer}</p>
             </div>
           ))}
         </>
-      ) : null}
+      )}
     </div>
   );
 }
@@ -249,7 +305,9 @@ export default async function ToolPage({ params }: PageProps) {
   const locked = Boolean(tool.locked);
   const title = toolTitle(tool);
   const description = toolDescription(tool);
-  const content = getToolContent(toolId);
+  const seo = getToolSeo(toolId);
+  const relatedTools = findRelatedToolsFromSidebar(toolId, 2);
+  const seoChecklist = findSeoChecklist();
 
   return (
     <div className="flex flex-col h-full min-h-0">
@@ -289,9 +347,8 @@ export default async function ToolPage({ params }: PageProps) {
           <div className="flex-1 min-h-0 flex flex-col overflow-visible md:overflow-hidden">
             <ToolClient toolId={toolId} />
           </div>
-
           {/* Keep the SEO/AEO text in DOM without UI noise */}
-          <ToolSeoText toolTitle={tool.title} content={content} />
+          <ToolSeoText toolTitle={tool.title} seo={seo} />
         </>
       )}
     </div>
