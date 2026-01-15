@@ -213,8 +213,7 @@ export const sidebarConfig: SidebarConfig = {
             "domain",
             "multi-domain",
           ],
-          locked: true,
-          badge: "soon",
+          locked: false,
         },
         {
           title: "JSON-LD Schema",
@@ -235,8 +234,7 @@ export const sidebarConfig: SidebarConfig = {
             "google",
             "seo",
           ],
-          locked: true,
-          badge: "soon",
+          locked: false,
         },
         {
           title: "SEO Checklist",

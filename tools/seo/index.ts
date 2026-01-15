@@ -7,9 +7,11 @@
 import type { Metadata } from "next";
 
 import { defaultToolSeo, type ToolSeo } from "../content-types";
+// Import SEO content from each tool
+import { seo as canonicalUrlSeo } from "../canonical-url/seo-content";
 import { seo as faviconSeo } from "../favicon/seo-content";
 import { seo as gradientSeo } from "../gradient/seo-content";
-// Import SEO content from each tool
+import { seo as jsonLdSeo } from "../json-ld/seo-content";
 import { seo as metaTagsSeo } from "../meta-tags/seo-content";
 import { seo as qrCodeSeo } from "../qr-code/seo-content";
 import { seo as robotsSeo } from "../robots/seo-content";
@@ -18,13 +20,15 @@ import { seo as sitemapSeo } from "../sitemap/seo-content";
 
 /** Aggregated SEO data for all tools */
 export const toolSeoMap: Record<string, ToolSeo> = {
+  "canonical-url": canonicalUrlSeo,
+  favicon: faviconSeo,
+  gradient: gradientSeo,
+  "json-ld": jsonLdSeo,
   "meta-tags": metaTagsSeo,
   "qr-code": qrCodeSeo,
   robots: robotsSeo,
-  sitemap: sitemapSeo,
   "security-headers": securityHeadersSeo,
-  gradient: gradientSeo,
-  favicon: faviconSeo,
+  sitemap: sitemapSeo,
 };
 
 /** Get SEO data for a tool, falling back to defaults */

@@ -6,13 +6,15 @@
  */
 
 // Import all tools here - this triggers registration
+import "./canonical-url";
+import "./favicon";
+import "./gradient";
+import "./json-ld";
 import "./meta-tags";
 import "./qr-code";
 import "./robots";
-import "./sitemap";
 import "./security-headers";
-import "./gradient";
-import "./favicon";
+import "./sitemap";
 
 // Re-export SEO helpers and types from the central seo module
 export {
