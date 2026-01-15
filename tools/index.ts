@@ -9,6 +9,7 @@
 import "./canonical-url";
 import "./favicon";
 import "./gradient";
+import "./html-head";
 import "./json-ld";
 import "./meta-tags";
 import "./qr-code";

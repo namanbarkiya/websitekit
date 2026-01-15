@@ -11,6 +11,7 @@ import { defaultToolSeo, type ToolSeo } from "../content-types";
 import { seo as canonicalUrlSeo } from "../canonical-url/seo-content";
 import { seo as faviconSeo } from "../favicon/seo-content";
 import { seo as gradientSeo } from "../gradient/seo-content";
+import { seo as htmlHeadSeo } from "../html-head/seo-content";
 import { seo as jsonLdSeo } from "../json-ld/seo-content";
 import { seo as metaTagsSeo } from "../meta-tags/seo-content";
 import { seo as qrCodeSeo } from "../qr-code/seo-content";
@@ -23,6 +24,7 @@ export const toolSeoMap: Record<string, ToolSeo> = {
   "canonical-url": canonicalUrlSeo,
   favicon: faviconSeo,
   gradient: gradientSeo,
+  "html-head": htmlHeadSeo,
   "json-ld": jsonLdSeo,
   "meta-tags": metaTagsSeo,
   "qr-code": qrCodeSeo,
