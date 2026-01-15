@@ -27,6 +27,6 @@ registerTool({
     "seo",
   ],
   acceptedContext: ["domain"],
-  outputs: ["code"],
+  outputs: ["json"],
   Component: JsonLdComponent,
 });

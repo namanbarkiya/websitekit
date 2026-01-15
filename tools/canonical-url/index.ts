@@ -26,6 +26,6 @@ registerTool({
     "trailing slash",
   ],
   acceptedContext: ["domain"],
-  outputs: ["code"],
+  outputs: ["text"],
   Component: CanonicalUrlComponent,
 });
