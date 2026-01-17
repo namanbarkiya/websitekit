@@ -7,6 +7,8 @@
 
 // Import all tools here - this triggers registration
 import "./canonical-url";
+import "./cookie-consent";
+import "./csp";
 import "./favicon";
 import "./font-loading";
 import "./gradient";
@@ -14,6 +16,7 @@ import "./html-head";
 import "./json-ld";
 import "./meta-tags";
 import "./preload";
+import "./privacy-policy";
 import "./qr-code";
 import "./robots";
 import "./security-headers";

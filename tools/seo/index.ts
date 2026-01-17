@@ -9,6 +9,8 @@ import type { Metadata } from "next";
 import { defaultToolSeo, type ToolSeo } from "../content-types";
 // Import SEO content from each tool
 import { seo as canonicalUrlSeo } from "../canonical-url/seo-content";
+import { seo as cookieConsentSeo } from "../cookie-consent/seo-content";
+import { seo as cspSeo } from "../csp/seo-content";
 import { seo as faviconSeo } from "../favicon/seo-content";
 import { seo as fontLoadingSeo } from "../font-loading/seo-content";
 import { seo as gradientSeo } from "../gradient/seo-content";
@@ -16,6 +18,7 @@ import { seo as htmlHeadSeo } from "../html-head/seo-content";
 import { seo as jsonLdSeo } from "../json-ld/seo-content";
 import { seo as metaTagsSeo } from "../meta-tags/seo-content";
 import { seo as preloadSeo } from "../preload/seo-content";
+import { seo as privacyPolicySeo } from "../privacy-policy/seo-content";
 import { seo as qrCodeSeo } from "../qr-code/seo-content";
 import { seo as robotsSeo } from "../robots/seo-content";
 import { seo as securityHeadersSeo } from "../security-headers/seo-content";
@@ -24,6 +27,8 @@ import { seo as sitemapSeo } from "../sitemap/seo-content";
 /** Aggregated SEO data for all tools */
 export const toolSeoMap: Record<string, ToolSeo> = {
   "canonical-url": canonicalUrlSeo,
+  "cookie-consent": cookieConsentSeo,
+  csp: cspSeo,
   favicon: faviconSeo,
   "font-loading": fontLoadingSeo,
   gradient: gradientSeo,
@@ -31,6 +36,7 @@ export const toolSeoMap: Record<string, ToolSeo> = {
   "json-ld": jsonLdSeo,
   "meta-tags": metaTagsSeo,
   preload: preloadSeo,
+  "privacy-policy": privacyPolicySeo,
   "qr-code": qrCodeSeo,
   robots: robotsSeo,
   "security-headers": securityHeadersSeo,
