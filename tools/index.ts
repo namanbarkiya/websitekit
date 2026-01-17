@@ -8,6 +8,7 @@
 // Import all tools here - this triggers registration
 import "./canonical-url";
 import "./favicon";
+import "./font-loading";
 import "./gradient";
 import "./html-head";
 import "./json-ld";

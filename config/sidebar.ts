@@ -389,8 +389,7 @@ export const sidebarConfig: SidebarConfig = {
             "google fonts",
             "performance",
           ],
-          locked: true,
-          badge: "soon",
+          locked: false,
         },
         {
           title: "Image Guide",

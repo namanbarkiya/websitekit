@@ -10,6 +10,7 @@ import { defaultToolSeo, type ToolSeo } from "../content-types";
 // Import SEO content from each tool
 import { seo as canonicalUrlSeo } from "../canonical-url/seo-content";
 import { seo as faviconSeo } from "../favicon/seo-content";
+import { seo as fontLoadingSeo } from "../font-loading/seo-content";
 import { seo as gradientSeo } from "../gradient/seo-content";
 import { seo as htmlHeadSeo } from "../html-head/seo-content";
 import { seo as jsonLdSeo } from "../json-ld/seo-content";
@@ -24,6 +25,7 @@ import { seo as sitemapSeo } from "../sitemap/seo-content";
 export const toolSeoMap: Record<string, ToolSeo> = {
   "canonical-url": canonicalUrlSeo,
   favicon: faviconSeo,
+  "font-loading": fontLoadingSeo,
   gradient: gradientSeo,
   "html-head": htmlHeadSeo,
   "json-ld": jsonLdSeo,
