@@ -12,6 +12,7 @@ import "./gradient";
 import "./html-head";
 import "./json-ld";
 import "./meta-tags";
+import "./preload";
 import "./qr-code";
 import "./robots";
 import "./security-headers";

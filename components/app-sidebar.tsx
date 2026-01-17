@@ -102,27 +102,22 @@ export function AppSidebar() {
 
         {/* Most Used (derived from config item flag) */}
         {(() => {
-          const liveItems = sidebarConfig.categories
+          const mostUsedItems = sidebarConfig.categories
             .flatMap((cat) => cat.items)
-            .filter((item) => !item.locked)
-            .sort((a, b) => {
-              // Prefer "most used" tools first, then alphabetical.
-              const aRank = a.mostUsed ? 1 : 0;
-              const bRank = b.mostUsed ? 1 : 0;
-              if (aRank !== bRank) return bRank - aRank;
-              return a.title.localeCompare(b.title);
-            });
+            .filter((item) => item.mostUsed && !item.locked)
+            .sort((a, b) => a.title.localeCompare(b.title))
+            .slice(0, 5); // Limit to 5 tools
 
-          if (liveItems.length === 0) return null;
+          if (mostUsedItems.length === 0) return null;
 
           return (
             <SidebarGroup>
-              <SidebarGroupLabel>Live</SidebarGroupLabel>
+              <SidebarGroupLabel>Most Used</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {liveItems.map((item) => (
+                  {mostUsedItems.map((item) => (
                     <NavItem
-                      key={`live:${item.href}`}
+                      key={`most-used:${item.href}`}
                       item={item}
                       isActive={isItemActive(item)}
                       onNavigate={handleNavigate}

@@ -194,6 +194,7 @@ export const sidebarConfig: SidebarConfig = {
             "crawl",
           ],
           locked: false,
+          mostUsed: true,
         },
         {
           title: "Canonical URL",
@@ -368,8 +369,7 @@ export const sidebarConfig: SidebarConfig = {
             "resource hint",
             "link",
           ],
-          locked: true,
-          badge: "soon",
+          locked: false,
         },
         {
           title: "Font Loading",
@@ -465,6 +465,7 @@ export const sidebarConfig: SidebarConfig = {
             "protection",
           ],
           locked: false,
+          mostUsed: true,
         },
         {
           title: "CSP Generator",
@@ -616,7 +617,6 @@ export const sidebarConfig: SidebarConfig = {
             "generator",
           ],
           locked: false,
-          mostUsed: true,
         },
         {
           title: "SVG Shapes",

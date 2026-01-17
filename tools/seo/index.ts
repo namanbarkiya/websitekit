@@ -14,6 +14,7 @@ import { seo as gradientSeo } from "../gradient/seo-content";
 import { seo as htmlHeadSeo } from "../html-head/seo-content";
 import { seo as jsonLdSeo } from "../json-ld/seo-content";
 import { seo as metaTagsSeo } from "../meta-tags/seo-content";
+import { seo as preloadSeo } from "../preload/seo-content";
 import { seo as qrCodeSeo } from "../qr-code/seo-content";
 import { seo as robotsSeo } from "../robots/seo-content";
 import { seo as securityHeadersSeo } from "../security-headers/seo-content";
@@ -27,6 +28,7 @@ export const toolSeoMap: Record<string, ToolSeo> = {
   "html-head": htmlHeadSeo,
   "json-ld": jsonLdSeo,
   "meta-tags": metaTagsSeo,
+  preload: preloadSeo,
   "qr-code": qrCodeSeo,
   robots: robotsSeo,
   "security-headers": securityHeadersSeo,
