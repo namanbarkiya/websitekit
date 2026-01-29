@@ -28,6 +28,19 @@ export function HeroSection({ unlockedToolsCount }: HeroSectionProps) {
       <div className="mx-auto w-full">
         <div className="grid lg:grid-cols-2 gap-y-14 lg:gap-x-24 items-start">
           <div>
+            {/* Corporate hosting badge */}
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full border bg-primary/5 hover:bg-primary/10 text-sm text-primary transition-colors group mr-2"
+            >
+              <span className="relative flex size-2">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex size-2 rounded-full bg-primary" />
+              </span>
+              Corporate hosting available
+              <ArrowRightIcon className="size-3 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+            </Link>
+
             <div className="inline-flex items-center gap-2 text-sm text-primary mb-4">
               <span className="relative flex size-2">
                 <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
